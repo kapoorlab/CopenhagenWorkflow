@@ -2,8 +2,6 @@
 from pathlib import Path 
 import os
 import torch
-from collections import Counter
-import matplotlib.pyplot as plt
 import pandas as pd
 from tqdm import tqdm
 from torch.nn.modules.loss import CrossEntropyLoss
@@ -37,7 +35,7 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 
 t_initials = [0,50,100,150]
-t_finals = [100,150,200,200]
+t_finals = [100,150,200,250]
 tracklet_length = 25
 num_samples = 20
 gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}/shape_densenet.json'
