@@ -94,20 +94,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
     val_shape_arrays = np.concatenate((shape_basal_val_arrays, shape_radial_val_arrays, shape_goblet_val_arrays ))
     val_shape_labels = np.concatenate((shape_basal_val_labels, shape_radial_val_labels, shape_goblet_val_labels ))
 
-    shape_training_data = {
-        'goblet_train_arrays': shape_goblet_train_arrays,
-        'goblet_train_labels': shape_goblet_train_labels,
-        'goblet_val_arrays': shape_goblet_val_arrays,
-        'goblet_val_labels': shape_goblet_val_labels,
-        'radial_train_arrays': shape_radial_train_arrays,
-        'radial_train_labels': shape_radial_train_labels,
-        'radial_val_arrays': shape_radial_val_arrays,
-        'radial_val_labels': shape_radial_val_labels,
-        'basal_train_arrays': shape_basal_train_arrays,
-        'basal_train_labels': shape_basal_train_labels,
-        'basal_val_arrays': shape_basal_val_arrays,
-        'basal_val_labels': shape_basal_val_labels,
-    }
+
 
     shape_h5_training_data = {
         'train_arrays': train_shape_arrays,
@@ -116,7 +103,6 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_shape_labels
     }
 
-    np.savez(os.path.join(train_save_dir, f'shape_training_data_gbr_{tracklet_length}.npz'), **shape_training_data)
 
     with h5py.File(os.path.join(train_save_dir, f'shape_training_data_gbr_{tracklet_length}.h5'), 'w') as hf:
         for key, value in shape_h5_training_data.items():
@@ -143,22 +129,6 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_dynamic_labels
     }
 
-    dynamic_training_data = {
-        'goblet_train_arrays': dynamic_goblet_train_arrays,
-        'goblet_train_labels': dynamic_goblet_train_labels,
-        'goblet_val_arrays': dynamic_goblet_val_arrays,
-        'goblet_val_labels': dynamic_goblet_val_labels,
-        'radial_train_arrays': dynamic_radial_train_arrays,
-        'radial_train_labels': dynamic_radial_train_labels,
-        'radial_val_arrays': dynamic_radial_val_arrays,
-        'radial_val_labels': dynamic_radial_val_labels,
-        'basal_train_arrays': dynamic_basal_train_arrays,
-        'basal_train_labels': dynamic_basal_train_labels,
-        'basal_val_arrays': dynamic_basal_val_arrays,
-        'basal_val_labels': dynamic_basal_val_labels,
-    }
-
-    np.savez(os.path.join(train_save_dir, f'dynamic_training_data_gbr_{tracklet_length}.npz'), **dynamic_training_data)
 
     with h5py.File(os.path.join(train_save_dir, f'dynamic_training_data_gbr_{tracklet_length}.h5'), 'w') as hf:
         for key, value in dynamic_h5_training_data.items():
