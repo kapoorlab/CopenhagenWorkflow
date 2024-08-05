@@ -11,7 +11,7 @@ from napatrackmater.Trackvector import (
 
 
 
-home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
+home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 #/gpfsstore/rech/jsy/uzj81mi/
 
 base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'

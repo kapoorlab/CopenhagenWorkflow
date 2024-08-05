@@ -9,7 +9,7 @@ from napatrackmater.Trackvector import (
 
 
 
-home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
+home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
 shape_model_dir = os.path.join(model_dir, 'shape_feature_lightning_densenet_mitosis_10/')

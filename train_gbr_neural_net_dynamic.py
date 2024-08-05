@@ -10,7 +10,7 @@ from napatrackmater.Trackvector import (
 
 
 
-home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
+home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 #/home/debian/jz/
 #/gpfsstore/rech/jsy/uzj81mi/
 
