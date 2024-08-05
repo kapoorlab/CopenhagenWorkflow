@@ -1,0 +1,13 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: README
+
+chapters:
+    - file: SEGMENTATION
+    - file: ONEAT
+    - file: POINTCLOUDS
+    - file: TRACKING
+    - file: TRACKCLUSTERING
+    - file: TRAINING

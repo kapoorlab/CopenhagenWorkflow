@@ -1,0 +1,66 @@
+patch_size : [8,256,256]
+overlap: [1, 16, 16]
+crop: [2,32,32]
+in_channels: 1
+out_activation: 'tanh'
+norm_method: 'instance'
+background_weight: 1
+flow_weight: 1
+out_channels: 4
+feat_channels: [32, 64, 128]
+num_levels: 3
+min_size_mask: 10
+min_size: 10
+max_size:  10000
+n_tiles: [2, 4, 4]
+axes: 'ZYX'
+channel_membrane: 0
+channel_nuclei: 1
+file_type: '*.tif'
+batch_size: 16
+learning_rate: 1.0E-3
+num_gpu: 4
+epochs: 200
+network_type: "unet"
+generate_npz: False
+grid_x: 1
+grid_y: 1
+grid_z: 1 
+diameter_cellpose: 34.6
+stitch_threshold: 0.25
+flow_threshold: 0.7
+cellprob_threshold: 0.0
+anisotropy: null  
+cellpose_model_path: null 
+gpu: True
+prob_thresh_nuclei: null 
+nms_thresh_nuclei: null 
+prob_thresh_membrane: null
+nms_thresh_membrane: null 
+UseProbability: True
+ExpandLabels: False
+donormalize: True
+lower_perc: 1.0
+upper_perc: 99.8
+dounet: True
+seedpool: False
+save_dir: null 
+Name: 'Result'
+slice_merge: False
+do_3D: False
+z_thresh: 2
+load_data_sequence: True
+validation_split: 0.01
+n_patches_per_image: 1 
+train_loss: "mae"
+train_unet: True 
+train_star: True
+erosion_iterations: 0
+use_gpu_opencl: True
+depth: 3
+kern_size: 3
+n_rays: 96
+startfilter: 64
+patch_x: 1024
+patch_y: 1024
+ 

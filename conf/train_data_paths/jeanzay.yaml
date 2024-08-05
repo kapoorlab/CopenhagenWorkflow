@@ -1,0 +1,47 @@
+base_membrane_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/' 
+
+raw_membrane_dir: 'raw_membrane/'
+real_mask_membrane_dir: 'real_mask_membrane/'
+cloud_mask_membrane_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/cloud_mask_membrane/'
+raw_membrane_patch_dir: 'raw_membrane_patches/'
+real_mask_membrane_patch_dir: 'cloud_mask_training/cloud_mask_membrane/label_images/selected_images/'
+raw_membrane_patch_h5_dir: 'raw_membrane_patches_h5/'
+real_mask_membrane_patch_h5_dir: 'real_mask_membrane_patches_h5/'
+binary_mask_membrane_patch_dir: 'binary_mask_membrane_patches/'
+binary_erode_mask_membrane_patch_dir: 'binary_erode_mask_membrane_patches/'
+test_raw_membrane_patch_dir: 'val_raw_membrane_patches'
+test_real_mask_membrane_patch_dir: 'val_real_mask_membrane_patches/'
+
+base_nuclei_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/' 
+
+raw_nuclei_dir: 'raw_nuclei/'
+real_mask_nuclei_dir: 'real_mask_nuclei/'
+cloud_mask_nuclei_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/cloud_mask_nuclei/'
+raw_nuclei_patch_dir: 'raw_nuclei_patches/'
+real_mask_nuclei_patch_dir: 'cloud_mask_training/cloud_mask_nuclei/label_images/selected_images/'
+raw_nuclei_patch_h5_dir: 'raw_nuclei_patches_h5/'
+real_mask_nuclei_patch_h5_dir: 'real_mask_nuclei_patches_h5/'
+binary_mask_nuclei_patch_dir: 'binary_mask_nuclei_patches/'
+binary_erode_mask_nuclei_patch_dir: 'binary_erode_mask_nuclei_patches/'
+test_raw_nuclei_patch_dir: 'val_raw_nuclei_patches'
+test_real_mask_nuclei_patch_dir: 'val_real_mask_nuclei_patches/'
+
+oneat_timelapse_nuclei_raw : 'oneat_timelapse_nuclei_raw/'
+oneat_timelapse_nuclei_csv : 'oneat_timelapse_nuclei_csv/'
+oneat_timelapse_nuclei_seg : 'oneat_timelapse_nuclei_seg/'
+oneat_nuclei_patch_dir : 'oneat_patches/'
+oneat_npzfile: 'oneat_xenopus_volumetric.npz'
+oneat_npzvalfile: 'oneat_xenopus_volumetric_val.npz'
+
+oneat_nuclei_train_data: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/Dual_Channel_CZYX/second_dataset_nuclei_raw.tif'
+
+base_roi_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/'
+raw_roi_dir : 'roi_training/raw_roi_patches/'
+binary_mask_roi_dir : 'roi_training/binary_mask_roi_patches/' 
+
+
+point_cloud_filename: 'point_cloud'
+identifier: "*.tif"
+save_train: '_train.csv'
+save_test: '_test.csv'
+save_val: '_val.csv'

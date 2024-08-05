@@ -1,0 +1,2 @@
+,Model Name,True Positive,False Positive,False Negative,Total Predictions,GT predictions,Precision,Recall,F1
+0,prediction_mitosis,27,4,5,31,28,0.8709677419354839,0.84375,0.8571428571428571

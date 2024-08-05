@@ -1,0 +1,7 @@
+defaults:
+  - _self_
+  - train_data_paths: jeanzay.yaml
+  - model_paths: jeanzay.yaml
+  - parameters: oneat.yaml
+
+   

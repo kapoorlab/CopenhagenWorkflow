@@ -1,0 +1,14 @@
+batch_size: 64
+axes: 'TZYX'
+learning_rate: 1.0E-3
+num_clusters: 7
+accelerator: 'cuda'
+devices: 1
+scale_z: 8
+scale_xy: 16
+compute_with_autoencoder: False
+enhance_trackmate_xml: True
+calibration_z: 2.0 
+calibration_y: 0.69
+calibration_x: 0.69
+oneat_threshold_cutoff: 0.9999

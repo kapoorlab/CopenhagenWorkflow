@@ -1,0 +1,23 @@
+depth: 3
+epochs: 200
+learning_rate: 0.001
+batch_size: 32
+num_features: 128
+pretrain: True
+num_clusters: 3
+model_type: 'cloud'
+encoder_type: 'dgcnn'
+decoder_type: 'foldingnet' 
+k_nearest_neighbours: 20
+gamma: 1
+alpha: 1.0
+num_cloud_points: 2048
+divergence_tolerance: 0.01
+update_interval: 1
+patch_size : [8,256,256]
+erosion_iterations: 2
+lower_ratio_fore_to_back: 0.6
+upper_ratio_fore_to_back: 1.0
+create_for_channel: 'membrane'
+scale_z: 16
+scale_xy: 32

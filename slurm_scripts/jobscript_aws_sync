@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --nodes=1            
+#SBATCH -A lzc@v100
+#SBATCH --job-name=aws           
+##SBATCH --gres=gpu:1
+#SBATCH --partition=prepost
+#SBATCH --cpus-per-task=60
+#SBATCH --output=track.o%j            
+#SBATCH --error=track.o%j           
+#SBATCH --time=10:00:00       
+module purge 
+module load anaconda-py3/2020.11
+conda deactivate
+conda activate kapoorlabsenv
+set -x # activating echo of
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/kapoorlabsenv/lib/
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/kapoorlabsenv/
+module load cuda/11.8.0
+aws s3 cp s3://marioneat/ecoset_square256_chunked.h5   /gpfsscratch/rech/jsy/uzj81mi/
+#aws s3 sync s3://bakal-lab/ /gpfsstore/rech/goy/uzj81mi/london/
+#aws s3 sync /gpfsstore/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/ s3://copenhagenkapoorlabs/Mari_Second_Dataset_Analysis/
+#aws s3 sync /gpfsstore/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Third_Dataset_Analysis/ s3://copenhagenkapoorlabs/Mari_Third_Dataset_Analysis/
