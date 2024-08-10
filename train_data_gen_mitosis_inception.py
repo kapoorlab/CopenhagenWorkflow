@@ -83,19 +83,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
     val_shape_arrays = np.concatenate( (shape_dividing_val_arrays, shape_non_dividing_val_arrays))
     val_shape_labels = np.concatenate((shape_dividing_val_labels, shape_non_dividing_val_labels))
 
-    shape_training_data = {
-        'dividing_train_arrays': shape_dividing_train_arrays,
-        'dividing_train_labels': shape_dividing_train_labels,
-        'dividing_val_arrays': shape_dividing_val_arrays,
-        'dividing_val_labels': shape_dividing_val_labels,
-        'non_dividing_train_arrays': shape_non_dividing_train_arrays,
-        'non_dividing_train_labels': shape_non_dividing_train_labels,
-        'non_dividing_val_arrays': shape_non_dividing_val_arrays,
-        'non_dividing_val_labels': shape_non_dividing_val_labels
-    }
 
-    np.savez(os.path.join(train_save_dir, f'shape_training_data_mitosis_{tracklet_length}.npz'), **shape_training_data)
-    
     shape_h5_training_data = {
         'train_arrays': train_shape_arrays,
         'train_labels': train_shape_labels,
@@ -118,19 +106,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
     val_dynamic_labels = np.concatenate((dynamic_dividing_val_labels, dynamic_non_dividing_val_labels))
 
 
-    dynamic_training_data = {
-        'dividing_train_arrays': dynamic_dividing_train_arrays,
-        'dividing_train_labels': dynamic_dividing_train_labels,
-        'dividing_val_arrays': dynamic_dividing_val_arrays,
-        'dividing_val_labels': dynamic_dividing_val_labels,
-        'non_dividing_train_arrays': dynamic_non_dividing_train_arrays,
-        'non_dividing_train_labels': dynamic_non_dividing_train_labels,
-        'non_dividing_val_arrays': dynamic_non_dividing_val_arrays,
-        'non_dividing_val_labels': dynamic_non_dividing_val_labels
-    }
 
-    np.savez(os.path.join(train_save_dir, f'dynamic_training_data_mitosis_{tracklet_length}.npz'), **dynamic_training_data)
-    
     dynamic_h5_training_data = {
         'train_arrays': train_dynamic_arrays,
         'train_labels': train_dynamic_labels,
