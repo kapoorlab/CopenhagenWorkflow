@@ -15,7 +15,7 @@ from napatrackmater.Trackvector import (
     DYNAMIC_FEATURES
 )
 
-dataset_name = 'Second'
+dataset_name = 'Fifth'
 home_folder = '/home/debian/jz/'
 #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
@@ -34,12 +34,13 @@ print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 
-t_initials = [0,50,100,150]
+t_initials = [0,50,100,120]
 t_finals = [100,150,200,250]
-tracklet_length = 25
+tracklet_length = 75
 num_samples = 20
 gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}/shape_densenet.json'
 gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}/dynamic_densenet.json'
+
 class_map_gbr = {
     0: "Basal",
     1: "Radial",
