@@ -15,7 +15,7 @@ from napatrackmater.Trackvector import (
     DYNAMIC_FEATURES
 )
 
-dataset_name = 'Second'
+dataset_name = 'Fifth'
 home_folder = '/home/debian/jz/'
 #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
@@ -39,8 +39,8 @@ t_finals = [100,150,200,250]
 tracklet_length = 25
 num_samples = 20
 
-mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis/shape_densenet.json'
-mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis/dynamic_densenet.json'
+mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis_{tracklet_length}/shape_densenet.json'
+mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis_{tracklet_length}/dynamic_densenet.json'
 
 
 class_map_mitosis = {
@@ -78,7 +78,7 @@ for index, t_initial in enumerate(t_initials):
    
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
