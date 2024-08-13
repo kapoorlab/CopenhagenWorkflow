@@ -119,7 +119,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
             hf.create_dataset(key, data=value)
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_names = ['Third', 'Second', 'Fourth']
+dataset_names = ['Third', 'Second', 'Fourth', 'Fifth']
 tracklet_lengths = [10,25,50,75,100]
 strides = [10,5,4,4,4]
 for index, tracklet_length in enumerate(tracklet_lengths):

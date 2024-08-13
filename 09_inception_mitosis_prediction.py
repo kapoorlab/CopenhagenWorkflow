@@ -83,7 +83,7 @@ for index, t_initial in enumerate(t_initials):
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for track_id in tqdm(tracks_dataframe_short['Track ID'].unique()):
-            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_mitosis, dynamic_model= mitosis_dynamic_torch_model, shape_model=mitosis_shape_torch_model, num_samples=num_samples,device=device )
+            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_mitosis, dynamic_model= mitosis_dynamic_torch_model, shape_model= None, num_samples=num_samples,device=device )
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_mitosis, filtered_gbr_prediction, annotations_prediction_dir, channel)
