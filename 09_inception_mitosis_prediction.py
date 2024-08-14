@@ -39,8 +39,8 @@ t_finals = [100,150,200,200]
 tracklet_length = 50
 num_samples = 20
 
-mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis_{tracklet_length}/shape_densenet.json'
-mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis_{tracklet_length}/dynamic_densenet.json'
+mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/shape_densenet.json'
+mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/dynamic_densenet.json'
 
 
 class_map_mitosis = {
@@ -54,7 +54,7 @@ mitosis_shape_lightning_model, mitosis_shape_torch_model = LightningModel.extrac
     mitosis_shape_model_json,
     loss_func,
     Adam,
-    local_model_path = os.path.join(model_dir, f'shape_feature_lightning_densenet_mitosis_{tracklet_length}/'),
+    local_model_path = os.path.join(model_dir, f'shape_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/'),
     map_location=torch.device(device)
     
 )
@@ -64,7 +64,7 @@ mitosis_dynamic_lightning_model, mitosis_dynamic_torch_model = LightningModel.ex
     mitosis_dynamic_model_json,
     loss_func,
     Adam,
-    local_model_path = os.path.join(model_dir, f'dynamic_feature_lightning_densenet_mitosis_{tracklet_length}/'),
+    local_model_path = os.path.join(model_dir, f'dynamic_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/'),
     map_location=torch.device(device)
     
 )
@@ -83,7 +83,7 @@ for index, t_initial in enumerate(t_initials):
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for track_id in tqdm(tracks_dataframe_short['Track ID'].unique()):
-            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_mitosis, dynamic_model= mitosis_dynamic_torch_model, shape_model= None, num_samples=num_samples,device=device )
+            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_mitosis, dynamic_model= mitosis_dynamic_torch_model, shape_model=mitosis_shape_torch_model, num_samples=num_samples,device=device )
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_mitosis, filtered_gbr_prediction, annotations_prediction_dir, channel)
