@@ -36,11 +36,11 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 t_initials = [0,50,100,140]
 t_finals = [100,150,200,200]
-tracklet_length = 50
+tracklet_length = 25
 num_samples = 20
 
-mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/shape_densenet.json'
-mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/dynamic_densenet.json'
+mitosis_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_mitosis_{tracklet_length}/shape_densenet.json'
+mitosis_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_mitosis_{tracklet_length}/dynamic_densenet.json'
 
 
 class_map_mitosis = {
@@ -54,7 +54,7 @@ mitosis_shape_lightning_model, mitosis_shape_torch_model = LightningModel.extrac
     mitosis_shape_model_json,
     loss_func,
     Adam,
-    local_model_path = os.path.join(model_dir, f'shape_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/'),
+    local_model_path = os.path.join(model_dir, f'shape_feature_lightning_densenet_mitosis_{tracklet_length}/'),
     map_location=torch.device(device)
     
 )
@@ -64,7 +64,7 @@ mitosis_dynamic_lightning_model, mitosis_dynamic_torch_model = LightningModel.ex
     mitosis_dynamic_model_json,
     loss_func,
     Adam,
-    local_model_path = os.path.join(model_dir, f'dynamic_feature_lightning_densenet_mitosis_{tracklet_length}_full_depth/'),
+    local_model_path = os.path.join(model_dir, f'dynamic_feature_lightning_densenet_mitosis_{tracklet_length}/'),
     map_location=torch.device(device)
     
 )
