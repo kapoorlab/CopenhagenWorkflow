@@ -30,8 +30,8 @@ def main(config: VollCellSegPose):
     channel_membrane = config.parameters.channel_membrane
     merged_path = os.path.join(parent_directory, 'Merged.tif')
     merged_data = imread(merged_path)
-    membrane_data = merged_data[:, :, channel_membrane, :, :]
-    nuclei_data = merged_data[:, :, channel_nuclei, :, :]
+    membrane_data = merged_data[:, :, 1 - channel_membrane, :, :]
+    nuclei_data = merged_data[:, :, 1 - channel_nuclei, :, :]
     data_name =  os.path.splitext(os.path.basename(merged_path))[0]
     voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
 
@@ -60,7 +60,7 @@ def main(config: VollCellSegPose):
             metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
                       'axes': 'TZCYX'})
     
-    
+
     time_points = data.shape[0]
     print(data.shape)
     with ProcessPoolExecutor() as executor:
