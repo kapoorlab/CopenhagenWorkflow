@@ -23,28 +23,38 @@ def main(config: VollCellSegPose):
     
     nuclei_image_dir = config.experiment_data_paths.timelapse_nuclei_directory
     membrane_image_dir = config.experiment_data_paths.timelapse_membrane_directory
-    nuclei_image = os.path.join(nuclei_image_dir, os.listdir(nuclei_image_dir)[0])
-    membrane_image = os.path.join(membrane_image_dir, os.listdir(membrane_image_dir)[0])
+    Path(nuclei_image_dir).mkdir(exist_ok=True)
+    Path(membrane_image_dir).mkdir(exist_ok=True)
+    channel_nuclei = config.parameters.channel_nuclei
+    channel_membrane = config.parameters.channel_membrane
+    
+    merged_path = os.path.join(parent_directory, 'Merged.tif')
+    merged_data = imread(merged_path)
+    membrane_data = merged_data[:, :, channel_membrane, :, :]
+    nuclei_data = merged_data[:, :, channel_nuclei, :, :]
+    data_name =  os.path.splitext(os.path.basename(merged_path))[0]
+    voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
+    
+    imwrite(os.path.join(nuclei_image_dir, 'timelapse_sixth_dataset'), nuclei_data, imagej=True,
+            photometric='minisblack',
+            resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
+            metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
+                        'axes': 'TZCYX'})
+    
+    imwrite(os.path.join(membrane_image_dir, 'timelapse_sixth_dataset'), nuclei_data, imagej=True,
+            photometric='minisblack',
+            resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
+            metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
+                        'axes': 'TZCYX'})
+
     save_dir = config.experiment_data_paths.dual_channel_split_directory
     Path(save_dir).mkdir(exist_ok=True)
     parent_directory = Path(nuclei_image_dir).parent
     merged_path = os.path.join(parent_directory, 'Merged.tif')
-    nuclei_data = imread(nuclei_image)
-    membrane_data = imread(membrane_image)
-    voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
     data = np.asarray([membrane_data, nuclei_data])
     data = np.transpose(data, (1, 2, 0, 3, 4))
-    data_name =  os.path.splitext(os.path.basename(merged_path))[0]
-   
-    imwrite(merged_path, data, imagej=True,
-                photometric='minisblack',
-                resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
-                metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
-                            'axes': 'TZCYX'})
-
-    
     time_points = data.shape[0]
-    
+    print(data.shape)
     with ProcessPoolExecutor() as executor:
         futures = []
 
