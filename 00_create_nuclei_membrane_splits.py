@@ -53,6 +53,14 @@ def main(config: VollCellSegPose):
     merged_path = os.path.join(parent_directory, 'Merged.tif')
     data = np.asarray([membrane_data, nuclei_data])
     data = np.transpose(data, (1, 2, 0, 3, 4))
+
+    imwrite(merged_path, data, imagej=True,
+            photometric='minisblack',
+            resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
+            metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
+                      'axes': 'TZCYX'})
+    
+    
     time_points = data.shape[0]
     print(data.shape)
     with ProcessPoolExecutor() as executor:
