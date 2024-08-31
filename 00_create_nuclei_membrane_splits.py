@@ -39,13 +39,13 @@ def main(config: VollCellSegPose):
             photometric='minisblack',
             resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
             metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
-                        'axes': 'TZCYX'})
+                        'axes': 'TZYX'})
     
     imwrite(os.path.join(membrane_image_dir, 'timelapse_sixth_dataset'), nuclei_data, imagej=True,
             photometric='minisblack',
             resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
             metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
-                        'axes': 'TZCYX'})
+                        'axes': 'TZYX'})
 
     save_dir = config.experiment_data_paths.dual_channel_split_directory
     Path(save_dir).mkdir(exist_ok=True)
