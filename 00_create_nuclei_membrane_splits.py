@@ -25,16 +25,16 @@ def main(config: VollCellSegPose):
     membrane_image_dir = config.experiment_data_paths.timelapse_membrane_directory
     Path(nuclei_image_dir).mkdir(exist_ok=True)
     Path(membrane_image_dir).mkdir(exist_ok=True)
+    parent_directory = Path(nuclei_image_dir).parent
     channel_nuclei = config.parameters.channel_nuclei
     channel_membrane = config.parameters.channel_membrane
-    
     merged_path = os.path.join(parent_directory, 'Merged.tif')
     merged_data = imread(merged_path)
     membrane_data = merged_data[:, :, channel_membrane, :, :]
     nuclei_data = merged_data[:, :, channel_nuclei, :, :]
     data_name =  os.path.splitext(os.path.basename(merged_path))[0]
     voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
-    
+
     imwrite(os.path.join(nuclei_image_dir, 'timelapse_sixth_dataset'), nuclei_data, imagej=True,
             photometric='minisblack',
             resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
@@ -49,7 +49,7 @@ def main(config: VollCellSegPose):
 
     save_dir = config.experiment_data_paths.dual_channel_split_directory
     Path(save_dir).mkdir(exist_ok=True)
-    parent_directory = Path(nuclei_image_dir).parent
+    
     merged_path = os.path.join(parent_directory, 'Merged.tif')
     data = np.asarray([membrane_data, nuclei_data])
     data = np.transpose(data, (1, 2, 0, 3, 4))
