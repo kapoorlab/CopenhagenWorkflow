@@ -25,7 +25,7 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
-
+ 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
