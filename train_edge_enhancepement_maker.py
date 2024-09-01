@@ -1,0 +1,71 @@
+from tifffile import imread, imwrite
+import os 
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from tqdm import tqdm
+import numpy as np
+from scipy.ndimage import gaussian_filter, distance_transform_edt, binary_dilation
+from skimage.segmentation import find_boundaries
+from skimage.measure import regionprops
+
+def main():
+  source_dir = '/lustre/fsstor/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPose/'
+  destination_dir = '/lustre/fsstor/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPoseEdges/'
+  Path(destination_dir).mkdir(exist_ok=True)
+  acceptable_formats = [".tif"] 
+  nthreads = os.cpu_count()
+  def denoisemaker(path, save_path, dtype):
+              
+              files = os.listdir(path)
+              for fname in tqdm(files):
+                if any(fname.endswith(f) for f in acceptable_formats):
+                    image = imread(os.path.join(path,fname))
+                    image = simple_dist(image.astype('uint16'))
+                    if np.max(image) > 0:    
+                       imwrite(save_path + '/' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
+                    else:
+                       print('image is empty: ' + fname)   
+  futures = []                   
+  with ThreadPoolExecutor(max_workers = nthreads) as executor:
+                    futures.append(executor.submit(denoisemaker, source_dir, destination_dir, 'float32')) 
+
+  [r.result() for r in futures]  
+
+def simple_dist(label_image):
+    binary_image = find_boundaries(label_image, mode="outer") * 255
+
+    # Create an empty output image
+    output_image = np.zeros_like(label_image, dtype=np.float32)
+    for i in range(output_image.shape[0]):
+       output_image[i] = gaussian_filter(binary_image[i], sigma = 1)
+    output_image = output_image / np.max(output_image)
+    return output_image    
+
+
+def integer_to_border(label_image):
+    
+    unique_labels = np.unique(label_image)
+    # Calculate distance transform for each label
+    distance_transforms = {}
+    for label in unique_labels:
+        binary_image = label_image == label
+        distance_transform = distance_transform_edt(binary_image)
+        distance_transforms[label] = distance_transform
+
+    # Combine distance transforms into a single image
+    output_image = np.zeros_like(label_image, dtype=np.float32)
+    for label, distance_transform in distance_transforms.items():
+        output_image += distance_transform * (label_image == label)
+
+    # Normalize the output image
+    output_image /= np.max(output_image)
+
+    # Invert the output image
+    output_image = 1 - output_image
+    
+
+    return output_image 
+
+if __name__=='__main__':
+
+  main()  
