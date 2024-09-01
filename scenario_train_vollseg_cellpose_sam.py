@@ -106,17 +106,12 @@ class Model_Paths:
 class Train_Data_Paths:
 
           base_membrane_dir: str 
-
+          edge_enhancement_low_dir: str 
+          edge_enhancement_gt_dir: str
           raw_membrane_dir: str
           real_mask_membrane_dir: str
           raw_membrane_patch_dir: str
           real_mask_membrane_patch_dir: str
-          raw_membrane_patch_h5_dir: str
-          real_mask_membrane_patch_h5_dir: str
-          binary_mask_membrane_patch_dir: str
-          binary_erode_mask_membrane_patch_dir: str
-          test_raw_membrane_patch_dir: str
-          test_real_mask_membrane_patch_dir: str
 
           base_nuclei_dir: str 
 
@@ -124,12 +119,6 @@ class Train_Data_Paths:
           real_mask_nuclei_dir: str
           raw_nuclei_patch_dir: str
           real_mask_nuclei_patch_dir: str
-          raw_nuclei_patch_h5_dir: str
-          real_mask_nuclei_patch_h5_dir: str
-          binary_mask_nuclei_patch_dir: str
-          binary_erode_mask_nuclei_patch_dir: str
-          test_raw_nuclei_patch_dir: str
-          test_real_mask_nuclei_patch_dir: str
 
           base_roi_dir: str
           raw_roi_dir : str
@@ -139,6 +128,7 @@ class Train_Data_Paths:
           save_train: str
           save_test: str 
           save_val: str 
+          membrane_enhancement_npzfile : str
 
 @dataclass
 class  TrainCellPose:

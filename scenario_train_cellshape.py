@@ -48,31 +48,17 @@ class Train_Data_Paths:
     real_mask_membrane_dir: str
     raw_membrane_patch_dir: str
     real_mask_membrane_patch_dir: str
-    raw_membrane_patch_h5_dir: str
-    real_mask_membrane_patch_h5_dir: str
-    binary_mask_membrane_patch_dir: str 
-    binary_erode_mask_membrane_patch_dir: str
-    test_raw_membrane_patch_dir: str
-    test_real_mask_membrane_patch_dir: str
 
     base_nuclei_dir: str 
     raw_nuclei_dir: str
     real_mask_nuclei_dir: str
-    raw_nuclei_patch_dir: str
     real_mask_nuclei_patch_dir: str
-    raw_nuclei_patch_h5_dir: str
-    real_mask_nuclei_patch_h5_dir: str
-    binary_mask_nuclei_patch_dir: str
-    binary_erode_mask_nuclei_patch_dir: str
-    test_raw_nuclei_patch_dir: str
-    test_real_mask_nuclei_patch_dir: str
     oneat_nuclei_train_data: str
+
+    
     cloud_mask_membrane_dir: str 
-
     cloud_mask_nuclei_dir: str
-
     point_cloud_filename: str
-
     identifier: str
      
 
