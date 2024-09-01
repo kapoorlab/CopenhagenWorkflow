@@ -19,7 +19,7 @@ def main():
     """Filter out small labels based on their size."""
     membrane_prop = regionprops(image.astype(np.uint16))
     filtered_image = np.zeros_like(image, dtype=np.uint16)
-    for region in tqdm(membrane_prop):
+    for region in tqdm(membrane_prop, desc='Taking only Clean Labels'):
          if region.area >= min_label_size:
               filtered_image[image == region.label] = region.label
 
