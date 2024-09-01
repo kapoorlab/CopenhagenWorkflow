@@ -15,7 +15,7 @@ imagez: 8
 depth: {'depth_0': 12, 'depth_1': 24, 'depth_2': 16}
 reduction: 0.5
 n_tiles: [1,4,4]
-event_threshold: [1,0.99]
+event_threshold: [1,0.9999]
 event_confidence: [1,0.9]
 file_type: '*.tif'
 nms_space: 10
