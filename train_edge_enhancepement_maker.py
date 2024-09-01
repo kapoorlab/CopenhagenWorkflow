@@ -9,8 +9,8 @@ from skimage.segmentation import find_boundaries
 from skimage.measure import regionprops
 
 def main():
-  source_dir = '/lustre/fsstor/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPose/'
-  destination_dir = '/lustre/fsstor/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPoseEdges/'
+  source_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPose/'
+  destination_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPoseEdges/'
   Path(destination_dir).mkdir(exist_ok=True)
   acceptable_formats = [".tif"] 
   nthreads = os.cpu_count()
