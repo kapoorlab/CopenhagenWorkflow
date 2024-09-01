@@ -100,6 +100,8 @@ class Model_Paths:
      membrane_npz_filename: str
      roi_npz_filename: str
      ckpt_path: str
+
+     edge_enhancement_model_name: str
      
 
 @dataclass 

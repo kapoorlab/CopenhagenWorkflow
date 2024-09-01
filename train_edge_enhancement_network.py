@@ -18,19 +18,19 @@ def main( config : TrainCellPose):
         low = config.train_data_paths.edge_enhancement_low_dir 
         GT = config.train_data_paths.edge_enhancement_gt_dir
 
-        raw_data = RawData.from_folder (
-            basepath    = basepath,
-            source_dirs = [low],
-            target_dir  = GT,
-            axes        = 'ZYX',
-        )
+        #raw_data = RawData.from_folder (
+        #    basepath    = basepath,
+        #    source_dirs = [low],
+        #    target_dir  = GT,
+        #    axes        = 'ZYX',
+        #)
 
-        X, Y, XY_axes = create_patches (
-            raw_data            = raw_data,
-            patch_size          = tuple(config.parameters.patch_size),
-            n_patches_per_image = 20,
-            save_file           = npz_file,
-        )
+        #X, Y, XY_axes = create_patches (
+        #    raw_data            = raw_data,
+        #    patch_size          = tuple(config.parameters.patch_size),
+        #    n_patches_per_image = 20,
+        #    save_file           = npz_file,
+        #)
 
         (X,Y), (X_val,Y_val), axes = load_training_data(npz_file, validation_split=0.01, verbose=True)
 
@@ -39,7 +39,7 @@ def main( config : TrainCellPose):
         configtrain = Config('ZYX', 1, 1,train_batch_size = config.parameters.batch_size, unet_n_depth=config.parameters.depth, unet_kern_size=config.parameters.kern_size, unet_n_first=config.parameters.startfilter,  train_loss='mae', train_epochs=config.parameters.epochs)
         print(configtrain)
         vars(configtrain)
-        den_membrane_model_name = config.model_paths.den_membrane_model_name
+        den_membrane_model_name = config.model_paths.edge_enhancement_model_name
         # the base directory in which our model will live
         den_model_dir = config.model_paths.den_model_dir
         model = CARE(configtrain, den_membrane_model_name, basedir=den_model_dir)

@@ -35,6 +35,7 @@ track_dynamic_model_no_latent_name: 'xenopus_dynamic_non_latent_track'
 track_shape_dynamic_model_no_latent_name: 'xenopus_shape_dynamic_non_latent_track'
 
 
+edge_enhancement_model_name: 'membrane_edge_enhancement'
 
 
 nuclei_npz_filename: 'xenopus_nuclei'
