@@ -14,17 +14,21 @@ def main():
   Path(destination_dir).mkdir(exist_ok=True)
   acceptable_formats = [".tif"] 
   nthreads = os.cpu_count()
-
-  def filter_labels_by_size(image, min_label_size):
-    """Filter out small labels based on their size."""
-    membrane_prop = regionprops(image.astype(np.uint16))
-    filtered_image = np.zeros_like(image, dtype=np.uint16)
-    for region in tqdm(membrane_prop, desc='Taking only Clean Labels'):
-         if region.area >= min_label_size:
-              filtered_image[image == region.label] = region.label
-
-    return filtered_image
   
+  def filter_labels_by_size(image, min_label_size):
+        """Filter out small labels based on their size."""
+        membrane_prop = regionprops(image.astype(np.uint16))
+        filtered_image = np.zeros_like(image, dtype=np.uint16)
+
+        def process_region(region):
+            if region.area >= min_label_size:
+                filtered_image[image == region.label] = region.label
+
+        with ThreadPoolExecutor(max_workers=nthreads) as executor:
+            list(tqdm(executor.map(process_region, membrane_prop), total=len(membrane_prop), desc='Taking only Clean Labels'))
+
+        return filtered_image
+
 
   def denoisemaker(path, save_path, dtype, min_label_size = 100):
               
