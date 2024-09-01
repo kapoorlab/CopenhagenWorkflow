@@ -15,8 +15,8 @@ configstore.store(name = 'TrainCellPose', node = TrainCellPose)
 def main( config : TrainCellPose):
         basepath = config.train_data_paths.base_membrane_dir
         npz_file = os.path.join(basepath, config.train_data_paths.membrane_enhancement_npzfile)
-        low = config.train_data_paths.edge_enhancement_low_dir 
-        GT = config.train_data_paths.edge_enhancement_gt_dir
+        low = os.path.join(basepath,config.train_data_paths.edge_enhancement_low_dir)
+        GT = os.path.join(basepath,config.train_data_paths.edge_enhancement_gt_dir)
 
         raw_data = RawData.from_folder (
             basepath    = basepath,
