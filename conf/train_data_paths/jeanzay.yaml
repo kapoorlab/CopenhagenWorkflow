@@ -1,20 +1,20 @@
 base_membrane_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/' 
 
-raw_membrane_dir: '/segmentation_training/Membrane/raw_membrane/'
-real_mask_membrane_dir: '/segmentation_training/Membrane/real_mask_membrane/'
-cloud_mask_membrane_dir: '/cloud_mask_training/cloud_mask_membrane/'
-raw_membrane_patch_dir: '/segmentation_training/Membrane/raw_membrane_patches/'
-real_mask_membrane_patch_dir: '/cloud_mask_training/cloud_mask_membrane/label_images/selected_images/'
-edge_enhancement_gt_dir: '/edge_enhancement_training/gt_raw_membrane/'
-edge_enhancement_low_dir: '/edge_enhancement_training/low_raw_membrane/'
+raw_membrane_dir: 'segmentation_training/Membrane/raw_membrane/'
+real_mask_membrane_dir: 'segmentation_training/Membrane/real_mask_membrane/'
+cloud_mask_membrane_dir: 'cloud_mask_training/cloud_mask_membrane/'
+raw_membrane_patch_dir: 'segmentation_training/Membrane/raw_membrane_patches/'
+real_mask_membrane_patch_dir: 'cloud_mask_training/cloud_mask_membrane/label_images/selected_images/'
+edge_enhancement_gt_dir: 'edge_enhancement_training/gt_raw_membrane/'
+edge_enhancement_low_dir: 'edge_enhancement_training/low_raw_membrane/'
 
 base_nuclei_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/' 
 
-raw_nuclei_dir: '/segmentation_training/Nuclei/raw_nuclei/'
-real_mask_nuclei_dir: '/segmentation_training/Nuclei/real_mask_nuclei/'
-cloud_mask_nuclei_dir: '/cloud_mask_training/cloud_mask_nuclei/'
+raw_nuclei_dir: 'segmentation_training/Nuclei/raw_nuclei/'
+real_mask_nuclei_dir: 'segmentation_training/Nuclei/real_mask_nuclei/'
+cloud_mask_nuclei_dir: 'cloud_mask_training/cloud_mask_nuclei/'
 raw_nuclei_patch_dir: 'raw_nuclei_patches/'
-real_mask_nuclei_patch_dir: '/cloud_mask_training/cloud_mask_nuclei/label_images/selected_images/'
+real_mask_nuclei_patch_dir: 'cloud_mask_training/cloud_mask_nuclei/label_images/selected_images/'
 
 
 oneat_timelapse_nuclei_raw : 'oneat_timelapse_nuclei_raw/'
