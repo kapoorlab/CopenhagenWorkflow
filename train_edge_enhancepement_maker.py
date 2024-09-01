@@ -53,9 +53,15 @@ def main():
 def simple_dist(label_image):
 
 
-    binary_image = find_boundaries(label_image, mode="outer") * 255
+    
 
-    return binary_image    
+    # Create an empty output image
+    binary_image = np.zeros_like(label_image, dtype=np.float32)
+    for i in range(output_image.shape[0]):
+       binary_image[i] = find_boundaries(label_image[i], mode="outer") * 255
+       output_image[i] = gaussian_filter(binary_image[i], sigma = 1)
+    output_image = output_image / np.max(output_image)
+    return output_image    
 
 
 
