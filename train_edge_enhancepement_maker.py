@@ -17,17 +17,11 @@ def main():
 
   def filter_labels_by_size(image, min_label_size):
     """Filter out small labels based on their size."""
-    labels = image.astype(int)
-    unique_labels = np.unique(labels)
-    
-    # Compute label sizes
-    label_sizes = {label: np.sum(labels == label) for label in unique_labels if label > 0}
-
-    # Create a filtered image
-    filtered_image = np.zeros_like(labels)
-    for label, size in label_sizes.items():
-        if size >= min_label_size:
-            filtered_image[labels == label] = label
+    membrane_prop = regionprops(image.astype(np.uint16))
+    filtered_image = np.zeros_like(image, dtype=np.uint16)
+    for region in membrane_prop:
+         if region.area >= min_label_size:
+              filtered_image[image == region.label] = region.label
 
     return filtered_image
   
