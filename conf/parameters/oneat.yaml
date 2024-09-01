@@ -21,7 +21,7 @@ file_type: '*.tif'
 nms_space: 10
 nms_time: 2
 normalizeimage: True
-event_name: ['Normal', 'Division']
+event_name: ['normal', 'mitosis']
 event_label: [0, 1]
 csv_name_diff: 'ONEAT'
 npz_name: 'oneat_xenopus_volumetric'
