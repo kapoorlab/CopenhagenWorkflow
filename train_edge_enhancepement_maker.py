@@ -30,7 +30,7 @@ def main():
         return filtered_image
 
 
-  def denoisemaker(path, save_path, dtype, min_label_size = 500):
+  def denoisemaker(path, save_path, dtype, min_label_size = 100):
               
               files = os.listdir(path)
               for fname in tqdm(files):
