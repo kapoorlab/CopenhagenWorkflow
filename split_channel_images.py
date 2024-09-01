@@ -15,11 +15,6 @@ def split_channels(source_dir, membrane_dir, nuclei_dir):
         # Read the image
         image = imread(os.path.join(source_dir, fname))
 
-        if image.shape[0] != 2:
-            print(f"Skipping {fname}: does not have 2 channels")
-            continue
-
-        # Split the channels
         membrane_image = image[:,0,:,:]  # Channel 0
         nuclei_image = image[:,1,:,:]    # Channel 1
 
