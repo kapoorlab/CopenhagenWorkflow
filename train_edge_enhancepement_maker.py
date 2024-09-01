@@ -30,7 +30,7 @@ def main():
         return filtered_image
 
 
-  def denoisemaker(path, save_path, dtype, min_label_size = 100):
+  def denoisemaker(path, save_path, dtype, min_label_size = 500):
               
               files = os.listdir(path)
               for fname in tqdm(files):
@@ -57,35 +57,13 @@ def simple_dist(label_image):
 
     # Create an empty output image
     output_image = np.zeros_like(label_image, dtype=np.float32)
-    for i in range(output_image.shape[0]):
-       output_image[i] = gaussian_filter(binary_image[i], sigma = 1)
+    #for i in range(output_image.shape[0]):
+    #   output_image[i] = gaussian_filter(binary_image[i], sigma = 1)
     output_image = output_image / np.max(output_image)
     return output_image    
 
 
-def integer_to_border(label_image):
-    
-    unique_labels = np.unique(label_image)
-    # Calculate distance transform for each label
-    distance_transforms = {}
-    for label in unique_labels:
-        binary_image = label_image == label
-        distance_transform = distance_transform_edt(binary_image)
-        distance_transforms[label] = distance_transform
 
-    # Combine distance transforms into a single image
-    output_image = np.zeros_like(label_image, dtype=np.float32)
-    for label, distance_transform in distance_transforms.items():
-        output_image += distance_transform * (label_image == label)
-
-    # Normalize the output image
-    output_image /= np.max(output_image)
-
-    # Invert the output image
-    output_image = 1 - output_image
-    
-
-    return output_image 
 
 if __name__=='__main__':
 
