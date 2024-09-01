@@ -14,15 +14,36 @@ def main():
   Path(destination_dir).mkdir(exist_ok=True)
   acceptable_formats = [".tif"] 
   nthreads = os.cpu_count()
-  def denoisemaker(path, save_path, dtype):
+
+  def filter_labels_by_size(image, min_label_size):
+    """Filter out small labels based on their size."""
+    labels = image.astype(int)
+    unique_labels = np.unique(labels)
+    
+    # Compute label sizes
+    label_sizes = {label: np.sum(labels == label) for label in unique_labels if label > 0}
+
+    # Create a filtered image
+    filtered_image = np.zeros_like(labels)
+    for label, size in label_sizes.items():
+        if size >= min_label_size:
+            filtered_image[labels == label] = label
+
+    return filtered_image
+  
+
+  def denoisemaker(path, save_path, dtype, min_label_size = 100):
               
               files = os.listdir(path)
               for fname in tqdm(files):
                 if any(fname.endswith(f) for f in acceptable_formats):
                     image = imread(os.path.join(path,fname))
-                    image = simple_dist(image.astype('uint16'))
-                    if np.max(image) > 0:    
-                       imwrite(save_path + '/' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
+                    filtered_image = filter_labels_by_size(image, min_label_size)
+            
+                    # Apply simple_dist only to the filtered image
+                    if np.max(filtered_image) > 0:
+                            image = simple_dist(image.astype('uint16'))
+                            imwrite(save_path + '/' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
                     else:
                        print('image is empty: ' + fname)   
   futures = []                   
@@ -32,6 +53,8 @@ def main():
   [r.result() for r in futures]  
 
 def simple_dist(label_image):
+
+
     binary_image = find_boundaries(label_image, mode="outer") * 255
 
     # Create an empty output image
