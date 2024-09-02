@@ -34,10 +34,9 @@ print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 
-t_initials = [0,50,100,160, 100]
+t_initials = [0,50,100,160, 200]
 t_finals = [100,150,200,260, 260]
 tracklet_length = 25
-num_samples = 50
 gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/shape_densenet.json'
 gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/dynamic_densenet.json'
 
@@ -80,7 +79,7 @@ for index, t_initial in enumerate(t_initials):
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for track_id in tqdm(tracks_dataframe_short['Track ID'].unique()):
-            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_gbr, dynamic_model= gbr_dynamic_torch_model, shape_model=gbr_shape_torch_model, num_samples=num_samples,device=device )
+            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_gbr, dynamic_model= gbr_dynamic_torch_model, shape_model=gbr_shape_torch_model,device=device )
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel)
