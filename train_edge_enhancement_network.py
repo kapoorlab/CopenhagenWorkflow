@@ -36,7 +36,12 @@ def main( config : TrainCellPose):
 
 
 
-        configtrain = Config('ZYX', 1, 1,train_batch_size = config.parameters.batch_size, unet_n_depth=config.parameters.depth, unet_kern_size=config.parameters.kern_size, unet_n_first=config.parameters.startfilter,  train_loss='mae', train_epochs=config.parameters.epochs)
+        configtrain = Config('ZYX', 1, 1,train_batch_size = config.parameters.batch_size, 
+                             unet_n_depth=config.parameters.depth, 
+                             unet_kern_size=config.parameters.kern_size, 
+                             unet_n_first=config.parameters.startfilter,  
+                             train_loss='mae', train_epochs=config.parameters.epochs
+                             )
         print(configtrain)
         vars(configtrain)
         den_membrane_model_name = config.model_paths.edge_enhancement_model_name
