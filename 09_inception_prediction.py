@@ -34,8 +34,8 @@ print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 
-t_initials = [0,50,100,160, 200]
-t_finals = [100,150,200,260, 260]
+t_initials = [200]
+t_finals = [260]
 tracklet_length = 25
 gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/shape_densenet.json'
 gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/dynamic_densenet.json'
