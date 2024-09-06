@@ -52,6 +52,7 @@ def main(config: VollCellSegPose):
                     extension = os.path.splitext(fname)[1]
                     inner_folder_path = os.path.join(save_dir, 'CellPose')  
                     edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
+                    Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
                     if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                             
 

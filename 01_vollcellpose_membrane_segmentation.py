@@ -90,6 +90,7 @@ def main(config: VollCellSegPose):
         inner_folder_path = os.path.join(save_dir, 'CellPose')  
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
+        Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
         if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                 
                 nuclei_seg_image = None
