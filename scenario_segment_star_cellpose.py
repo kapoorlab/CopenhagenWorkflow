@@ -88,6 +88,7 @@ class Model_Paths:
     cellpose2D_model_name: str
     cellpose2D_nuclei_model_name: str
     cellpose_model_type: str
+    edge_enhancement_model_name: str
 
 
 @dataclass
