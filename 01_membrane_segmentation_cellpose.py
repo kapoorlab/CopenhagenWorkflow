@@ -56,7 +56,7 @@ def main(config: VollCellSegPose):
                             
 
                             denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
-                            imwrite(edge_enhanced_folder_path + '/' + os.path.splitext(fname)[0] + '.tif', denoised_image_membrane)  
+                            imwrite(edge_enhanced_folder_path + '/' + Name + '.tif', denoised_image_membrane)  
                             CellPoseSeg( denoised_image_membrane, 
                             diameter_cellpose= diameter_cellpose,
                             stitch_threshold = stitch_threshold,
