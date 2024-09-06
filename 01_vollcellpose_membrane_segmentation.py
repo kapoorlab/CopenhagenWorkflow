@@ -4,6 +4,8 @@ from tifffile import imread
 from vollseg import StarDist3D, UNET, MASKUNET
 from vollseg.utils import VollCellSeg
 import hydra
+from vollseg import VollSeg3D, CARE
+from tifffile import imread, imwrite
 from scenario_segment_star_cellpose import VollCellSegPose
 from hydra.core.config_store import ConfigStore
 from pathlib import Path 
@@ -60,7 +62,8 @@ def main(config: VollCellSegPose):
     star_model_nuclei = StarDist3D(config=None, name=star_model_nuclei_name, basedir=star_model_dir)
     roi_model_nuclei = MASKUNET(config=None, name=roi_model_nuclei_name, basedir=roi_model_dir)
 
-
+    den_model_dir = config.model_paths.den_model_dir
+    edge_enhancement_model_name = config.model_paths.edge_enhancement_model_name
 
     Raw_path = os.path.join(dual_channel_image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
@@ -78,18 +81,28 @@ def main(config: VollCellSegPose):
     axes = config.parameters.axes
     ExpandLabels = config.parameters.ExpandLabels
     z_thresh = config.parameters.z_thresh
+    edge_enhancement_model = CARE(config = None, name = edge_enhancement_model_name, basedir = den_model_dir)
+
     for fname in filesRaw:
         image = imread(fname)
         Name = os.path.basename(os.path.splitext(fname)[0])
         extension = os.path.splitext(fname)[1]
         inner_folder_path = os.path.join(save_dir, 'CellPose')  
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
+        edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
         if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                 
                 nuclei_seg_image = None
                 if os.path.exists(os.path.join(nuclei_segmentation_folder, Name + extension)):
                      nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
-                                                     
+                
+                image_membrane = image[:, :, channel_membrane, :, :]
+
+                denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
+                imwrite(edge_enhanced_folder_path + '/' + os.path.splitext(fname)[0] + '.tif', denoised_image_membrane)                                        
+                
+                image[:, :, channel_membrane, :, :] = denoised_image_membrane
+                
                 VollCellSeg(
                             image,
                             nuclei_seg_image = nuclei_seg_image,
