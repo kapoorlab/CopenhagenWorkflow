@@ -96,12 +96,12 @@ def main(config: VollCellSegPose):
                 if os.path.exists(os.path.join(nuclei_segmentation_folder, Name + extension)):
                      nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 
-                image_membrane = image[:, :, channel_membrane, :, :]
-
+                image_membrane = image[ :, channel_membrane, :, :]
+                print(image.shape)
                 denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
                 imwrite(edge_enhanced_folder_path + '/' + os.path.splitext(fname)[0] + '.tif', denoised_image_membrane)                                        
                 
-                image[:, :, channel_membrane, :, :] = denoised_image_membrane
+                image[ :, channel_membrane, :, :] = denoised_image_membrane
                 
                 VollCellSeg(
                             image,
