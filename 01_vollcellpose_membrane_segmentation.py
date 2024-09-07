@@ -1,18 +1,14 @@
 import os
 import glob
 from tifffile import imread
-from vollseg import StarDist3D, UNET, MASKUNET
 from vollseg.utils import VollCellSeg
 import hydra
-from vollseg import VollSeg3D, CARE
-from tifffile import imread, imwrite
+from tifffile import imread
 from scenario_segment_star_cellpose import VollCellSegPose
 from hydra.core.config_store import ConfigStore
 from pathlib import Path 
 configstore = ConfigStore.instance()
 configstore.store(name='VollCellSegPose', node=VollCellSegPose)
-from pynvml.smi import nvidia_smi
-import tensorflow as tf
 from natsort import natsorted
 
 
@@ -38,10 +34,6 @@ def main(config: VollCellSegPose):
     cellprob_threshold = config.parameters.cellprob_threshold
     gpu = config.parameters.gpu
 
-   
-
-    den_model_dir = config.model_paths.den_model_dir
-    edge_enhancement_model_name = config.model_paths.edge_enhancement_model_name
 
     Raw_path = os.path.join(dual_channel_image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
@@ -59,7 +51,6 @@ def main(config: VollCellSegPose):
     axes = config.parameters.axes
     ExpandLabels = config.parameters.ExpandLabels
     z_thresh = config.parameters.z_thresh
-    edge_enhancement_model = CARE(config = None, name = edge_enhancement_model_name, basedir = den_model_dir)
 
     for fname in filesRaw:
         image = imread(fname)
@@ -74,13 +65,7 @@ def main(config: VollCellSegPose):
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 
                 denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
- 
-
-                image_membrane = image[ :, channel_membrane, :, :]
-                
-                denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
-                imwrite(edge_enhanced_folder_path + '/' + Name + '.tif', denoised_image_membrane)                                        
-                
+               
                 image[ :, channel_membrane, :, :] = denoised_image_membrane
                 
                 VollCellSeg(
