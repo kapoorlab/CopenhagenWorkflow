@@ -33,7 +33,7 @@ def main(config: VollCellSegPose):
     flow_threshold = config.parameters.flow_threshold
     cellprob_threshold = config.parameters.cellprob_threshold
     gpu = config.parameters.gpu
-
+    max_size = config.parameters.max_size
 
     Raw_path = os.path.join(dual_channel_image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
@@ -80,7 +80,7 @@ def main(config: VollCellSegPose):
                             
                             save_dir=save_dir,
                             Name = Name,
-                           
+                            max_size = max_size,
                             do_3D=do_3D,
                             
                         )
