@@ -43,7 +43,7 @@ def main( config : VollOneat):
                                    dtype = np.float32,
                                    event_threshold = event_threshold, 
                                    event_confidence = event_confidence,
-                                   
+                                   normalize_in_chunks=True,
                                    marker_tree = marker_tree)
           
                
