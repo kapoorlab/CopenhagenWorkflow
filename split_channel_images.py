@@ -27,8 +27,8 @@ def split_channels(source_dir, membrane_dir, nuclei_dir):
         print(f"Saved membrane to {membrane_save_path} and nuclei to {nuclei_save_path}")
 
 if __name__ == "__main__":
-    source_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/"
-    membrane_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/membrane_split/"  
-    nuclei_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/nuclei_split/"  
+    source_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/split_nuclei_membrane_raw/"
+    membrane_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/split_nuclei_membrane_raw/membrane_split/"  
+    nuclei_dir = "/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/split_nuclei_membrane_raw/nuclei_split/"  
 
     split_channels(source_dir, membrane_dir, nuclei_dir)
