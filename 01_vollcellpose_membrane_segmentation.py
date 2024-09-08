@@ -58,12 +58,13 @@ def main(config: VollCellSegPose):
         extension = os.path.splitext(fname)[1]
         inner_folder_path = os.path.join(save_dir, 'CellPose')  
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
+        roi_segmentation_folder = os.path.join(nuclei_save_dir, 'Roi')
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
         if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                 
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
-                
+                roi_image = imread(os.path.join(roi_segmentation_folder, Name + extension))
                 denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
                
                 image[ :, channel_membrane, :, :] = denoised_image_membrane
@@ -71,6 +72,7 @@ def main(config: VollCellSegPose):
                 VollCellSeg(
                             image,
                             nuclei_seg_image = nuclei_seg_image,
+                            roi_image = roi_image, 
                             diameter_cellpose = diameter_cellpose,
                             stitch_threshold = stitch_threshold,
                             channel_membrane = channel_membrane,
@@ -78,7 +80,7 @@ def main(config: VollCellSegPose):
                             flow_threshold = flow_threshold,
                             cellprob_threshold = cellprob_threshold,
                             
-                            cellpose_model_path= os.path.join(cellpose_model_dir, cellpose_model_name),
+                            cellpose_model_path= None, #os.path.join(cellpose_model_dir, cellpose_model_name),
                             gpu = gpu,
                             axes = axes,
                             min_size_mask = min_size_mask,
