@@ -33,7 +33,7 @@ def main(config: VollCellSegPose):
     flow_threshold = config.parameters.flow_threshold
     cellprob_threshold = config.parameters.cellprob_threshold
     gpu = config.parameters.gpu
-    max_size = config.parameters.max_size
+   
 
     Raw_path = os.path.join(dual_channel_image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
@@ -47,7 +47,6 @@ def main(config: VollCellSegPose):
         Name = os.path.basename(os.path.splitext(fname)[0])
         extension = os.path.splitext(fname)[1]
         cellpose_folder_path = os.path.join(save_dir, 'CellPose')  
-        stitch_threshold = config.parameters.stitch_threshold
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
         roi_segmentation_folder = os.path.join(nuclei_save_dir, 'Roi')
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
@@ -57,7 +56,7 @@ def main(config: VollCellSegPose):
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 roi_image = imread(os.path.join(roi_segmentation_folder, Name + extension))
                 denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
-                cellpose_labels = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
+                cellpose_labels = imread(os.path.join(cellpose_folder_path, Name + extension))
                 image[ :, channel_membrane, :, :] = denoised_image_membrane
                 
                 VollCellSeg(
@@ -81,7 +80,7 @@ def main(config: VollCellSegPose):
                             
                             save_dir=save_dir,
                             Name = Name,
-                            max_size = max_size,
+                           
                             do_3D=do_3D,
                             
                         )
