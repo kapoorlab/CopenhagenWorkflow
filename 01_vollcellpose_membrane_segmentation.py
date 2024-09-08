@@ -10,7 +10,7 @@ from pathlib import Path
 configstore = ConfigStore.instance()
 configstore.store(name='VollCellSegPose', node=VollCellSegPose)
 from natsort import natsorted
-
+from tqdm import tqdm 
 
 
 @hydra.main(version_base="1.3", config_path='conf', config_name='scenario_segment_star_cellpose')
@@ -38,25 +38,16 @@ def main(config: VollCellSegPose):
     Raw_path = os.path.join(dual_channel_image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
     filesRaw =natsorted(filesRaw)
-    min_size = config.parameters.min_size
-    min_size_mask = config.parameters.min_size_mask
-    max_size = config.parameters.max_size
     do_3D = config.parameters.do_3D
     n_tiles = tuple(config.parameters.n_tiles)
-    dounet = config.parameters.dounet
-    seedpool = config.parameters.seedpool
-    slice_merge = config.parameters.slice_merge
-    UseProbability = config.parameters.UseProbability
-    donormalize = config.parameters.donormalize
     axes = config.parameters.axes
-    ExpandLabels = config.parameters.ExpandLabels
-    z_thresh = config.parameters.z_thresh
 
-    for fname in filesRaw:
+    for fname in tqdm(filesRaw):
         image = imread(fname)
         Name = os.path.basename(os.path.splitext(fname)[0])
         extension = os.path.splitext(fname)[1]
-        inner_folder_path = os.path.join(save_dir, 'CellPose')  
+        inner_folder_path = os.path.join(save_dir, 'ollCellPose')  
+        stitch_threshold = config.parameters.stitch_threshold
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
         roi_segmentation_folder = os.path.join(nuclei_save_dir, 'Roi')
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
