@@ -61,7 +61,7 @@ def main(config: VollCellSegPose):
         roi_segmentation_folder = os.path.join(nuclei_save_dir, 'Roi')
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
-        if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
+        if True: #not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                 
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 roi_image = imread(os.path.join(roi_segmentation_folder, Name + extension))
@@ -83,20 +83,15 @@ def main(config: VollCellSegPose):
                             cellpose_model_path= None, #os.path.join(cellpose_model_dir, cellpose_model_name),
                             gpu = gpu,
                             axes = axes,
-                            min_size_mask = min_size_mask,
-                            min_size = min_size,
-                            max_size = max_size,
+                            
                             n_tiles = n_tiles,
-                            UseProbability= UseProbability,
-                            ExpandLabels = ExpandLabels,
-                            donormalize = donormalize,
-                            dounet = dounet,
-                            seedpool=seedpool,
+                            
+                            
                             save_dir=save_dir,
                             Name = Name,
-                            slice_merge=slice_merge,
+                           
                             do_3D=do_3D,
-                            z_thresh = z_thresh
+                            
                         )
 
 
