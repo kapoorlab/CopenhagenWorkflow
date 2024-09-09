@@ -14,8 +14,8 @@ configstore.store(name = 'NapaTrackMater' , node = NapaTrackMater )
 def main(config:NapaTrackMater):
     
     do_nuclei = True 
-    do_nuclei_vollseg = True
-    do_membrane = True
+    do_nuclei_vollseg = False
+    do_membrane = False
     compute_with_autoencoder = config.parameters.compute_with_autoencoder
     variable_t_calibration = config.experiment_data_paths.variable_t_calibration
     oneat_nuclei_csv_file = config.experiment_data_paths.oneat_nuclei_csv_file
