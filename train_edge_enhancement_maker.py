@@ -52,9 +52,6 @@ def main():
 
 def simple_dist(label_image):
 
-
-    
-
     # Create an empty output image
     binary_image = np.zeros_like(label_image, dtype=np.float32)
     for i in range(binary_image.shape[0]):

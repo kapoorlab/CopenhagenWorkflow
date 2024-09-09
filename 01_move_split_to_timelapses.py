@@ -27,8 +27,8 @@ def main(config: VollCellSegPose):
         os.path.join(input_parent_folder, 'VollSeg/Roi'),
         os.path.join(input_parent_folder, 'VollSeg/StarDist'),
         os.path.join(input_parent_folder, 'VollSeg/VollSeg'),
-        os.path.join(input_parent_folder, 'VollCellPoseSeg/VollCellPose'),
-        os.path.join(input_parent_folder, 'VollCellPoseSeg/CellPose')
+        os.path.join(input_parent_folder, 'VollCellPoseSeg/CellPose'),
+        os.path.join(input_parent_folder, 'VollCellPoseSeg/VollCellPose')
 
     ]
 
@@ -37,7 +37,7 @@ def main(config: VollCellSegPose):
         os.path.join(parent_directory, 'seg_nuclei_timelapses'),
         os.path.join(parent_directory, 'seg_nuclei_vollseg_timelapses'),
         os.path.join(parent_directory, 'seg_membrane_timelapses'),
-        os.path.join(parent_directory, 'cellpose_seg_membrane_timelapses'),
+        os.path.join(parent_directory, 'watershed_seg_membrane_timelapses'),
     ]
     for input_folder, output_folder in zip(input_folders, output_folders):
         input_files = [os.path.join(input_folder, filename) for filename in natsorted(os.listdir(input_folder))]
