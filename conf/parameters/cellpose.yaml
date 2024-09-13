@@ -28,8 +28,8 @@ grid_y: 1
 grid_z: 1 
 diameter_cellpose: 34.6
 stitch_threshold: 0.25
-flow_threshold: 0.7
-cellprob_threshold: 0.0
+flow_threshold: 1.0
+cellprob_threshold: -1.0
 anisotropy: null  
 cellpose_model_path: null 
 gpu: True

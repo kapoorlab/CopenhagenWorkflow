@@ -24,7 +24,7 @@ cloud_membrane_model_name: 'xenopus_membrane_autoencoder_filled.ckpt'
 cloud_membrane_model_json: 'xenopus_membrane_autoencoder_filled.json'
 
 cellpose3D_model_name: 'xenopus_membrane_cellpose_3D_litest'
-cellpose2D_model_name: 'xenopus_membrane_cellpose_2D'
+cellpose2D_model_name: 'mem_mneongreen'
 cellpose2D_nuclei_model_name: 'nucleitorch_3'
 cellpose_model_type: 'cyto3'
 track_shape_model_name: 'xenopus_shape_track'
