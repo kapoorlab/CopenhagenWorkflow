@@ -12,8 +12,7 @@ timelapse_region_of_interest_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/
 tracking_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/nuclei_membrane_tracking/'
 tracking_vollseg_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/nuclei_vollseg_membrane_tracking/'
 ground_truth_csv: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/nuclei_membrane_tracking/ground_truth.csv'
-variable_t_calibration: {119: 149, 219: 200, 359: 259}
-{119: 149, 219: 200, 359: 299}
+variable_t_calibration: {119: 149, 219: 200, 359: 299}
 voxel_size_xyz: [0.6918, 0.6918, 2]
 oneat_nuclei_csv_file: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_nuclei_timelapse_sixth_dataset.csv'
 oneat_membrane_csv_file: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_membrane_timelapse_sixth_dataset.csv'
