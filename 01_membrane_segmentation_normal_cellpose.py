@@ -27,7 +27,7 @@ def main(config: VollCellSegPose):
     flow_threshold = config.parameters.flow_threshold
     cellprob_threshold = config.parameters.cellprob_threshold
     gpu = config.parameters.gpu
-
+    channel_membrane = config.parameters.channel_membrane
     Raw_path = os.path.join(image_dir, config.parameters.file_type)
     filesRaw = glob.glob(Raw_path)
     filesRaw =natsorted(filesRaw)
@@ -43,14 +43,12 @@ def main(config: VollCellSegPose):
                     Name = os.path.basename(os.path.splitext(fname)[0])
                     extension = os.path.splitext(fname)[1]
                     inner_folder_path = os.path.join(save_dir, 'CellPose')  
-                    edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
-                    Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
                     if not os.path.exists(os.path.join(inner_folder_path, Name + extension)):
                             
 
-                            denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
-
-                            CellPoseSeg( denoised_image_membrane, 
+                            image = imread(fname)
+                            image_membrane = image[ :, channel_membrane, :, :]
+                            CellPoseSeg(image_membrane, 
                             diameter_cellpose= diameter_cellpose,
                             stitch_threshold = stitch_threshold,
                             flow_threshold = flow_threshold,

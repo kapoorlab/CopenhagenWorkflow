@@ -19,19 +19,9 @@ def main(config: VollCellSegPose):
     save_dir = os.path.join(dual_channel_image_dir, 'VollCellPoseSeg')
     Path(save_dir).mkdir(exist_ok=True)
     nuclei_save_dir = os.path.join(dual_channel_image_dir, 'VollSeg')
-    
 
-    cellpose_model_name = config.model_paths.cellpose2D_model_name
-
-    
-    cellpose_model_dir = config.model_paths.cellpose2D_model_dir
-
-    diameter_cellpose = config.parameters.diameter_cellpose
-    stitch_threshold = config.parameters.stitch_threshold
     channel_membrane = config.parameters.channel_membrane
     channel_nuclei = config.parameters.channel_nuclei
-    flow_threshold = config.parameters.flow_threshold
-    cellprob_threshold = config.parameters.cellprob_threshold
     gpu = config.parameters.gpu
    
 
@@ -50,7 +40,8 @@ def main(config: VollCellSegPose):
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
         edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
-        if True: #not os.path.exists(os.path.join(cellpose_folder_path, Name + extension)):
+
+        if not os.path.exists(os.path.join(cellpose_folder_path, Name + extension)):
                 
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
@@ -61,23 +52,13 @@ def main(config: VollCellSegPose):
                             image,
                             nuclei_seg_image = nuclei_seg_image,
                             cellpose_labels = cellpose_labels,
-                            diameter_cellpose = diameter_cellpose,
-                            stitch_threshold = stitch_threshold,
                             channel_membrane = channel_membrane,
                             channel_nuclei = channel_nuclei,
-                            flow_threshold = flow_threshold,
-                            cellprob_threshold = cellprob_threshold,
-                            
-                            cellpose_model_path= None, #os.path.join(cellpose_model_dir, cellpose_model_name),
                             gpu = gpu,
                             axes = axes,
-                            
                             n_tiles = n_tiles,
-                            
-                            
                             save_dir=save_dir,
                             Name = Name,
-                           
                             do_3D=do_3D,
                             
                         )
