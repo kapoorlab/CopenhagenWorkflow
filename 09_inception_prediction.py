@@ -16,7 +16,8 @@ from napatrackmater.Trackvector import (
 )
 
 dataset_name = 'Sixth'
-home_folder = '/home/debian/jz/'
+home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
+#'/home/debian/jz/'
 #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
