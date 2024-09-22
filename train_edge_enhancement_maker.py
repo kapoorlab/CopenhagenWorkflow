@@ -41,7 +41,7 @@ def main():
                     # Apply simple_dist only to the filtered image
                     if np.max(filtered_image) > 0:
                             image = simple_dist(image.astype('uint16'))
-                            imwrite(save_path + '/' + 'Sixth_' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
+                            imwrite(save_path + '/' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
                     else:
                        print('image is empty: ' + fname)   
   futures = []                   
