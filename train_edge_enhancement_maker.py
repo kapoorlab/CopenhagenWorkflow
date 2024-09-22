@@ -9,8 +9,8 @@ from skimage.segmentation import find_boundaries
 from skimage.measure import regionprops
 
 def main():
-  source_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPose/'
-  destination_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/MembraneSeg/CellPoseEdges/'
+  source_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg//CellPose/'
+  destination_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg/CellPoseEdges/'
   Path(destination_dir).mkdir(exist_ok=True)
   acceptable_formats = [".tif"] 
   nthreads = os.cpu_count()
@@ -41,7 +41,7 @@ def main():
                     # Apply simple_dist only to the filtered image
                     if np.max(filtered_image) > 0:
                             image = simple_dist(image.astype('uint16'))
-                            imwrite(save_path + '/' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
+                            imwrite(save_path + '/' + 'Sixth_' + os.path.splitext(fname)[0]  + '.tif' , image.astype(dtype))
                     else:
                        print('image is empty: ' + fname)   
   futures = []                   

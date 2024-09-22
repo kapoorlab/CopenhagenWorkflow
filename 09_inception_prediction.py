@@ -15,16 +15,15 @@ from napatrackmater.Trackvector import (
     DYNAMIC_FEATURES
 )
 
-dataset_name = 'Sixth'
-home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
+dataset_name = 'Second'
+home_folder = '/home/debian/jz/' #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 #'/home/debian/jz/'
 #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
 channel = 'nuclei_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
-master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
-xml_path = Path(os.path.join(tracking_directory, master_xml_name))
+
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
  
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -35,8 +34,8 @@ print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
 
 
-t_initials = [150]
-t_finals = [350]
+t_initials = [100]
+t_finals = [260]
 tracklet_length = 25
 gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/shape_densenet.json'
 gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}_full_depth/dynamic_densenet.json'
