@@ -15,15 +15,25 @@ def main( config : VollOneat):
     timelapse_nuclei_to_track = config.experiment_data_paths.timelapse_nuclei_to_track
     timelapse_seg_membrane_directory = config.experiment_data_paths.timelapse_seg_membrane_directory
     membranesegimage = os.path.join(timelapse_seg_membrane_directory, timelapse_nuclei_to_track + '.tif')
-    csv_files = [
-                    f"oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv"
-                    for label in ["mitosis"]
-                ]
-    save_files = [
-                    f"oneat_{label}_locations_membrane_{timelapse_nuclei_to_track}.csv"
-                    for label in ["mitosis"]
-                ]
 
+    csv_files = [
+    file_name
+    for label in ["mitosis"]
+    for file_name in [
+        f"oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv",
+        f"non_maximal_oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv"
+    ]
+    ]
+
+    
+    save_files = [
+    file_name
+    for label in ["mitosis"]
+    for file_name in [
+        f"oneat_{label}_locations_membrane_{timelapse_nuclei_to_track}.csv",
+        f"non_maximal_oneat_{label}_locations_membrane_{timelapse_nuclei_to_track}.csv"
+    ]
+    ]
     for index, csv_file in enumerate(csv_files):
                     csvfile = os.path.join(timelapse_oneat_directory, csv_file)
                     savefile = os.path.join(timelapse_oneat_directory, save_files[index] )
