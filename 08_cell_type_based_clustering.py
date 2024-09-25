@@ -29,9 +29,9 @@ master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
      
-goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_200/goblet_cells_{channel}annotations_inception.csv'
-basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_200/basal_cells_{channel}annotations_inception.csv'
-radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_200/radially_intercalating_cells_{channel}annotations_inception.csv'
+goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_190/goblet_cells_{channel}annotations_inception.csv'
+basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_190/basal_cells_{channel}annotations_inception.csv'
+radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_190/radially_intercalating_cells_{channel}annotations_inception.csv'
 
 
 goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
