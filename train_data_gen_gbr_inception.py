@@ -137,9 +137,9 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 
 
 home_folder = '/lustre/fsstor/projects/rech/jsy/uzj81mi/'
-dataset_name = ['Second', 'Fifth']
-tracklet_lengths = [10,25,50,75,100]
-strides = [10,5,4,4,4]
+dataset_name = ['Second', 'Fifth', 'Fifth_Extra_Goblet', 'Fifth_Extra_Radial']
+tracklet_lengths = [25]
+strides = [4]
 for index, tracklet_length in enumerate(tracklet_lengths):
   stride = strides[index]
   process_datasets(home_folder, dataset_name, tracklet_length=tracklet_length, stride=stride)
