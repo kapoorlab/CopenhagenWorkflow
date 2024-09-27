@@ -13,9 +13,9 @@ configstore.store(name = 'NapaTrackMater' , node = NapaTrackMater )
 @hydra.main(version_base ="1.3", config_path = 'conf', config_name = 'scenario_track')
 def main(config:NapaTrackMater):
     
-    do_nuclei = False 
+    do_nuclei = True 
     do_nuclei_vollseg = False
-    do_membrane = True
+    do_membrane = False
     compute_with_autoencoder = config.parameters.compute_with_autoencoder
     variable_t_calibration = config.experiment_data_paths.variable_t_calibration
     oneat_nuclei_csv_file = config.experiment_data_paths.oneat_nuclei_csv_file
