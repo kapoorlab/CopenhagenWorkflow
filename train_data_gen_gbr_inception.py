@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 import h5py
 
 
-def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=50, stride=4):
+def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=25, stride=4):
     shape_training_arrays_basal = []
     dynamic_training_arrays_basal = []
     shape_training_arrays_goblet = []
@@ -38,7 +38,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         return np.asarray(processed_arrays)
 
     for dataset_name in dataset_names:
-        tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/{tracking_directory_name}'
+        tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{tracking_directory_name}'
         data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
         normalized_dataframe_file = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}.csv')
         dataset_dataframe = pd.read_csv(normalized_dataframe_file)
@@ -137,7 +137,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_name = ['Second', 'Fifth', 'Fifth_Extra_Goblet', 'Fifth_Extra_Radial','Third_Extra_Goblet', 'Third_Extra_Radial' ]
+dataset_name = ['Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Fifth_Extra_Goblet', 'Fifth_Extra_Radial','Third_Extra_Goblet', 'Third_Extra_Radial' ]
 tracklet_lengths = [25]
 strides = [4]
 for index, tracklet_length in enumerate(tracklet_lengths):
