@@ -16,13 +16,13 @@ home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 
 base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
-shape_model_dir = os.path.join(model_dir, 'shape_feature_lightning_densenet_gbr_25_full_depth/')
+shape_model_dir = os.path.join(model_dir, 'shape_feature_lightning_densenet_gbr_25/')
 os.makedirs(shape_model_dir, exist_ok = True)
 shape_gbr_h5_file = 'shape_training_data_gbr_25.h5'
 num_classes = 3
 batch_size = 10240
 epochs = 100
-block_config = (6,12,24,16)
+block_config = (6,12)
 growth_rate = 32
 train_gbr_neural_net(
     save_path = shape_model_dir,
