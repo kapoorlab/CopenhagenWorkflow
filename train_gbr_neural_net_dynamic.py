@@ -13,12 +13,12 @@ from napatrackmater.Trackvector import (
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 #/home/debian/jz/
 #/gpfsstore/rech/jsy/uzj81mi/
-
+channel = 'nuclei_'
 base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
-dynamic_model_dir = os.path.join(model_dir, 'dynamic_feature_lightning_densenet_gbr_25/')
+dynamic_model_dir = os.path.join(model_dir, f'dynamic_feature_lightning_densenet_gbr_25_{channel}/')
 os.makedirs(dynamic_model_dir, exist_ok = True)
-dynamic_gbr_h5_file = 'dynamic_training_data_gbr_25.h5'
+dynamic_gbr_h5_file = f'dynamic_training_data_gbr_25_{channel}.h5'
 num_classes = 3
 batch_size = 9800
 epochs = 100
