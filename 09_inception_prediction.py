@@ -37,8 +37,8 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 t_initials = [50]
 t_finals = [400]
 tracklet_length = 25
-gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}/shape_densenet.json'
-gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}/dynamic_densenet.json'
+gbr_shape_model_json = f'{model_dir}shape_feature_lightning_densenet_gbr_{tracklet_length}_{channel}/shape_densenet.json'
+gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_densenet_gbr_{tracklet_length}_{channel}/dynamic_densenet.json'
 
 class_map_gbr = {
     0: "Basal",
@@ -54,7 +54,7 @@ gbr_shape_lightning_model, gbr_shape_torch_model = LightningModel.extract_mitosi
     loss_func,
     Adam,
     map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/shape_feature_lightning_densenet_gbr_{tracklet_length}/')
+    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/shape_feature_lightning_densenet_gbr_{tracklet_length}_{channel}/')
     
 )
 gbr_dynamic_lightning_model, gbr_dynamic_torch_model = LightningModel.extract_mitosis_model(
@@ -63,7 +63,7 @@ gbr_dynamic_lightning_model, gbr_dynamic_torch_model = LightningModel.extract_mi
     loss_func,
     Adam,
     map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/dynamic_feature_lightning_densenet_gbr_{tracklet_length}/')
+    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/dynamic_feature_lightning_densenet_gbr_{tracklet_length}_{channel}/')
 )
 
 
