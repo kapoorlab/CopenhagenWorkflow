@@ -71,6 +71,6 @@ for cell_type in cell_types:
     plt.xlabel('Time')
     plt.ylabel('Mean Square Displacement (MSD)')
     plt.legend(title='Cell Type')
-    plt.savefig(os.path.join(save_dir, 'MSD_Cell_Type'))
+    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}'))
     plt.tight_layout()
 
