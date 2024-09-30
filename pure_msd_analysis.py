@@ -62,14 +62,34 @@ tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 
 cell_types = tracks_goblet_basal_radial_dataframe['Cell_Type'].unique()
 
+
+
 for cell_type in cell_types:
+    # Filter DataFrame by Cell Type
     filtered_tracks = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
+    
+    # Get unique Track IDs for this cell type
+    track_ids = filtered_tracks['Track ID'].unique()
+    
+    # Create a new figure
     plt.figure(figsize=(12, 6))
-    sns.scatterplot(data=filtered_tracks, x='t', y='MSD', hue='Cell_Type', alpha=0.7)
-    plt.title('Mean Square Displacement (MSD) over Time by Cell Type')
+    
+    # Iterate over each Track ID and plot a line for each track
+    for track_id in track_ids:
+        track_data = filtered_tracks[filtered_tracks['Track ID'] == track_id]
+        plt.plot(track_data['t'], track_data['MSD'])
+    
+    # Set plot titles and labels
+    plt.title(f'Mean Square Displacement (MSD) over Time by Track ID for Cell Type {cell_type}')
     plt.xlabel('Time')
     plt.ylabel('Mean Square Displacement (MSD)')
-    plt.legend(title='Cell Type')
-    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}'))
+    
+    # Add legend for track IDs
+    plt.legend(title='Track ID', bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    # Save the plot as an image
+    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}.png'))
+    
+    # Adjust layout and display/save
     plt.tight_layout()
-
+    plt.close()
