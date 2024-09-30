@@ -144,7 +144,7 @@ cell_type_dataframe.loc[:, 'Cell_Type_Label'] = cell_type_dataframe['Cell_Type']
 correlation_dataframe = cell_type_dataframe.copy()
 
 # %%
-correlation_dataframe.head()
+print(correlation_dataframe.head())
 
 # %%
 t_start = 0
@@ -205,7 +205,7 @@ cluster_extended_shape_dataframe = create_cluster_plot(dataframe=copy_celltype_d
 
 
 # %%
-
+print(cluster_extended_shape_dataframe.keys())
 hue_options = [ "Shape_Cluster_CellType_Distances" ]
 cluster_plots = ["MSD",SHAPE_DYNAMIC_FEATURES]
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
