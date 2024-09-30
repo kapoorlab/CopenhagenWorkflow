@@ -39,7 +39,7 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
+dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_{channel}predicted.csv')
  
 
 shape_cols = SHAPE_FEATURES

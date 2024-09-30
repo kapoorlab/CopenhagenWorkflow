@@ -210,7 +210,7 @@ print(cluster_extended_shape_dataframe.keys())
 
 
 hue_options = ["Shape_Cluster_CellType_Distances"]
-cluster_plots = ["MSD"] + SHAPE_DYNAMIC_FEATURES
+cluster_plots = SHAPE_DYNAMIC_FEATURES
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
 Path(shape_save_dir).mkdir(exist_ok=True, parents=True)
 cell_type = list(map(int, cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"].unique()))
