@@ -58,14 +58,14 @@ track_vectors.x_start = 0
 track_vectors.x_end = track_vectors.xmax
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
+cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
-
-cell_types = tracks_goblet_basal_radial_dataframe['Cell_Type'].unique()
+cell_types = cell_type_dataframe['Cell_Type'].unique()
 
 
 for cell_type in cell_types:
     # Filter DataFrame by Cell Type
-    filtered_tracks = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
+    filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == cell_type]
     
     # Get unique Track IDs for this cell type
     track_ids = filtered_tracks['Track ID'].unique()
