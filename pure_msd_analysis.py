@@ -60,7 +60,7 @@ track_vectors.x_end = track_vectors.xmax
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 
 plt.figure(figsize=(12, 6))
-cell_types = list(map(int, tracks_goblet_basal_radial_dataframe['Cell_Type'].unique()))
+cell_types = tracks_goblet_basal_radial_dataframe['Cell_Type'].unique()
 
 for cell_type in cell_types:
     filtered_tracks = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
