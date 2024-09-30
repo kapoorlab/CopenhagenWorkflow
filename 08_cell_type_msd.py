@@ -230,6 +230,7 @@ for index, cell_type_index in enumerate(cell_type):
                         plt.title(f'Cell Type based clustering')
                         fig_name = f"{channel}{cluster_plot}_{hue_option}_{cell_type_label}_all.png"
                         plt.savefig(os.path.join(shape_save_dir, fig_name))
+                        plt.close()
 
         for count, hue_option in enumerate(hue_options):    
                         unique_t_values = filtered_tracks['t'].unique()     
@@ -247,6 +248,7 @@ for index, cell_type_index in enumerate(cell_type):
                         plt.title(f'Pseudo_Shape feature {hue_option}')
                         fig_name = f"pseudo_{channel}{hue_option}_{cell_type_label}_line_plot_all.png"
                         plt.savefig(os.path.join(shape_save_dir, fig_name))
+                        plt.close()
 
 
 
