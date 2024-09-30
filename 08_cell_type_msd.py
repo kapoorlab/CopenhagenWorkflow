@@ -220,9 +220,8 @@ for index, cell_type_index in enumerate(cell_type):
         cell_type_label = key_list[index]
         for cluster_plot in cluster_plots:
                     filtered_tracks = cluster_extended_shape_dataframe[cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"] == cell_type_index]
-                    
+                    filtered_tracks = filtered_tracks[~filtered_tracks[cluster_plot].isna()]
                     for hue_option in hue_options:  
-                        filtered_tracks = filtered_tracks.dropna(subset=['t', cluster_plot, hue_option])               
                         plt.figure(figsize=(15, 6))
                         print(cluster_plot, len(filtered_tracks['t']), len(filtered_tracks[cluster_plot]), len(filtered_tracks[hue_option]))
                         scatter = plt.scatter(filtered_tracks['t'],filtered_tracks[cluster_plot],c=filtered_tracks[hue_option],cmap='viridis')
