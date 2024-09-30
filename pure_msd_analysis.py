@@ -59,14 +59,13 @@ track_vectors.x_end = track_vectors.xmax
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 
-plt.figure(figsize=(12, 6))
+
 cell_types = tracks_goblet_basal_radial_dataframe['Cell_Type'].unique()
 
 for cell_type in cell_types:
     filtered_tracks = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
+    plt.figure(figsize=(12, 6))
     sns.scatterplot(data=filtered_tracks, x='t', y='MSD', hue='Cell_Type', alpha=0.7)
-
-    # Set plot titles and labels
     plt.title('Mean Square Displacement (MSD) over Time by Cell Type')
     plt.xlabel('Time')
     plt.ylabel('Mean Square Displacement (MSD)')
