@@ -207,10 +207,9 @@ cluster_extended_shape_dataframe = create_cluster_plot(dataframe=copy_celltype_d
 
 # %%
 print(cluster_extended_shape_dataframe.keys())
-import pdb 
-pdb.set_trace()
 
-hue_options = [ "Shape_Cluster_CellType_Distances" ]
+
+hue_options = ["Shape_Cluster_CellType_Distances"]
 cluster_plots = ["MSD",SHAPE_DYNAMIC_FEATURES]
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
 Path(shape_save_dir).mkdir(exist_ok=True, parents=True)
@@ -224,6 +223,7 @@ for index, cell_type_index in enumerate(cell_type):
                 
                     for hue_option in hue_options:                 
                         plt.figure(figsize=(15, 6))
+                        print(len(filtered_tracks['t']), len(filtered_tracks[cluster_plot]), len(filtered_tracks[hue_option]))
                         scatter = plt.scatter(filtered_tracks['t'],filtered_tracks[cluster_plot],c=filtered_tracks[hue_option],cmap='viridis')
                         plt.xlabel('Time (t)')
                         plt.ylabel(f'{cluster_plot}_{cell_type_label}')
