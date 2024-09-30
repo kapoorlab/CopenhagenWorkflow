@@ -22,10 +22,10 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 # %%
-dataset_name = 'Second'
+dataset_name = 'Second
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
-tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/nuclei_membrane_tracking/'
+tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
 channel = 'nuclei_'
 
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
