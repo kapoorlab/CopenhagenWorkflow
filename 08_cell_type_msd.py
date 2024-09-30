@@ -145,6 +145,7 @@ correlation_dataframe = cell_type_dataframe.copy()
 
 # %%
 print(correlation_dataframe.head())
+print(correlation_dataframe.keys())
 
 # %%
 t_start = 0
