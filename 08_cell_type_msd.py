@@ -47,8 +47,8 @@ time_delta = 10
 block_size = 100
 overlap = 50
 verbose_generation_plots = False
-save_dir = os.path.join(tracking_directory, f'celltype_clustering_plots_predicted/')
-distribution_dir = os.path.join(tracking_directory, f'cell_type_distribution_plots_predicted/')
+save_dir = os.path.join(tracking_directory, f'cell_type_clustering_plots_predicted_{channel}/')
+distribution_dir = os.path.join(tracking_directory, f'cell_type_distribution_plots_predicted_{channel}/')
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 Path(distribution_dir).mkdir(exist_ok=True, parents=True)
 method="ward"
@@ -222,7 +222,6 @@ for index, cell_type_index in enumerate(cell_type):
                     filtered_tracks = cluster_extended_shape_dataframe[cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"] == cell_type_index]
                     for hue_option in hue_options:  
                         plt.figure(figsize=(15, 6))
-                        print(cluster_plot, len(filtered_tracks['t']), len(filtered_tracks[cluster_plot]), len(filtered_tracks[hue_option]))
                         scatter = plt.scatter(filtered_tracks['t'],filtered_tracks[cluster_plot],c=filtered_tracks[hue_option],cmap='viridis')
                         plt.xlabel('Time (t)')
                         plt.ylabel(f'{cluster_plot}_{cell_type_label}')
@@ -276,7 +275,7 @@ for start, end in time_blocks:
     track_vectors.plot_cell_type_times(sliced_df, save_path = cell_type_save_path)
     print(f'Start time {start}, End time {end}')
     name = f't_start_{start}_t_end_{end}'
-    plot_histograms_for_cell_type_groups(cell_type_save_path, distribution_dir, dataset_name, channel, label_dict = label_cell_type_mapping, name = name)
+    plot_histograms_for_cell_type_groups(cell_type_save_path, distribution_dir, dataset_name, channel, label_dict = label_cell_type_mapping, name = name, plot_show=False)
 
 
 # %% [markdown]
