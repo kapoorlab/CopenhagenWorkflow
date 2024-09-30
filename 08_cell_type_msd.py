@@ -43,7 +43,7 @@ radial_cells_dataframe = pd.read_csv(radial_cells_file)
 normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
 
-time_delta = 100
+time_delta = 10
 block_size = 100
 overlap = 50
 verbose_generation_plots = False
@@ -210,7 +210,7 @@ print(cluster_extended_shape_dataframe.keys())
 
 
 hue_options = ["Shape_Cluster_CellType_Distances"]
-cluster_plots = "MSD" + [SHAPE_DYNAMIC_FEATURES]
+cluster_plots = ["MSD"] + SHAPE_DYNAMIC_FEATURES
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
 Path(shape_save_dir).mkdir(exist_ok=True, parents=True)
 cell_type = list(map(int, cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"].unique()))
