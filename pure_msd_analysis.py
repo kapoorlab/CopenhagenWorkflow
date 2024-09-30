@@ -30,16 +30,14 @@ channel = 'nuclei_'
 
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
-oneat_detections = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
-
 
 save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}/')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
-Path(data_frames_dir).mkdir(exist_ok=True, parents=True) 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+
+dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
  
 
 shape_cols = SHAPE_FEATURES
