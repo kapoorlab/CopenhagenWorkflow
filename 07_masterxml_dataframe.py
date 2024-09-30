@@ -54,7 +54,6 @@ dynamic_cols = DYNAMIC_FEATURES
 feature_cols = SHAPE_DYNAMIC_FEATURES
 
 
-
 # %%
 track_vectors = TrackVector(master_xml_path=xml_path)
 track_vectors.oneat_csv_file = oneat_detections
