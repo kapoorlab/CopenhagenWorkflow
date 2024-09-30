@@ -89,11 +89,8 @@ for cell_type in cell_types:
     plt.xlabel('Normalized Time (t)')
     plt.ylabel('Mean Square Displacement (MSD)')
     
-    # Add legend for track IDs
-    plt.legend(title='Track ID', bbox_to_anchor=(1.05, 1), loc='upper left')
-    
     # Save the plot as an image
-    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}_normalized.png'))
+    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}.png'))
     
     # Adjust layout and display/save
     plt.tight_layout()
