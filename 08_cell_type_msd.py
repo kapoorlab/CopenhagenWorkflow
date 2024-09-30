@@ -210,7 +210,7 @@ print(cluster_extended_shape_dataframe.keys())
 
 
 hue_options = ["Shape_Cluster_CellType_Distances"]
-cluster_plots = ["MSD",SHAPE_DYNAMIC_FEATURES]
+cluster_plots = "MSD" + [SHAPE_DYNAMIC_FEATURES]
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
 Path(shape_save_dir).mkdir(exist_ok=True, parents=True)
 cell_type = list(map(int, cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"].unique()))
@@ -220,7 +220,6 @@ for index, cell_type_index in enumerate(cell_type):
         cell_type_label = key_list[index]
         for cluster_plot in cluster_plots:
                     filtered_tracks = cluster_extended_shape_dataframe[cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"] == cell_type_index]
-                    filtered_tracks = filtered_tracks[~filtered_tracks[cluster_plot].isna()]
                     for hue_option in hue_options:  
                         plt.figure(figsize=(15, 6))
                         print(cluster_plot, len(filtered_tracks['t']), len(filtered_tracks[cluster_plot]), len(filtered_tracks[hue_option]))
