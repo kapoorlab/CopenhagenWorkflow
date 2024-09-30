@@ -5,6 +5,8 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import Counter
 from napatrackmater.Trackvector import (TrackVector,
