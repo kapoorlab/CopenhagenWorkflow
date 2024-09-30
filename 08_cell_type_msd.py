@@ -268,13 +268,13 @@ while start < t_max:
     time_blocks.append((start, end))
     start += overlap
 for start, end in time_blocks:
-    cell_type_save_path = os.path.join(tracking_directory, f'cell_type_data_{start}_end_t_{end}/')
+    cell_type_save_path = os.path.join(tracking_directory, f'cell_type_data_{start}_end_t_{end}_{channel}/')
     Path(cell_type_save_path).mkdir(parents=True, exist_ok=True)
     sliced_df = correlation_dataframe[(correlation_dataframe['t'] >= start) & (correlation_dataframe['t'] < end)]
 
     track_vectors.plot_cell_type_times(sliced_df, save_path = cell_type_save_path)
     print(f'Start time {start}, End time {end}')
-    name = f't_start_{start}_t_end_{end}'
+    name = f't_start_{start}_t_end_{end}_{channel}'
     plot_histograms_for_cell_type_groups(cell_type_save_path, distribution_dir, dataset_name, channel, label_dict = label_cell_type_mapping, name = name, plot_show=False)
 
 
