@@ -45,7 +45,6 @@ Path(data_frames_dir).mkdir(exist_ok=True, parents=True)
 
 save_file_normalized = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
 save_file_unnormalized = os.path.join(data_frames_dir , f'goblet_basal_dataframe_{channel}.csv')  
-save_file = os.path.join(data_frames_dir , f'results_dataframe_{channel}.csv')   
 
 shape_cols = SHAPE_FEATURES
 dynamic_cols = DYNAMIC_FEATURES
