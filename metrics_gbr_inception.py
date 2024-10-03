@@ -83,6 +83,8 @@ class_map_gbr = {
     1: "Radial",
     2: "Goblet"
 }
+class_names = ['Goblet', 'Basal', 'Radial']
+
 def compute_counts(predicted_ids, gt_ids):
     # Calculate counts of true positives (TP) and misclassifications (FN)
     tp = len(set(predicted_ids) & set(gt_ids))  # True Positives
@@ -130,17 +132,14 @@ conf_matrix_array = np.array([
     [misclassifications_goblet_as_basal, misclassifications_goblet_as_radial, tp_goblet],  # Goblet
 ])
 
-# Print the confusion matrix
+confusion_df = pd.DataFrame(conf_matrix_array, index=class_names, columns=class_names)
+
+# Print the confusion matrix summary
 print("\nConfusion Matrix Summary:")
-print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Predicted', 'Actual', 'Basal', 'Radial', 'Goblet'))
-print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Basal', tp_basal, misclassifications_basal_as_radial, misclassifications_basal_as_goblet, 0))
-print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Radial', misclassifications_radial_as_basal, tp_radial, misclassifications_radial_as_goblet, 0))
-print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Goblet', misclassifications_goblet_as_basal, misclassifications_goblet_as_radial, tp_goblet, 0))
-
-
+print(confusion_df)
 # Plot the confusion matrix
 plt.figure(figsize=(8, 6))
-class_names = ['Goblet', 'Basal', 'Radial']
+
 sns.heatmap(conf_matrix_array, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
 
 plt.xlabel('Actual Labels')
