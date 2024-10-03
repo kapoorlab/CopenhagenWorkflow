@@ -130,44 +130,26 @@ for i in range(len(confusion_matrix_summary['Predicted'])):
         confusion_matrix_summary['Count'][i],
     ))
 
-# %%
-# Total ground truth counts for each category
-total_globlet = len(gt_globlet_track_ids)
-total_basal = len(gt_basal_track_ids)
-total_radial = len(gt_radial_track_ids)
-
-# Calculate percentages
-percent_tp_globlet = (tp_globlet / total_globlet) * 100 if total_globlet > 0 else 0
-percent_fn_globlet = (fn_globlet / total_globlet) * 100 if total_globlet > 0 else 0
-
-percent_tp_basal = (tp_basal / total_basal) * 100 if total_basal > 0 else 0
-percent_fn_basal = (fn_basal / total_basal) * 100 if total_basal > 0 else 0
-
-percent_tp_radial = (tp_radial / total_radial) * 100 if total_radial > 0 else 0
-percent_fn_radial = (fn_radial / total_radial) * 100 if total_radial > 0 else 0
-
-# Print results
-print(f'Globlet Cells - TP: {percent_tp_globlet:.2f}%, FN: {percent_fn_globlet:.2f}%')
-print(f'Basal Cells - TP: {percent_tp_basal:.2f}%, FN: {percent_fn_basal:.2f}%')
-print(f'Radial Cells - TP: {percent_tp_radial:.2f}%, FN: {percent_fn_radial:.2f}%')
-
-# Create a confusion matrix array
+# Create a confusion matrix array for plotting
 conf_matrix_array = np.array([
-    [percent_tp_basal, percent_fn_basal],
-    [percent_tp_radial, percent_fn_radial],
-    [percent_tp_globlet, percent_fn_globlet]
+    [misclassifications_goblet_as_basal, misclassifications_goblet_as_radial],
+    [misclassifications_basal_as_goblet, misclassifications_basal_as_radial],
+    [misclassifications_radial_as_goblet, misclassifications_radial_as_basal]
 ])
 
-save_path = Path(goblet_cells_file).parent.stem
 # Plot the confusion matrix
 plt.figure(figsize=(8, 6))
-class_names = list(class_map_gbr.values())
-sns.heatmap(conf_matrix_array, annot=True, fmt='.2f', cmap='Blues', xticklabels=['TP', 'FN'], yticklabels=class_names)
-plt.xlabel('Predicted Labels')
-plt.ylabel('True Labels')
-plt.title('Confusion Matrix (Percentages)')
-plt.savefig(os.path.join(save_dir,save_path + '.png'))
-plt.show()
+class_names = ['Goblet', 'Basal', 'Radial']
+sns.heatmap(conf_matrix_array, annot=True, fmt='d', cmap='Blues', xticklabels=['Basal', 'Radial'], yticklabels=class_names)
+plt.xlabel('Actual Labels')
+plt.ylabel('Predicted Labels')
+plt.title('Cell Type Misclassification Matrix')
+plt.savefig(f'{save_dir}/{channel}cell_type_misclassification_matrix.png')  
+
+
+# %%
+# Total ground truth counts for each category
+
 
 # %%
 
