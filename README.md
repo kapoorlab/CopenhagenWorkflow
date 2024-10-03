@@ -11,6 +11,7 @@ You can install the packages required to run this workflow via pip:
       
 
       conda create -n capedenv python=3.10
+      conda activate capedenv
       conda install mamba -c conda-forge
       pip install caped-ai
       mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
