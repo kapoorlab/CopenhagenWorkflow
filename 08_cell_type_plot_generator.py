@@ -75,37 +75,8 @@ track_vectors.x_end = track_vectors.xmax
 
 print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
-if os.path.exists(goblet_basal_radial_dataframe):
-    tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
-else:
-
-    track_vectors._interactive_function()
-    tracks_goblet_basal_radial_dataframe = tracks_dataframe
-    globlet_track_ids = track_vectors._get_trackmate_ids_by_location(goblet_cells_dataframe)
-    print(f'Trackmate IDs for globlet cells {globlet_track_ids}')
-    basal_track_ids = track_vectors._get_trackmate_ids_by_location(basal_cells_dataframe)
-    print(f'Trackmate IDs for basal cells {basal_track_ids}')
-    radial_track_ids = track_vectors._get_trackmate_ids_by_location(radial_cells_dataframe)
-    print(f'Trackmate IDs for radial cells {radial_track_ids}')
-
-    goblet_df = pd.DataFrame({'TrackMate Track ID': globlet_track_ids, 'Cell_Type': 'Goblet'})
-    basal_df = pd.DataFrame({'TrackMate Track ID': basal_track_ids, 'Cell_Type': 'Basal'})
-    radial_df = pd.DataFrame({'TrackMate Track ID': radial_track_ids, 'Cell_Type': 'Radial'})
-
-    basal_radial_dataframe = pd.concat([goblet_df, basal_df, radial_df], ignore_index=True)
-    basal_radial_dataframe['TrackMate Track ID'] = basal_radial_dataframe['TrackMate Track ID'].astype(str)
-    tracks_goblet_basal_radial_dataframe['TrackMate Track ID'] = tracks_goblet_basal_radial_dataframe['TrackMate Track ID'].astype(str)
-
-
-    for index, row in tracks_goblet_basal_radial_dataframe.iterrows():
-            track_id = row['TrackMate Track ID']
-            match_row = basal_radial_dataframe[basal_radial_dataframe['TrackMate Track ID'] == track_id]
-            if not match_row.empty:
-                cell_type = match_row.iloc[0]['Cell_Type']
-                tracks_goblet_basal_radial_dataframe.at[index, 'Cell_Type'] = cell_type
-
-    tracks_goblet_basal_radial_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
-        
+tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
+  
 
 
 # %%
@@ -210,7 +181,7 @@ print(cluster_extended_shape_dataframe.keys())
 
 
 hue_options = ["Shape_Cluster_CellType_Distances"]
-cluster_plots = SHAPE_DYNAMIC_FEATURES
+cluster_plots = ['MSD'] + SHAPE_DYNAMIC_FEATURES
 shape_save_dir = os.path.join(save_dir, 'CellFate_Shape_Clustering/')
 Path(shape_save_dir).mkdir(exist_ok=True, parents=True)
 cell_type = list(map(int, cluster_extended_shape_dataframe["Shape_Cluster_Label_Type"].unique()))
@@ -280,7 +251,4 @@ for start, end in time_blocks:
     plot_histograms_for_cell_type_groups(cell_type_save_path, distribution_dir, dataset_name, channel, label_dict = label_cell_type_mapping, name = name, plot_show=False)
 
 
-# %% [markdown]
-# ### Cross Correlation Features
 
-# %%
