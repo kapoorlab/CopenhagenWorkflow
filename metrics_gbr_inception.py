@@ -25,9 +25,9 @@ Path(save_dir).mkdir(exist_ok=True)
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
   
-goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400/goblet_cells_{channel}annotations_inception.csv'
-basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400/basal_cells_{channel}annotations_inception.csv'
-radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400/radially_intercalating_cells_{channel}annotations_inception.csv'
+goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400_{channel}/goblet_cells_{channel}annotations_inception.csv'
+basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400_{channel}/basal_cells_{channel}annotations_inception.csv'
+radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_tracklet_length_25_t_initial_50_t_final_400_{channel}/radially_intercalating_cells_{channel}annotations_inception.csv'
 
 goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
 basal_cells_dataframe = pd.read_csv(basal_cells_file)
