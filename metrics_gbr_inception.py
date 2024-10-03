@@ -35,9 +35,9 @@ radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
 
 
-gt_goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/goblet_cells_annotations.csv'
-gt_basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/basal_cells_annotations.csv'
-gt_radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/radially_intercalating_cells_annotations.csv'
+gt_goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/goblet_cells_nuclei_annotations.csv'
+gt_basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/basal_cells_nuclei_annotations.csv'
+gt_radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations/radially_intercalating_cells_nuclei_annotations.csv'
 
 gt_goblet_cells_dataframe = pd.read_csv(gt_goblet_cells_file)
 gt_basal_cells_dataframe = pd.read_csv(gt_basal_cells_file)
