@@ -83,6 +83,18 @@ class_map_gbr = {
     1: "Radial",
     2: "Goblet"
 }
+def compute_counts(predicted_ids, gt_ids):
+    # Calculate counts of true positives (TP) and misclassifications (FN)
+    tp = len(set(predicted_ids) & set(gt_ids))  # True Positives
+    fn = len(set(gt_ids) - set(predicted_ids))  # False Negatives
+    return tp, fn
+
+
+tp_goblet, fn_goblet = compute_counts(goblet_track_ids, gt_globlet_track_ids)
+tp_basal, fn_basal = compute_counts(basal_track_ids, gt_basal_track_ids)
+tp_radial, fn_radial = compute_counts(radial_track_ids, gt_radial_track_ids)
+
+
 
 def compute_misclassifications(predicted_ids, gt_ids, predicted_class, actual_class):
     # Calculate misclassifications of a predicted class that are actually another class
@@ -99,6 +111,12 @@ misclassifications_radial_as_goblet = compute_misclassifications(radial_track_id
 misclassifications_radial_as_basal = compute_misclassifications(radial_track_ids, gt_basal_track_ids, "Radial", "Basal")
 
 # Print results
+
+print(f'Predicted Goblet and actually Goblet: {tp_goblet}')
+print(f'Predicted Basal and actually Basal: {tp_basal}')
+print(f'Predicted Radial and actually Radial: {tp_radial}')
+
+
 print(f'Predicted Goblet but actually Basal: {misclassifications_goblet_as_basal}')
 print(f'Predicted Goblet but actually Radial: {misclassifications_goblet_as_radial}')
 print(f'Predicted Basal but actually Goblet: {misclassifications_basal_as_goblet}')
@@ -106,41 +124,25 @@ print(f'Predicted Basal but actually Radial: {misclassifications_basal_as_radial
 print(f'Predicted Radial but actually Goblet: {misclassifications_radial_as_goblet}')
 print(f'Predicted Radial but actually Basal: {misclassifications_radial_as_basal}')
 
-# Create a summary confusion matrix
-confusion_matrix_summary = {
-    'Predicted': ['Goblet', 'Goblet', 'Basal', 'Basal', 'Radial', 'Radial'],
-    'Actual': ['Basal', 'Radial', 'Goblet', 'Radial', 'Goblet', 'Basal'],
-    'Count': [
-        misclassifications_goblet_as_basal,
-        misclassifications_goblet_as_radial,
-        misclassifications_basal_as_goblet,
-        misclassifications_basal_as_radial,
-        misclassifications_radial_as_goblet,
-        misclassifications_radial_as_basal,
-    ]
-}
-
-# Print the confusion matrix summary
-print("\nMisclassification Summary:")
-print("{:<20} {:<15} {:<5}".format('Predicted', 'Actual', 'Count'))
-for i in range(len(confusion_matrix_summary['Predicted'])):
-    print("{:<20} {:<15} {:<5}".format(
-        confusion_matrix_summary['Predicted'][i],
-        confusion_matrix_summary['Actual'][i],
-        confusion_matrix_summary['Count'][i],
-    ))
-
-# Create a confusion matrix array for plotting
 conf_matrix_array = np.array([
-    [misclassifications_goblet_as_basal, misclassifications_goblet_as_radial],
-    [misclassifications_basal_as_goblet, misclassifications_basal_as_radial],
-    [misclassifications_radial_as_goblet, misclassifications_radial_as_basal]
+    [tp_basal, misclassifications_basal_as_radial, misclassifications_basal_as_goblet],  # Basal
+    [misclassifications_radial_as_basal, tp_radial, misclassifications_radial_as_goblet],  # Radial
+    [misclassifications_goblet_as_basal, misclassifications_goblet_as_radial, tp_goblet],  # Goblet
 ])
+
+# Print the confusion matrix
+print("\nConfusion Matrix Summary:")
+print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Predicted', 'Actual', 'Basal', 'Radial', 'Goblet'))
+print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Basal', tp_basal, misclassifications_basal_as_radial, misclassifications_basal_as_goblet, 0))
+print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Radial', misclassifications_radial_as_basal, tp_radial, misclassifications_radial_as_goblet, 0))
+print("{:<20} {:<15} {:<5} {:<5} {:<5}".format('Goblet', misclassifications_goblet_as_basal, misclassifications_goblet_as_radial, tp_goblet, 0))
+
 
 # Plot the confusion matrix
 plt.figure(figsize=(8, 6))
 class_names = ['Goblet', 'Basal', 'Radial']
-sns.heatmap(conf_matrix_array, annot=True, fmt='d', cmap='Blues', xticklabels=['Basal', 'Radial'], yticklabels=class_names)
+sns.heatmap(conf_matrix_array, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+
 plt.xlabel('Actual Labels')
 plt.ylabel('Predicted Labels')
 plt.title('Cell Type Misclassification Matrix')
