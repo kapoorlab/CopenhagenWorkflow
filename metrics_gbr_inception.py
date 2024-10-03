@@ -83,7 +83,7 @@ class_map_gbr = {
     1: "Radial",
     2: "Goblet"
 }
-class_names = ['Goblet', 'Basal', 'Radial']
+class_names = ['Basal', 'Radial','Goblet']
 
 def compute_counts(predicted_ids, gt_ids):
     # Calculate counts of true positives (TP) and misclassifications (FN)
