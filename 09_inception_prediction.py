@@ -78,8 +78,8 @@ for index, t_initial in enumerate(t_initials):
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
-        for track_id in tqdm(tracks_dataframe_short['Track ID'].unique()):
-            gbr_prediction[track_id] = inception_model_prediction(tracks_dataframe_short, track_id, tracklet_length, class_map_gbr, dynamic_model= gbr_dynamic_torch_model, shape_model=gbr_shape_torch_model,device=device )
+        for trackmate_id in tqdm(tracks_dataframe_short['TrackMate Track ID'].unique()):
+            gbr_prediction[trackmate_id] = inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, dynamic_model= gbr_dynamic_torch_model, shape_model=gbr_shape_torch_model,device=device )
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel)
