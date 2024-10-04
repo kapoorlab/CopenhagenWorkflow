@@ -38,9 +38,9 @@ gt_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analy
 
 
 gt_cells_dataframe = pd.read_csv(gt_cells_file)
-gt_goblet_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['cell_type_label'] == 'goblet'].copy()
-gt_basal_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['cell_type_label'] == 'basal'].copy()
-gt_radial_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['cell_type_label'] == 'radial'].copy()
+gt_goblet_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['celltype_label'] == 'goblet'].copy()
+gt_basal_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['celltype_label'] == 'basal'].copy()
+gt_radial_cells_dataframe = gt_cells_dataframe[gt_cells_dataframe['celltype_label'] == 'radial'].copy()
 
 
 for d in [gt_goblet_cells_dataframe, gt_basal_cells_dataframe, gt_radial_cells_dataframe]:
