@@ -103,9 +103,9 @@ print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_rad
 tracks_goblet_basal_radial_dataframe_clean = tracks_goblet_basal_radial_dataframe.dropna(subset=['Cell_Type'])
 
 # Sample 100 Goblet, 30 Radial, and 50 Basal randomly
-goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet'].sample(n=100, random_state=42)
-radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial'].sample(n=30, random_state=42)
-basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal'].sample(n=50, random_state=42)
+goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet'].sample(n=200, random_state=42)
+radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial'].sample(n=20, random_state=42)
+basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal'].sample(n=20, random_state=42)
 
 # Combine them into a validation DataFrame
 test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample])
@@ -117,5 +117,13 @@ remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean.drop(test_dataf
 test_dataframe.to_csv(val_dataframe, index=False)
 remaining_dataframe.to_csv(train_dataframe, index=False)
 
-print(f'test DataFrame shape: {test_dataframe.shape}')
-print(f'Remaining DataFrame shape: {remaining_dataframe.shape}')
+print('Going in training: ')
+print('Goblet', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()))
+print('Basal', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()))
+print('Radial', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()))
+
+
+print('Seperated for testing: ')
+print('Goblet', len(test_dataframe[test_dataframe['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()))
+print('Basal', len(test_dataframe[test_dataframe['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()))
+print('Radial', len(test_dataframe[test_dataframe['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()))
