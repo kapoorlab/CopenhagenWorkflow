@@ -102,18 +102,15 @@ print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_rad
 
 tracks_goblet_basal_radial_dataframe_clean = tracks_goblet_basal_radial_dataframe.dropna(subset=['Cell_Type'])
 
-# Sample 100 Goblet, 30 Radial, and 50 Basal randomly
 goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet'].sample(n=200, random_state=42)
 radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial'].sample(n=20, random_state=42)
 basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal'].sample(n=20, random_state=42)
 
-# Combine them into a validation DataFrame
-test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample])
+test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample], ignore_index = True)
 
-# Remove the selected rows from the original dataframe
-tracks_goblet_basal_radial_dataframe_clean.drop(test_dataframe.index, inplace = True)
-remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean
-# Save the validation and remaining dataframes to csv
+remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean[
+    ~tracks_goblet_basal_radial_dataframe_clean.index.isin(test_dataframe.index)
+]
 test_dataframe.to_csv(val_dataframe, index=False)
 remaining_dataframe.to_csv(train_dataframe, index=False)
 
