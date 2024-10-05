@@ -111,8 +111,8 @@ basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_ra
 test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample])
 
 # Remove the selected rows from the original dataframe
-remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean.drop(test_dataframe.index, inplace = True)
-
+tracks_goblet_basal_radial_dataframe_clean.drop(test_dataframe.index, inplace = True)
+remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean
 # Save the validation and remaining dataframes to csv
 test_dataframe.to_csv(val_dataframe, index=False)
 remaining_dataframe.to_csv(train_dataframe, index=False)
