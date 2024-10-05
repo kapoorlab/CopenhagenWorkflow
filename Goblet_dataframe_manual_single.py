@@ -89,7 +89,7 @@ else:
 
         tracks_goblet_basal_radial_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
 
-print('Goblet', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Goblet']))
-print('Basal', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Basal']))
-print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type']=='Radial']))
+print('Goblet', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Goblet']).unique())
+print('Basal', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Basal']).unique())
+print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type']=='Radial']).unique())
 
