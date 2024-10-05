@@ -27,7 +27,12 @@ xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
 normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+
+goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'train_test_goblet_basal_dataframe_normalized_{channel}.csv')
+
+train_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+val_dataframe = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_normalized_{channel}.csv')
+
 
 track_vectors = TrackVector(master_xml_path=xml_path)
 track_vectors.oneat_csv_file = oneat_detections
@@ -93,3 +98,24 @@ else:
 print('Goblet', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()))
 print('Basal', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()))
 print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()))
+
+
+tracks_goblet_basal_radial_dataframe_clean = tracks_goblet_basal_radial_dataframe.dropna(subset=['Cell_Type'])
+
+# Sample 100 Goblet, 30 Radial, and 50 Basal randomly
+goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet'].sample(n=100, random_state=42)
+radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial'].sample(n=30, random_state=42)
+basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal'].sample(n=50, random_state=42)
+
+# Combine them into a validation DataFrame
+test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample])
+
+# Remove the selected rows from the original dataframe
+remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean.drop(test_dataframe.index)
+
+# Save the validation and remaining dataframes to csv
+test_dataframe.to_csv(val_dataframe, index=False)
+remaining_dataframe.to_csv(train_dataframe, index=False)
+
+print(f'test DataFrame shape: {test_dataframe.shape}')
+print(f'Remaining DataFrame shape: {remaining_dataframe.shape}')
