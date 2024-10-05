@@ -66,8 +66,8 @@ else:
 
         gt_globlet_track_ids = track_vectors._get_trackmate_ids_by_location(gt_goblet_cells_dataframe)
         print(f'Total GT Trackmate IDs for globlet cells {len(gt_globlet_track_ids)}')
-        gt_basal_track_ids = track_vectors._get_trackmate_ids_by_location(len(gt_basal_cells_dataframe))
-        print(f'Total GT Trackmate IDs for basal cells {gt_basal_track_ids}')
+        gt_basal_track_ids = track_vectors._get_trackmate_ids_by_location(gt_basal_cells_dataframe)
+        print(f'Total GT Trackmate IDs for basal cells {len(gt_basal_track_ids)}')
         gt_radial_track_ids = track_vectors._get_trackmate_ids_by_location(len(gt_radial_cells_dataframe))
         print(f'Total GT Trackmate IDs for radial cells {gt_radial_track_ids}')
 
