@@ -102,25 +102,41 @@ print('Radial', len(tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_rad
 
 tracks_goblet_basal_radial_dataframe_clean = tracks_goblet_basal_radial_dataframe.dropna(subset=['Cell_Type'])
 
-goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet'].sample(n=200, random_state=42)
-radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial'].sample(n=20, random_state=42)
-basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal'].sample(n=20, random_state=42)
 
-test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample], ignore_index = True)
+goblet_ids = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()
+radial_ids = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()
+basal_ids = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()
 
-remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean[
-    ~tracks_goblet_basal_radial_dataframe_clean.index.isin(test_dataframe.index)
-]
+# Sample unique Track IDs
+goblet_sample_ids = pd.Series(goblet_ids).sample(n=200, random_state=42).values
+radial_sample_ids = pd.Series(radial_ids).sample(n=20, random_state=42).values
+basal_sample_ids = pd.Series(basal_ids).sample(n=20, random_state=42).values
+
+# Create test dataframe by selecting all rows corresponding to sampled IDs
+goblet_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['TrackMate Track ID'].isin(goblet_sample_ids)]
+radial_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['TrackMate Track ID'].isin(radial_sample_ids)]
+basal_sample = tracks_goblet_basal_radial_dataframe_clean[tracks_goblet_basal_radial_dataframe_clean['TrackMate Track ID'].isin(basal_sample_ids)]
+
+# Concatenate samples into test dataframe
+test_dataframe = pd.concat([goblet_sample, radial_sample, basal_sample], ignore_index=True)
+
+# Use the TrackMate Track IDs to create the remaining dataframe
+remaining_dataframe = tracks_goblet_basal_radial_dataframe_clean[~tracks_goblet_basal_radial_dataframe_clean['TrackMate Track ID'].isin(test_dataframe['TrackMate Track ID'])]
+
+# Save the dataframes
+val_dataframe = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_normalized_{channel}.csv')
+train_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+
 test_dataframe.to_csv(val_dataframe, index=False)
 remaining_dataframe.to_csv(train_dataframe, index=False)
 
+# Print summary of training and testing data
 print('Going in training: ')
 print('Goblet', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()))
 print('Basal', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()))
 print('Radial', len(remaining_dataframe[remaining_dataframe['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()))
 
-
-print('Seperated for testing: ')
+print('Separated for testing: ')
 print('Goblet', len(test_dataframe[test_dataframe['Cell_Type'] == 'Goblet']['TrackMate Track ID'].unique()))
 print('Basal', len(test_dataframe[test_dataframe['Cell_Type'] == 'Basal']['TrackMate Track ID'].unique()))
 print('Radial', len(test_dataframe[test_dataframe['Cell_Type'] == 'Radial']['TrackMate Track ID'].unique()))
