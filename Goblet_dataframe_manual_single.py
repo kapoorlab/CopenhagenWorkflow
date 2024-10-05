@@ -24,10 +24,14 @@ save_dir = os.path.join(tracking_directory, f'cell_fate_accuracy/')
 Path(save_dir).mkdir(exist_ok=True)
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
+oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
+
 normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
 
 track_vectors = TrackVector(master_xml_path=xml_path)
+track_vectors.oneat_csv_file = oneat_detections
+track_vectors.oneat_threshold_cutoff = 0.9999
 track_vectors.t_minus = 0
 track_vectors.t_plus = track_vectors.tend
 track_vectors.y_start = 0
