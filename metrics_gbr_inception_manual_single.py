@@ -67,21 +67,21 @@ track_vectors._interactive_function()
 
 
 goblet_track_ids = track_vectors._get_trackmate_ids_by_location(goblet_cells_dataframe)
-print(f'Trackmate IDs for globlet cells {goblet_track_ids}')
+print(f'Total Trackmate IDs for globlet cells {len(goblet_track_ids)}')
 basal_track_ids = track_vectors._get_trackmate_ids_by_location(basal_cells_dataframe)
-print(f'Trackmate IDs for basal cells {basal_track_ids}')
+print(f'Total Trackmate IDs for basal cells {len(basal_track_ids)}')
 radial_track_ids = track_vectors._get_trackmate_ids_by_location(radial_cells_dataframe)
-print(f'Trackmate IDs for radial cells {radial_track_ids}')
+print(f'Total Trackmate IDs for radial cells {len(radial_track_ids)}')
 
 
 
 # %%
 gt_globlet_track_ids = track_vectors._get_trackmate_ids_by_location(gt_goblet_cells_dataframe)
-print(f'GT Trackmate IDs for globlet cells {gt_globlet_track_ids}')
+print(f'Total GT Trackmate IDs for globlet cells {len(gt_globlet_track_ids)}')
 gt_basal_track_ids = track_vectors._get_trackmate_ids_by_location(gt_basal_cells_dataframe)
-print(f'GT Trackmate IDs for basal cells {gt_basal_track_ids}')
+print(f'Total GT Trackmate IDs for basal cells {len(gt_basal_track_ids)}')
 gt_radial_track_ids = track_vectors._get_trackmate_ids_by_location(gt_radial_cells_dataframe)
-print(f'GT Trackmate IDs for radial cells {gt_radial_track_ids}')
+print(f'Total GT Trackmate IDs for radial cells {len(gt_radial_track_ids)}')
 
 # %%
 

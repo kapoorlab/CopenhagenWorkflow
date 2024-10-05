@@ -76,11 +76,11 @@ else:
     track_vectors._interactive_function()
     tracks_goblet_basal_radial_dataframe = tracks_dataframe
     globlet_track_ids = track_vectors._get_trackmate_ids_by_location(goblet_cells_dataframe)
-    print(f'Trackmate IDs for globlet cells {globlet_track_ids}')
+    print(f'Total Trackmate IDs for globlet cells {len(globlet_track_ids)}')
     basal_track_ids = track_vectors._get_trackmate_ids_by_location(basal_cells_dataframe)
-    print(f'Trackmate IDs for basal cells {basal_track_ids}')
+    print(f'Total Trackmate IDs for basal cells {len(basal_track_ids)}')
     radial_track_ids = track_vectors._get_trackmate_ids_by_location(radial_cells_dataframe)
-    print(f'Trackmate IDs for radial cells {radial_track_ids}')
+    print(f'Total Trackmate IDs for radial cells {len(radial_track_ids)}')
 
     goblet_df = pd.DataFrame({'TrackMate Track ID': globlet_track_ids, 'Cell_Type': 'Goblet'})
     basal_df = pd.DataFrame({'TrackMate Track ID': basal_track_ids, 'Cell_Type': 'Basal'})
