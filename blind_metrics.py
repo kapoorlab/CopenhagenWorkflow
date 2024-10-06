@@ -46,7 +46,7 @@ for cell_type in cell_types:
 
     gt_filtered_tracks = gt_tracks_goblet_basal_radial_dataframe[gt_tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
     
-
+    print(f'GT tracks for {cell_type}: {len(gt_filtered_tracks)} total predicted tracks {len(filtered_tracks)}')
     if cell_type == 'Goblet':
         goblet_track_ids = filtered_tracks['Track ID'].unique()
         gt_goblet_track_ids = gt_filtered_tracks['Track ID'].unique()
