@@ -48,17 +48,17 @@ for cell_type in cell_types:
     
     
     if cell_type == 'Goblet':
-        goblet_track_ids = filtered_tracks['TrackMate ID'].unique()
-        gt_goblet_track_ids = gt_filtered_tracks['TrackMate ID'].unique()
+        goblet_track_ids = filtered_tracks['TrackMate Track ID'].unique()
+        gt_goblet_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {cell_type}: {len(gt_goblet_track_ids)} total predicted tracks {len(goblet_track_ids)}')
     elif cell_type == 'Basal':
-        basal_track_ids = filtered_tracks['TrackMate ID'].unique()
-        gt_basal_track_ids = gt_filtered_tracks['TrackMate ID'].unique()
+        basal_track_ids = filtered_tracks['TrackMate Track ID'].unique()
+        gt_basal_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {cell_type}: {len(gt_basal_track_ids)} total predicted tracks {len(basal_track_ids)}')
 
     elif cell_type == 'Radial':
-        radial_track_ids = filtered_tracks['TrackMate ID'].unique()
-        gt_radial_track_ids = gt_filtered_tracks['TrackMate ID'].unique()
+        radial_track_ids = filtered_tracks['TrackMate Track ID'].unique()
+        gt_radial_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {cell_type}: {len(gt_radial_track_ids)} total predicted tracks {len(radial_track_ids)}')
 
 
