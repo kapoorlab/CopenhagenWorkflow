@@ -29,7 +29,7 @@ Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 
 dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
-gt_dataframe_file = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_normalized_{channel}.csv') 
+gt_dataframe_file = os.path.join(data_frames_dir , f'train_test_goblet_basal_dataframe_normalized_{channel}.csv') 
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 gt_tracks_goblet_basal_radial_dataframe = pd.read_csv(gt_dataframe_file)
