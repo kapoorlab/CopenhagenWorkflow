@@ -46,16 +46,21 @@ for cell_type in cell_types:
 
     gt_filtered_tracks = gt_tracks_goblet_basal_radial_dataframe[gt_tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
     
-    print(f'GT tracks for {cell_type}: {len(gt_filtered_tracks)} total predicted tracks {len(filtered_tracks)}')
+    
     if cell_type == 'Goblet':
         goblet_track_ids = filtered_tracks['Track ID'].unique()
         gt_goblet_track_ids = gt_filtered_tracks['Track ID'].unique()
+        print(f'GT tracks for {cell_type}: {len(gt_goblet_track_ids)} total predicted tracks {len(goblet_track_ids)}')
     elif cell_type == 'Basal':
         basal_track_ids = filtered_tracks['Track ID'].unique()
         gt_basal_track_ids = gt_filtered_tracks['Track ID'].unique()
+        print(f'GT tracks for {cell_type}: {len(gt_basal_track_ids)} total predicted tracks {len(basal_track_ids)}')
+
     elif cell_type == 'Radial':
         radial_track_ids = filtered_tracks['Track ID'].unique()
         gt_radial_track_ids = gt_filtered_tracks['Track ID'].unique()
+        print(f'GT tracks for {cell_type}: {len(gt_radial_track_ids)} total predicted tracks {len(radial_track_ids)}')
+
 
 
 # Define class map and class names
