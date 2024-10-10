@@ -24,7 +24,6 @@ batch_size = 9800
 epochs = 100
 block_config = (6)
 attention_dim=64
-sequence_length=25
 n_pos=(8,)
 growth_rate = 4
 train_gbr_neural_net(
@@ -38,7 +37,6 @@ train_gbr_neural_net(
     num_workers = 10,
     block_config=block_config,
     attention_dim = attention_dim,
-    sequence_length = sequence_length,
     n_pos = n_pos,
     growth_rate = growth_rate
 )
