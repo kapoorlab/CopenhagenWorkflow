@@ -11,8 +11,7 @@ from sklearn.model_selection import train_test_split
 import h5py
 
 def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=25, stride=4):
-    shape_training_arrays = []
-    dynamic_training_arrays = []
+    training_arrays = []  # Combined morphodynamic arrays
     labels = []
 
     def create_training_arrays(array, tracklet_length, stride):
@@ -49,23 +48,24 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
                     (shape_dynamic_dataframe_list, shape_dataframe_list, dynamic_dataframe_list, full_dataframe_list) = analysis_vectors[track_id]
                     shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
                     dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
-                    shape_training_arrays.extend(create_training_arrays(shape_track_array, tracklet_length, stride))
-                    dynamic_training_arrays.extend(create_training_arrays(dynamic_track_array, tracklet_length, stride))
-                    labels.extend([cell_label] * len(create_training_arrays(shape_track_array, tracklet_length, stride)))
+                    
+                    # Combine shape and dynamic features
+                    combined_track_array = np.concatenate((shape_track_array, dynamic_track_array), axis=-1)
+
+                    # Create training arrays
+                    training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
+                    training_arrays.extend(training_subarrays)
+                    labels.extend([cell_label] * len(training_subarrays))
                 except KeyError:
                     print(f'key {track_id} not found, skipping')
 
     # Convert lists to numpy arrays
-    shape_training_arrays = np.asarray(shape_training_arrays)
-    dynamic_training_arrays = np.asarray(dynamic_training_arrays)
+    training_arrays = np.asarray(training_arrays)
     labels = np.asarray(labels)
-
-    # Combine shape and dynamic features along the last axis
-    combined_training_arrays = np.concatenate((shape_training_arrays, dynamic_training_arrays), axis=-1)
 
     # Split the combined data into training and validation sets
     train_arrays, val_arrays, train_labels, val_labels = train_test_split(
-        combined_training_arrays, labels, test_size=0.2, random_state=42
+        training_arrays, labels, test_size=0.2, random_state=42
     )
 
     train_save_dir = f'{home_folder}Mari_Data_Training/track_training_data/'
