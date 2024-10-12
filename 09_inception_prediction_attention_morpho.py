@@ -35,7 +35,7 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 t_initials = [50]
 t_finals = [400]
 tracklet_length = 25
-gbr_morpho_model_json = f'{model_dir}morpho_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/shape_attention.json'
+gbr_morpho_model_json = f'{model_dir}morpho_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/morpho_attention.json'
 
 class_map_gbr = {
     0: "Basal",
@@ -51,7 +51,7 @@ gbr_morpho_lightning_model, gbr_morpho_torch_model = LightningModel.extract_mito
     loss_func,
     Adam,
     map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/morpho_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/')
+    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/morpho_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/')
     
 )
 
@@ -63,7 +63,7 @@ for index, t_initial in enumerate(t_initials):
    
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}shallowest_litest_morpho_dynamic/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}shallower_liter_morpho_dynamic/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
