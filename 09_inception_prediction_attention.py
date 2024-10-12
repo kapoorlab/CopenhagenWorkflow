@@ -11,8 +11,6 @@ from kapoorlabs_lightning.lightning_trainer import LightningModel
 from napatrackmater.Trackvector import (
     inception_model_prediction,
     save_cell_type_predictions,
-    SHAPE_FEATURES,
-    DYNAMIC_FEATURES
 )
 
 dataset_name = 'Sixth'
@@ -37,8 +35,8 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 t_initials = [50]
 t_finals = [400]
 tracklet_length = 25
-gbr_shape_model_json = f'{model_dir}shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/shape_densenet.json'
-gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/dynamic_densenet.json'
+gbr_shape_model_json = f'{model_dir}shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/shape_attention.json'
+gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_litest/dynamic_attention.json'
 
 class_map_gbr = {
     0: "Basal",
