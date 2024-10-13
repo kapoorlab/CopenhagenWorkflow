@@ -12,7 +12,7 @@
 | Nuclei morpho_feature_shallowest_liter    | (6)           | 8           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane shape_feature_shallowest_liter   | (6)           | 8           |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane morpho_feature_shallowest_liter  | (6)           | 8           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Nuclei shape_feature_shallower_liter      | (6, 12)       | 8           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Nuclei shape_feature_shallower_liter      | (6, 12)       | 8           | 34.58%              | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Nuclei morpho_feature_shallower_liter     | (6, 12)       | 8           | 69.58%              | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane shape_feature_shallower_liter    | (6, 12)       | 8           |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane morpho_feature_shallower_liter   | (6, 12)       | 8           | 68.33%              | [metrics.npz](./metrics_gbr_inception.ipynb) |
