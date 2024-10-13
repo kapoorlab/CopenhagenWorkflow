@@ -3,7 +3,7 @@
 | Nuclei attention_shape_feature_shallowest_litest    | (6)           | 4           |               |  |
 | Nuclei attention_morpho_feature_shallowest_litest   | (6)           | 4           |               |  |
 | Membrane attention_shape_feature_shallowest_litest  | (6)           | 4           |               |  |
-| Membrane attention_morpho_feature_shallowest_litest | (6)           | 4           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Membrane attention_morpho_feature_shallowest_litest | (6)           | 4           |               |  |
 | Nuclei attention_shape_feature_shallower_litest     | (6, 12)       | 4           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Nuclei attention_morpho_feature_shallower_litest    | (6, 12)       | 4           |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_shape_feature_shallower_litest   | (6, 12)       | 4           |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
@@ -32,3 +32,7 @@
 | Nuclei attention_morpho_feature                     | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_shape_feature                    | (6, 12, 24)   | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_morpho_feature                   | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Nuclei attention_shape_feature_shallowest      | (6)           | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Nuclei attention_morpho_feature_shallowest     | (6)           | 32          |   67.08%            | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Membrane attention_shape_feature_shallowest    | (6)           | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Membrane attention_morpho_feature_shallowest   | (6)           | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
