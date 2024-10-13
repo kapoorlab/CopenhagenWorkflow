@@ -62,6 +62,9 @@ for cell_type in cell_types:
         print(f'GT tracks for {cell_type}: {len(gt_radial_track_ids)} total predicted tracks {len(radial_track_ids)}')
         print('Radial Track Ids', gt_radial_track_ids)
 
+        matching_radial_track_ids = set(radial_track_ids) & set(gt_radial_track_ids)
+        print('Matching Radial Track IDs:', matching_radial_track_ids)
+
 
 
 # Define class map and class names
