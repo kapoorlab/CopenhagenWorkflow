@@ -29,9 +29,9 @@
 | Membrane attention_shape_feature_shallowest    | (6)           | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_morpho_feature_shallowest   | (6)           | 32          |  66.67%              | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Nuclei attention_shape_feature_shallower            | (6, 12)       | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Nuclei attention_morpho_feature_shallower           | (6, 12)       | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Nuclei attention_morpho_feature_shallower           | (6, 12)       | 32          | 68.75%               | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_shape_feature_shallower          | (6, 12)       | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Membrane attention_morpho_feature_shallower         | (6, 12)       | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Membrane attention_morpho_feature_shallower         | (6, 12)       | 32          |  63.33%              | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Nuclei attention_shape_feature                      | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Nuclei attention_morpho_feature                     | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
 | Membrane attention_shape_feature                    | (6, 12, 24)   | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
