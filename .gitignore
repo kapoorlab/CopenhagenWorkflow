@@ -56,7 +56,7 @@ local_settings.py
 
 # Flask instance folder
 instance/
-
+outputs/
 # Sphinx documentation
 docs/_build/
 
