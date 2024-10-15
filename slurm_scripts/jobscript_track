@@ -14,9 +14,9 @@ module purge # purging modules inherited by default
 module load anaconda-py3/2020.11
 #conda init bash # deactivating environments inherited by default
 conda deactivate
-conda activate kapoorlabsenv
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/kapoorlabsenv/lib/
-export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/kapoorlabsenv/
+conda activate capedenv
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/
 module load cuda/11.8.0
 
-python  /gpfswork/rech/jsy/uzj81mi/MTVKW/05_master_tracking.py
+python  /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/07_masterxml_dataframe.py
