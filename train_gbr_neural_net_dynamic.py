@@ -13,10 +13,10 @@ from napatrackmater.Trackvector import (
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 #/home/debian/jz/
 #/gpfsstore/rech/jsy/uzj81mi/
-channel = 'nuclei_'
+channel = 'membrane_'
 base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
-dynamic_model_dir = os.path.join(model_dir, f'dynamic_feature_lightning_attention_gbr_25_{channel}shallower_lite/')
+dynamic_model_dir = os.path.join(model_dir, f'dynamic_feature_lightning_attention_gbr_25_{channel}shallower_liter/')
 os.makedirs(dynamic_model_dir, exist_ok = True)
 dynamic_gbr_h5_file = f'dynamic_training_data_gbr_25_{channel}.h5'
 num_classes = 3
@@ -25,7 +25,7 @@ epochs = 100
 block_config = (6,12)
 attention_dim=64
 n_pos=(8,)
-growth_rate = 16
+growth_rate = 8
 train_gbr_neural_net(
     save_path = dynamic_model_dir,
     h5_file = os.path.join(base_dir, dynamic_gbr_h5_file),

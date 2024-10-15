@@ -19,7 +19,7 @@ home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/' #'/lustre/fsstor/project
 #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
-channel = 'nuclei_'
+channel = 'membrane_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
@@ -35,8 +35,8 @@ tracks_dataframe = pd.read_csv(normalized_dataframe)
 t_initials = [50]
 t_finals = [400]
 tracklet_length = 25
-gbr_shape_model_json = f'{model_dir}shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_lite/shape_attention.json'
-gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_lite/dynamic_attention.json'
+gbr_shape_model_json = f'{model_dir}shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/shape_attention.json'
+gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/dynamic_attention.json'
 
 class_map_gbr = {
     0: "Basal",
@@ -52,32 +52,32 @@ gbr_shape_lightning_model, gbr_shape_torch_model = LightningModel.extract_mitosi
     loss_func,
     Adam,
     map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_lite/')
+    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/')
     
 )
-gbr_dynamic_lightning_model, gbr_dynamic_torch_model = LightningModel.extract_mitosis_model(
-    HybridAttentionDenseNet,
-    gbr_dynamic_model_json,
-    loss_func,
-    Adam,
-    map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallowest_lite/')
-)
+#gbr_dynamic_lightning_model, gbr_dynamic_torch_model = LightningModel.extract_mitosis_model(
+#    HybridAttentionDenseNet,
+#    gbr_dynamic_model_json,
+#    loss_func,
+#    Adam,
+#    map_location=torch.device(device),
+#    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_lite/')
+#)
 
 
 
 gbr_shape_torch_model.eval()
-gbr_dynamic_torch_model.eval()
+#gbr_dynamic_torch_model.eval()
 for index, t_initial in enumerate(t_initials):
    
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}shallowest_lite_dynamic_only/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}shallower_liter_shape_only/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for trackmate_id in tqdm(tracks_dataframe_short['TrackMate Track ID'].unique()):
-            gbr_prediction[trackmate_id] = inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, dynamic_model= gbr_dynamic_torch_model, shape_model=None,device=device )
+            gbr_prediction[trackmate_id] = inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, dynamic_model= None, shape_model=gbr_shape_torch_model,device=device )
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel)

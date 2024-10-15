@@ -64,27 +64,16 @@ track_vectors.y_start = 0
 track_vectors.y_end = track_vectors.ymax
 track_vectors.x_start = 0
 track_vectors.x_end = track_vectors.xmax
-if plot_at_mitosis_time_distribution:
-  track_vectors._interactive_function()
 
-if os.path.exists(save_file_unnormalized):
-    print(f'reading data from {save_file_unnormalized}')
-    global_shape_dynamic_dataframe = pd.read_csv(save_file_unnormalized)
-    
-else:    
-    print('no saved un-normalized dataframe found, computing ...')
-    track_vectors._interactive_function()
-    global_shape_dynamic_dataframe = track_vectors.get_shape_dynamic_feature_dataframe()
-    copy_dataframe = global_shape_dynamic_dataframe.copy(deep = True)
-    global_shape_dynamic_dataframe.to_csv(save_file_unnormalized)
-if os.path.exists(save_file_normalized):
-    print(f'reading data from {save_file_normalized}')      
-    normalized_global_shape_dynamic_dataframe = pd.read_csv(save_file_normalized)
-else:
-    normalized_global_shape_dynamic_dataframe = copy_dataframe    
-    for col in feature_cols:
+
+track_vectors._interactive_function()
+global_shape_dynamic_dataframe = track_vectors.get_shape_dynamic_feature_dataframe()
+copy_dataframe = global_shape_dynamic_dataframe.copy(deep = True)
+global_shape_dynamic_dataframe.to_csv(save_file_unnormalized)
+normalized_global_shape_dynamic_dataframe = copy_dataframe    
+for col in feature_cols:
                  normalized_global_shape_dynamic_dataframe[col] = normalize_list(copy_dataframe[col])
-    normalized_global_shape_dynamic_dataframe.to_csv(save_file_normalized)
+normalized_global_shape_dynamic_dataframe.to_csv(save_file_normalized)
 
 # %%
 
