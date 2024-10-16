@@ -4,20 +4,19 @@
 #SBATCH -A jsy@v100
 #SBATCH --gres=gpu:1          # Allocate 1 GPU per node
 #SBATCH --partition=gpu_p2
-#SBATCH --job-name=Morpho_jobs  # Jobname for all tasks
 #SBATCH --cpus-per-task=40
-#SBATCH --output=morpho_jobs.o%j    # Output file with unique id
-#SBATCH --error=morpho_jobs.e%j     # Error file with unique id
 #SBATCH --time=20:00:00        # Expected runtime HH:MM:SS (max 100h)
 
 module purge
 module load anaconda-py3
-#conda init bash # deactivating environments inherited by default
+
+# Deactivating environments inherited by default
 conda deactivate
 conda activate capedenv
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/
 export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/
 module load cuda/11.8.0
+
 # Define arrays for the different parameter values for morpho models
 morpho_model_dirs_base=(
     "morpho_feature_attention_shallowest_litest"
@@ -58,9 +57,13 @@ for i in "${!morpho_model_dirs_base[@]}"; do
         # Include the channel name in the model directory
         morpho_model_dir="/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/${morpho_model_dirs_base[$i]}_${channel}/"
         
+        # Set job-specific parameters
+        #SBATCH --job-name=Morpho_${i}_${j}  # Jobname with unique id
+        #SBATCH --output=morpho_${i}_${j}.o%j    # Output file with unique id
+        #SBATCH --error=morpho_${i}_${j}.e%j     # Error file with unique id
+        
         # Run the Python script with the specified arguments
-        srun --nodes=1 --gres=gpu:1 --cpus-per-task=40 \
-            python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_morpho.py \
+        python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_morpho.py \
             --morpho_model_dir "$morpho_model_dir" \
             --block_config "$block_config" \
             --growth_rate $growth_rate \
