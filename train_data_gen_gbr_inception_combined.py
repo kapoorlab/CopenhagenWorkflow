@@ -34,30 +34,33 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         analysis_vectors, _ = create_analysis_tracklets(dataset_dataframe)
         
         cell_type_dataframe = dataset_dataframe[~dataset_dataframe['Cell_Type'].isna()]
-        basal_tracklet_ids = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == 'Basal']['Track ID']
-        goblet_tracklet_ids = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == 'Goblet']['Track ID']
-        radial_tracklet_ids = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == 'Radial']['Track ID']
 
-        for tracklet_ids, cell_label in [
-            (basal_tracklet_ids, 0),
-            (goblet_tracklet_ids, 2),
-            (radial_tracklet_ids, 1)
-        ]:
-            for track_id in tracklet_ids:
-                try:
-                    (shape_dynamic_dataframe_list, shape_dataframe_list, dynamic_dataframe_list, full_dataframe_list) = analysis_vectors[track_id]
-                    shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
-                    dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
-                    
-                    # Combine shape and dynamic features
-                    combined_track_array = np.concatenate((shape_track_array, dynamic_track_array), axis=-1)
+        # Iterate over TrackMate Track IDs instead of individual Track IDs directly
+        for trackmate_track_id, group_df in cell_type_dataframe.groupby("TrackMate Track ID"):
+            basal_tracklet_ids = group_df[group_df['Cell_Type'] == 'Basal']['Track ID']
+            goblet_tracklet_ids = group_df[group_df['Cell_Type'] == 'Goblet']['Track ID']
+            radial_tracklet_ids = group_df[group_df['Cell_Type'] == 'Radial']['Track ID']
 
-                    # Create training arrays
-                    training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
-                    training_arrays.extend(training_subarrays)
-                    labels.extend([cell_label] * len(training_subarrays))
-                except KeyError:
-                    print(f'key {track_id} not found, skipping')
+            for tracklet_ids, cell_label in [
+                (basal_tracklet_ids, 0),
+                (goblet_tracklet_ids, 2),
+                (radial_tracklet_ids, 1)
+            ]:
+                for track_id in tracklet_ids:
+                    try:
+                        (shape_dynamic_dataframe_list, shape_dataframe_list, dynamic_dataframe_list, full_dataframe_list) = analysis_vectors[track_id]
+                        shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
+                        dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
+                        
+                        # Combine shape and dynamic features
+                        combined_track_array = np.concatenate((shape_track_array, dynamic_track_array), axis=-1)
+
+                        # Create training arrays
+                        training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
+                        training_arrays.extend(training_subarrays)
+                        labels.extend([cell_label] * len(training_subarrays))
+                    except KeyError:
+                        print(f'key {track_id} not found, skipping')
 
     # Convert lists to numpy arrays
     training_arrays = np.asarray(training_arrays)
@@ -82,9 +85,11 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         for key, value in combined_h5_training_data.items():
             hf.create_dataset(key, data=value)
 
-
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_name = ['Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 'Fifth_Extra_Goblet', 'Fifth_Extra_Radial']#,'Third_Extra_Goblet', 'Third_Extra_Radial' ]
+dataset_name = [
+    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
+    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial'
+] # , 'Third_Extra_Goblet', 'Third_Extra_Radial' - commented for now
 tracklet_lengths = [25]
 strides = [4]
 for index, tracklet_length in enumerate(tracklet_lengths):
