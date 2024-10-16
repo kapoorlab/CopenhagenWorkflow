@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --nodes=1             # Number of nodes 
-#SBATCH -A jsy@a100
+#SBATCH -A jsy@v100
 ##SBATCH -C a100
 #SBATCH --partition=prepost
 ##SBATCH --gres=gpu:1
