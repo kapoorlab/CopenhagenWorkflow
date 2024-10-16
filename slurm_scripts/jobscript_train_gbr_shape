@@ -1,6 +1,23 @@
 #!/bin/bash
 
-# Define arrays for the different parameter values
+#SBATCH --nodes=1             # Number of nodes 
+#SBATCH -A jsy@v100
+#SBATCH --gres=gpu:1          # Allocate 1 GPU per node
+#SBATCH --partition=gpu_p2
+#SBATCH --job-name=Shape_jobs  # Jobname for all tasks
+#SBATCH --cpus-per-task=40
+#SBATCH --output=shape_jobs.o%j    # Output file with unique id
+#SBATCH --error=shape_jobs.e%j     # Error file with unique id
+#SBATCH --time=20:00:00        # Expected runtime HH:MM:SS (max 100h)
+
+module purge # Purging modules inherited by default
+module load anaconda-py3/2020.11
+
+# Activate the Conda environment
+conda deactivate
+conda activate capedenv
+
+# Define arrays for the different parameter values for shape models
 shape_model_dirs_base=(
     "shape_feature_attention_shallowest_litest"
     "shape_feature_attention_shallowest_liter"
@@ -39,26 +56,14 @@ for i in "${!shape_model_dirs_base[@]}"; do
         
         # Include the channel name in the model directory
         shape_model_dir="/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/${shape_model_dirs_base[$i]}_${channel}/"
-        #SBATCH --nodes=1             # Number of nodes 
-        #SBATCH -A jsy@v100
-        #SBATCH --gres=gpu:1          # Allocate 1 GPU per node
-        #SBATCH --partition=gpu_p2
-        #SBATCH --job-name=Morpho_${i}_${j}  # Jobname with unique id
-        #SBATCH --cpus-per-task=40
-        #SBATCH --output=morpho_${i}_${j}.o%j    # Output file with unique id
-        #SBATCH --error=morpho_${i}_${j}.e%j     # Error file with unique id
-        #SBATCH --time=20:00:00        # Expected runtime HH:MM:SS (max 100h)
-
-        module purge # Purging modules inherited by default
-        module load anaconda-py3/2020.11
-
-        # Activate the Conda environment
-        conda deactivate
-        conda activate capedenv
-
+        
         # Run the Python script with the specified arguments
-        python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_shape.py --shape_model_dir "$shape_model_dir" --block_config "$block_config" --growth_rate $growth_rate --channel $channel --shape_gbr_h5_file $shape_gbr_h5_file
-
-
+        srun --nodes=1 --gres=gpu:1 --cpus-per-task=40 \
+            python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_shape.py \
+            --shape_model_dir "$shape_model_dir" \
+            --block_config "$block_config" \
+            --growth_rate $growth_rate \
+            --channel $channel \
+            --shape_gbr_h5_file $shape_gbr_h5_file &
     done
 done
