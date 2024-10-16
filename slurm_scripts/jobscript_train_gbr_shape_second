@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#SBATCH --nodes=1             # Number of nodes 
+#SBATCH -A jsy@v100
+#SBATCH --gres=gpu:1          # Allocate 1 GPU per node
+#SBATCH --partition=gpu_p2
+#SBATCH --job-name=Shape_jobs  # Jobname for all tasks
+#SBATCH --cpus-per-task=40
+#SBATCH --output=shape_jobs.o%j    # Output file with unique id
+#SBATCH --error=shape_jobs.e%j     # Error file with unique id
+#SBATCH --time=20:00:00        # Expected runtime HH:MM:SS (max 100h)
+
+module purge # Purging modules inherited by default
+module load anaconda-py3/2020.11
+
+# Activate the Conda environment
+conda deactivate
+conda activate capedenv
+
+# Define arrays for the different parameter values for shape models
+shape_model_dirs_base=(
+    "shape_feature_attention_shallowest_litest"
+    "shape_feature_attention_shallowest_liter"
+    "shape_feature_attention_shallowest_lite"
+    "shape_feature_attention_shallowest"
+)
+
+block_configs=(
+    "6"
+    "6"
+    "6"
+    "6"
+)
+
+growth_rates=(4 8 16 32)
+
+channels=(
+    "nuclei_"
+    "membrane_"
+)
+
+shape_gbr_h5_files=(
+    "shape_training_data_gbr_25_nuclei_.h5"
+    "shape_training_data_gbr_25_membrane_.h5"
+)
+
+# Loop through each model configuration
+for i in "${!shape_model_dirs_base[@]}"; do
+    block_config="${block_configs[$i]}"
+    growth_rate="${growth_rates[$i]}"
+
+    # Loop through each channel and submit a separate job
+    for j in "${!channels[@]}"; do
+        channel="${channels[$j]}"
+        shape_gbr_h5_file="${shape_gbr_h5_files[$j]}"
+        
+        # Include the channel name in the model directory
+        shape_model_dir="/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/${shape_model_dirs_base[$i]}_${channel}/"
+        
+        # Run the Python script with the specified arguments
+        srun --nodes=1 --gres=gpu:1 --cpus-per-task=40 \
+            python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_shape.py \
+            --shape_model_dir "$shape_model_dir" \
+            --block_config "$block_config" \
+            --growth_rate $growth_rate \
+            --channel $channel \
+            --shape_gbr_h5_file $shape_gbr_h5_file &
+    done
+done
