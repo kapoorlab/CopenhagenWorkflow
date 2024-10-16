@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# Define arrays for the different parameter values
+# Define arrays for the different parameter values for morpho models
 morpho_model_dirs_base=(
     "morpho_feature_attention_shallowest_litest"
     "morpho_feature_attention_shallowest_liter"
@@ -41,9 +39,9 @@ for i in "${!morpho_model_dirs_base[@]}"; do
         morpho_model_dir="/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/${morpho_model_dirs_base[$i]}_${channel}/"
 
         # Create a Slurm script for this particular job
-        slurm_script="train_gbr_job_${i}_${j}.slurm"
+        slurm_script="train_morpho_gbr_job_${i}_${j}.slurm"
         cat <<EOT > $slurm_script
-
+#!/bin/bash
 #SBATCH --nodes=1             # Number of nodes 
 #SBATCH -A jsy@v100
 #SBATCH --gres=gpu:1          # Allocate 1 GPU per node
