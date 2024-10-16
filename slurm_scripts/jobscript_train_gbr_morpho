@@ -1,3 +1,4 @@
+#!/bin/bash
 # Define arrays for the different parameter values for morpho models
 morpho_model_dirs_base=(
     "morpho_feature_attention_shallowest_litest"
