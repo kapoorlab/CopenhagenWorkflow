@@ -10,8 +10,8 @@
 #SBATCH --error=morpho_jobs.e%j     # Error file with unique id
 #SBATCH --time=20:00:00        # Expected runtime HH:MM:SS (max 100h)
 
-
-module load anaconda-py3/2020.11
+module purge
+module load anaconda-py3
 #conda init bash # deactivating environments inherited by default
 conda deactivate
 conda activate capedenv
