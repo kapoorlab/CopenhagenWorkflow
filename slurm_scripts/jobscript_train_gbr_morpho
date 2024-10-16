@@ -42,7 +42,7 @@ for i in "${!morpho_model_dirs_base[@]}"; do
         # Create a Slurm script for this particular job
         slurm_script="train_morpho_gbr_job_${i}_${j}.slurm"
         cat <<EOT > $slurm_script
-#!/bin/bash
+
 #SBATCH --nodes=1             # Number of nodes 
 #SBATCH -A jsy@v100
 #SBATCH --gres=gpu:1          # Allocate 1 GPU per node
