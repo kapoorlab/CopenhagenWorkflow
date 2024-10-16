@@ -43,9 +43,10 @@ for i, morpho_model_base in enumerate(morpho_model_dirs_base):
         sbatch_command = [
             "sbatch",
             "--nodes=1",
-            "-A", "jsy@v100",
+            "-A", "jsy@a100",
+            "-C", "a100",
             "--gres=gpu:1",
-            "--partition=gpu_p2",
+            "--partition=gpu_p5",
             "--cpus-per-task=40",
             "--time=20:00:00",
             f"--job-name=Morpho_{i}_{j}",
