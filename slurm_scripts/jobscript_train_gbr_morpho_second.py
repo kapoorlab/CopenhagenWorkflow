@@ -46,7 +46,7 @@ for i, morpho_model_base in enumerate(morpho_model_dirs_base):
             #"-A", "jsy@a100",
             #"-C", "a100",
             "-A", "jsy@v100",
-            "-C", "v100-32g", 
+           
             "--gres=gpu:1",
             #"--partition=gpu_p5",
             "--partition=gpu_p2",
