@@ -6,10 +6,7 @@ model_dirs_base = [
     "morpho_feature_attention_shallowest_liter",
     "morpho_feature_attention_shallowest_lite",
     "morpho_feature_attention_shallowest",
-    "shape_feature_attention_shallowest_litest",
-    "shape_feature_attention_shallowest_liter",
-    "shape_feature_attention_shallowest_lite",
-    "shape_feature_attention_shallowest"
+
 ]
 
 channels = [
