@@ -1,4 +1,4 @@
-# %%
+import argparse
 from pathlib import Path 
 import os
 import torch
@@ -13,75 +13,69 @@ from napatrackmater.Trackvector import (
     save_cell_type_predictions,
 )
 
-dataset_name = 'Sixth'
-home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/' #'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
-#'/home/debian/jz/'
-#'/lustre/fsstor/projects/rech/jsy/uzj81mi/'
-timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
-tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
-channel = 'membrane_'
-data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
+def main(args):
+    dataset_name = args.dataset_name
+    home_folder = args.home_folder
+    channel = args.channel
+    t_initials = args.t_initials
+    t_finals = args.t_finals
+    tracklet_length = args.tracklet_length
+    model_dir = args.model_dir
+    model_name = args.model_name
 
-model_dir = f'{home_folder}Mari_Models/TrackModels/'
- 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
+    data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-print(f'reading data from {normalized_dataframe}')
-tracks_dataframe = pd.read_csv(normalized_dataframe)
+    normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
+    print(f'reading data from {normalized_dataframe}')
+    tracks_dataframe = pd.read_csv(normalized_dataframe)
 
+    gbr_shape_model_json = f'{model_dir}{model_name}/shape_attention.json'
 
-t_initials = [50]
-t_finals = [400]
-tracklet_length = 25
-gbr_shape_model_json = f'{model_dir}shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/shape_attention.json'
-gbr_dynamic_model_json = f'{model_dir}dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/dynamic_attention.json'
+    class_map_gbr = {
+        0: "Basal",
+        1: "Radial",
+        2: "Goblet"
+    }
 
-class_map_gbr = {
-    0: "Basal",
-    1: "Radial",
-    2: "Goblet"
-}
+    loss_func =  CrossEntropyLoss()
 
-loss_func =  CrossEntropyLoss()
+    gbr_shape_lightning_model, gbr_shape_torch_model = LightningModel.extract_mitosis_model(
+        HybridAttentionDenseNet,
+        gbr_shape_model_json,
+        loss_func,
+        Adam,
+        map_location=torch.device(device),
+        local_model_path=os.path.join(model_dir, model_name)
+    )
 
-gbr_shape_lightning_model, gbr_shape_torch_model = LightningModel.extract_mitosis_model(
-    HybridAttentionDenseNet,
-    gbr_shape_model_json,
-    loss_func,
-    Adam,
-    map_location=torch.device(device),
-    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/shape_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_liter/')
-    
-)
-#gbr_dynamic_lightning_model, gbr_dynamic_torch_model = LightningModel.extract_mitosis_model(
-#    HybridAttentionDenseNet,
-#    gbr_dynamic_model_json,
-#    loss_func,
-#    Adam,
-#    map_location=torch.device(device),
-#    local_model_path=os.path.join(home_folder, f'Mari_Models/TrackModels/dynamic_feature_lightning_attention_gbr_{tracklet_length}_{channel}shallower_lite/')
-#)
+    gbr_shape_torch_model.eval()
 
-
-
-gbr_shape_torch_model.eval()
-#gbr_dynamic_torch_model.eval()
-for index, t_initial in enumerate(t_initials):
-   
+    for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}shallower_liter_shape_only/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_tracklet_length_{tracklet_length}_t_initial_{t_initial}_t_final_{t_final}_{channel}_shape_only/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for trackmate_id in tqdm(tracks_dataframe_short['TrackMate Track ID'].unique()):
-            gbr_prediction[trackmate_id] = inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, dynamic_model= None, shape_model=gbr_shape_torch_model,device=device )
+            gbr_prediction[trackmate_id] = inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, dynamic_model=None, shape_model=gbr_shape_torch_model, device=device)
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel)
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Arguments for shape prediction script")
+    parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
+    parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
+    parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
+    parser.add_argument('--t_initials', type=int, nargs='+', default=[50], help='List of initial timepoints')
+    parser.add_argument('--t_finals', type=int, nargs='+', default=[400], help='List of final timepoints')
+    parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
+    parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
+    parser.add_argument('--model_name', type=str, default='shape_feature_lightning_attention_gbr_25_membrane_shallower_liter', help='Model name including full path')
 
-
-
+    args = parser.parse_args()
+    main(args)
