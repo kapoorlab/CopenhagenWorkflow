@@ -48,7 +48,7 @@ def main(args):
         loss_func,
         Adam,
         map_location=torch.device(device),
-        local_model_path=os.path.join(model_dir, model_name)
+        local_model_path=os.path.join(model_dir, model_name + f'_{channel}')
     )
 
     gbr_morpho_torch_model.eval()
