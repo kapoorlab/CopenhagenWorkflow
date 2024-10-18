@@ -27,7 +27,7 @@ for model_name in model_dirs_base:
             # "-C", "v100-32g",
             "--partition=prepost",
             "--cpus-per-task=40",
-            "--time=20:00:00",
+            "--time=10:00:00",
             f"--job-name={model_name}_{channel}",
             f"--output={model_name}_{channel}.o%j",
             f"--error={model_name}_{channel}.e%j",
