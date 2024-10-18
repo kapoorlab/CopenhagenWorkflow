@@ -32,7 +32,7 @@ def main(args):
     print(f'reading data from {normalized_dataframe}')
     tracks_dataframe = pd.read_csv(normalized_dataframe)
 
-    gbr_shape_model_json = f'{model_dir}{model_name}/shape_attention.json'
+    gbr_shape_model_json = f'{model_dir}{model_name}{channel}/shape_attention.json'
 
     class_map_gbr = {
         0: "Basal",
