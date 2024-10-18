@@ -18,12 +18,12 @@ block_configs = [
 growth_rates = [4, 8, 16, 32]
 
 channels = [
-    "nuclei_",
+    #"nuclei_",
     "membrane_"
 ]
 
 shape_gbr_h5_files = [
-    "shape_training_data_gbr_25_nuclei_.h5",
+    #"shape_training_data_gbr_25_nuclei_.h5",
     "shape_training_data_gbr_25_membrane_.h5"
 ]
 
