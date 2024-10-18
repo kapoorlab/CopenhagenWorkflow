@@ -30,7 +30,7 @@ def main(args):
     radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
     normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-    goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+    goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_{model_name}.csv')
 
 
 
