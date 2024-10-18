@@ -55,7 +55,7 @@ for i, morpho_model_base in enumerate(morpho_model_dirs_base):
             f"--output=morpho_{i}_{j}.o%j",
             f"--error=morpho_{i}_{j}.e%j",
             "--wrap",
-            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_morpho.py --morpho_model_dir {morpho_model_dir} --block_config {block_config} --growth_rate {growth_rate} --channel {channel} --morpho_gbr_h5_file {morpho_gbr_h5_file}"
+            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_morpho.py --morpho_model_dir {morpho_model_dir} --block_config '{block_config}' --growth_rate {growth_rate} --channel {channel} --morpho_gbr_h5_file {morpho_gbr_h5_file}"
         ]
         
         # Submit the job
