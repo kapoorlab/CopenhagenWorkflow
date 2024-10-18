@@ -3,20 +3,10 @@
 from napatrackmater.Trackvector import TrackVector
 from pathlib import Path 
 import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import norm
 from napatrackmater.Trackvector import (SHAPE_FEATURES, 
                                         DYNAMIC_FEATURES, 
                                         SHAPE_DYNAMIC_FEATURES,
-                                        populate_zero_gen_tracklets, 
-                                        get_zero_gen_daughter_generations,
-                                        populate_daughter_tracklets,
-                                        plot_at_mitosis_time, 
-                                        plot_histograms_for_groups,
-                                        create_video,
+                                       
                                         normalize_list
                                         )
 import warnings
@@ -24,7 +14,7 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 # %%
-dataset_name = 'Second'
+dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
