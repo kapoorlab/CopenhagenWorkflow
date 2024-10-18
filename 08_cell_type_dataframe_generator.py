@@ -30,9 +30,9 @@ def main(args):
     xml_path = Path(os.path.join(tracking_directory, master_xml_name))
     oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
-    goblet_cells_file = f'{annotations_prediction_dir}/goblet_cells_nuclei_annotations.csv'
-    basal_cells_file = f'{annotations_prediction_dir}/basal_cells_nuclei_annotations.csv'
-    radial_cells_file = f'{annotations_prediction_dir}/radially_intercalating_cells_nuclei_annotations.csv'
+    goblet_cells_file = f'{annotations_prediction_dir}/goblet_cells_{channel}annotations.csv'
+    basal_cells_file = f'{annotations_prediction_dir}/basal_cells_{channel}annotations.csv'
+    radial_cells_file = f'{annotations_prediction_dir}/radially_intercalating_cells_{channel}annotations.csv'
 
     goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
     basal_cells_dataframe = pd.read_csv(basal_cells_file)
@@ -41,17 +41,7 @@ def main(args):
     normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
     goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
 
-    time_delta = args.time_delta
-    block_size = args.block_size
-    overlap = args.overlap
-    verbose_generation_plots = args.verbose_generation_plots
-    method = args.method
-    criterion = args.criterion
-    metric = args.metric
 
-    shape_cols = SHAPE_FEATURES
-    dynamic_cols = DYNAMIC_FEATURES
-    feature_cols = SHAPE_DYNAMIC_FEATURES
 
     track_vectors = TrackVector(master_xml_path=xml_path)
     track_vectors.oneat_csv_file = oneat_detections
@@ -120,7 +110,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for track analysis script")
-    parser.add_argument('--dataset_name', type=str, default='Second', help='Name of the dataset')
+    parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
     parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
     parser.add_argument('--model_name', type=str, default='morpho_feature_lightning_attention_gbr', help='Name of the model being used')
