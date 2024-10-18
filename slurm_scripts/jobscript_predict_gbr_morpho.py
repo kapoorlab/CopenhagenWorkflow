@@ -32,7 +32,7 @@ for model_name in model_dirs_base:
             f"--output={model_name}_{channel}.o%j",
             f"--error={model_name}_{channel}.e%j",
             "--wrap",
-            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python 09_inception_prediction_attention_morpho.py --dataset_name Sixth --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --t_initials 50 --t_finals 400 --tracklet_length 25 --model_dir /lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/ --model_name {model_name}"
+            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/09_inception_prediction_attention_morpho.py --dataset_name Sixth --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --t_initials 50 --t_finals 400 --tracklet_length 25 --model_dir /lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/ --model_name {model_name}"
         ]
         
         # Submit the job
