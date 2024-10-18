@@ -22,10 +22,10 @@ for i, shape_model_base in enumerate(shape_model_dirs_base):
             "sbatch",
             "--nodes=1",
             "-A", "jsy@v100",
-            "--gres=gpu:1",
-            
+            #"--gres=gpu:1",
+            "--partition=prepost",
             "--cpus-per-task=40",
-            "--time=20:00:00",
+            "--time=10:00:00",
             f"--job-name=Shape_{i}_{j}",
             f"--output=shape_{i}_{j}.o%j",
             f"--error=shape_{i}_{j}.e%j",
