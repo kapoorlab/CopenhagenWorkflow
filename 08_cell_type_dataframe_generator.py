@@ -88,7 +88,6 @@ def main(args):
         "Radial": 2, 
         "Goblet": 3
     }
-    label_cell_type_mapping = {v: k for k, v in cell_type_label_mapping.items()}
     print("Cell type counts, unique TrackMate Track IDs, and count of mitotic tracks:")
     for cell_type in unique_cell_types:
         cell_type_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
