@@ -30,7 +30,7 @@ for i, shape_model_base in enumerate(shape_model_dirs_base):
             f"--output=shape_{i}_{j}.o%j",
             f"--error=shape_{i}_{j}.e%j",
             "--wrap",
-            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/08_cell_type_dataframe_generator.py --dataset_name Second --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --model_name {shape_model_base}"
+            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/08_cell_type_dataframe_generator.py --dataset_name Sixth --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --model_name {shape_model_base}"
         ]
         
         # Submit the job
