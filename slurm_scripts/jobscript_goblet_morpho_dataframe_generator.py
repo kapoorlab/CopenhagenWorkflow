@@ -1,7 +1,7 @@
 import subprocess
 
 # Define arrays for the different parameter values for shape models
-shape_model_dirs_base = [
+morpho_model_dirs_base = [
     "morpho_feature_attention_shallowest_litest",
     "morpho_feature_attention_shallowest_liter",
     "morpho_feature_attention_shallowest_lite",
@@ -14,7 +14,7 @@ channels = [
 ]
 
 # Loop through each model configuration
-for i, shape_model_base in enumerate(shape_model_dirs_base):
+for i, shape_model_base in enumerate(morpho_model_dirs_base):
     # Loop through each channel and submit a separate job
     for j, channel in enumerate(channels):
         # Construct the sbatch command
@@ -26,7 +26,7 @@ for i, shape_model_base in enumerate(shape_model_dirs_base):
             "--partition=prepost",
             "--cpus-per-task=40",
             "--time=10:00:00",
-            f"--job-name=Shape_{i}_{j}",
+            f"--job-name=Morpho_{i}_{j}",
             f"--output=shape_{i}_{j}.o%j",
             f"--error=shape_{i}_{j}.e%j",
             "--wrap",

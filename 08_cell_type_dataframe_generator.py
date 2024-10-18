@@ -30,9 +30,9 @@ def main(args):
     xml_path = Path(os.path.join(tracking_directory, master_xml_name))
     oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
-    goblet_cells_file = f'{annotations_prediction_dir}/goblet_cells_{channel}annotations.csv'
-    basal_cells_file = f'{annotations_prediction_dir}/basal_cells_{channel}annotations.csv'
-    radial_cells_file = f'{annotations_prediction_dir}/radially_intercalating_cells_{channel}annotations.csv'
+    goblet_cells_file = f'{annotations_prediction_dir}goblet_cells_{channel}annotations_incpetion.csv'
+    basal_cells_file = f'{annotations_prediction_dir}basal_cells_{channel}annotations_inception.csv'
+    radial_cells_file = f'{annotations_prediction_dir}radially_intercalating_cells_{channel}annotations_inception.csv'
 
     goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
     basal_cells_dataframe = pd.read_csv(basal_cells_file)
