@@ -11,7 +11,8 @@ def main(args):
     home_folder = args.home_folder
     channel = args.channel
     model_name = args.model_name
-    annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}morpho_dynamic/'
+    model_type = args.model_type
+    annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}{model_type}/'
 
     timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
     tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
@@ -20,7 +21,7 @@ def main(args):
     xml_path = Path(os.path.join(tracking_directory, master_xml_name))
     oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
-    goblet_cells_file = f'{annotations_prediction_dir}goblet_cells_{channel}annotations_incpetion.csv'
+    goblet_cells_file = f'{annotations_prediction_dir}goblet_cells_{channel}annotations_inception.csv'
     basal_cells_file = f'{annotations_prediction_dir}basal_cells_{channel}annotations_inception.csv'
     radial_cells_file = f'{annotations_prediction_dir}radially_intercalating_cells_{channel}annotations_inception.csv'
 
@@ -100,6 +101,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for track analysis script")
     parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
+    parser.add_argument('--model_type', type=str, default='morpho_dynamic', help='Model Type')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
     parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
     parser.add_argument('--model_name', type=str, default='morpho_feature_lightning_attention_gbr', help='Name of the model being used')
@@ -110,6 +112,7 @@ if __name__ == "__main__":
     parser.add_argument('--method', type=str, default='ward', help='Method for clustering')
     parser.add_argument('--criterion', type=str, default='distance', help='Criterion for clustering')
     parser.add_argument('--metric', type=str, default='euclidean', help='Metric for clustering')
+
 
     args = parser.parse_args()
     main(args)
