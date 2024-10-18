@@ -1,19 +1,9 @@
 import argparse
 from pathlib import Path 
 import os
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from tqdm import tqdm
-from napatrackmater import  create_analysis_cell_type_tracklets, convert_pseudo_tracks_to_simple_arrays
 from napatrackmater.Trackvector import (TrackVector,
-                                        create_cluster_plot,
-                                        cross_correlation_class,
-                                        SHAPE_FEATURES, 
-                                        DYNAMIC_FEATURES, 
-                                        SHAPE_DYNAMIC_FEATURES,
-                                        plot_histograms_for_cell_type_groups
+                                       
                                         )
 
 def main(args):
