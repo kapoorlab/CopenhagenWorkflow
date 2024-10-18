@@ -113,7 +113,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_arrays': val_dynamic_arrays,
         'val_labels': val_dynamic_labels
     }
-    with h5py.File(os.path.join(train_save_dir, f'dynamic_training_data_mitosis_{tracklet_length}.h5'), 'w') as hf:
+    with h5py.File(os.path.join(train_save_dir, f'dynamic_training_data_mitosis_{channel}{tracklet_length}.h5'), 'w') as hf:
         for key, value in dynamic_h5_training_data.items():
             hf.create_dataset(key, data=value)
 
@@ -123,4 +123,4 @@ tracklet_lengths = [25]
 strides = [4]
 for index, tracklet_length in enumerate(tracklet_lengths):
     stride = strides[index]
-    process_datasets(home_folder, dataset_names, tracklet_length=tracklet_length, stride=stride)
+    process_datasets(home_folder,  dataset_names, channel='nuclei_', tracklet_length=tracklet_length, stride=stride)
