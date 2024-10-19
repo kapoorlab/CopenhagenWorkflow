@@ -31,9 +31,9 @@
 | Nuclei attention_shape_feature_shallower            | (6, 12)       | 32          |                | 
 | Nuclei attention_morpho_feature_shallower           | (6, 12)       | 32          |               | 
 | Membrane attention_shape_feature_shallower          | (6, 12)       | 32          |                | 
-| Membrane attention_morpho_feature_shallower         | (6, 12)       | 32          |              | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Nuclei attention_shape_feature                      | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Nuclei attention_morpho_feature                     | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Membrane attention_shape_feature                    | (6, 12, 24)   | 32          |               | [metrics.npz](./metrics_gbr_inception.ipynb) |
-| Membrane attention_morpho_feature                   | (6, 12, 24)   | 32          |                | [metrics.npz](./metrics_gbr_inception.ipynb) |
+| Membrane attention_morpho_feature_shallower         | (6, 12)       | 32          |              | 
+| Nuclei attention_shape_feature                      | (6, 12, 24)   | 32          |                | 
+| Nuclei attention_morpho_feature                     | (6, 12, 24)   | 32          |                | 
+| Membrane attention_shape_feature                    | (6, 12, 24)   | 32          |               | 
+| Membrane attention_morpho_feature                   | (6, 12, 24)   | 32          |                | 
 
