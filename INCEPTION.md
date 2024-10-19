@@ -2,7 +2,7 @@
 |-------------------------------------------|---------------|-------------|---------------------|------------------------------------------|
 | Nuclei attention_shape_feature_shallowest_litest    | (6)           | 4           |   59.17%            |  
 | Nuclei attention_morpho_feature_shallowest_litest   | (6)           | 4           |   77.5%            |  
-| Membrane attention_shape_feature_shallowest_litest  | (6)           | 4           |               |  
+| Membrane attention_shape_feature_shallowest_litest  | (6)           | 4           |   37.5%            |  
 | Membrane attention_morpho_feature_shallowest_litest | (6)           | 4           |               |  
 | Nuclei attention_shape_feature_shallower_litest     | (6, 12)       | 4           |               | 
 | Nuclei attention_morpho_feature_shallower_litest    | (6, 12)       | 4           |               | 
