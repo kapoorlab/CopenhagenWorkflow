@@ -3,7 +3,7 @@
 | Nuclei attention_shape_feature_shallowest_litest    | (6)           | 4           |   59.17%            |  
 | Nuclei attention_morpho_feature_shallowest_litest   | (6)           | 4           |   77.5%            |  
 | Membrane attention_shape_feature_shallowest_litest  | (6)           | 4           |   37.5%            |  
-| Membrane attention_morpho_feature_shallowest_litest | (6)           | 4           |               |  
+| Membrane attention_morpho_feature_shallowest_litest | (6)           | 4           |   56.67%            |  
 | Nuclei attention_shape_feature_shallower_litest     | (6, 12)       | 4           |               | 
 | Nuclei attention_morpho_feature_shallower_litest    | (6, 12)       | 4           |               | 
 | Membrane attention_shape_feature_shallower_litest   | (6, 12)       | 4           |                | 
@@ -11,7 +11,7 @@
 | Nuclei attention_shape_feature_shallowest_liter     | (6)           | 8           |  57.5%             | 
 | Nuclei attention_morpho_feature_shallowest_liter    | (6)           | 8           |  73.33%             | 
 | Membrane attention_shape_feature_shallowest_liter   | (6)           | 8           |                | 
-| Membrane attention_morpho_feature_shallowest_liter  | (6)           | 8           |               |
+| Membrane attention_morpho_feature_shallowest_liter  | (6)           | 8           |  51.67%             |
 | Nuclei attention_shape_feature_shallower_liter      | (6, 12)       | 8           |              | 
 | Nuclei attention_morpho_feature_shallower_liter     | (6, 12)       | 8           |             |
 | Membrane attention_shape_feature_shallower_liter    | (6, 12)       | 8           |                | 
