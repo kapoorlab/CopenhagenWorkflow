@@ -24,7 +24,7 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 # %%
-dataset_name = 'Second'
+dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
@@ -33,13 +33,13 @@ channel = 'nuclei_'
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
-save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}/')
+save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
+dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
  
 
 shape_cols = SHAPE_FEATURES
