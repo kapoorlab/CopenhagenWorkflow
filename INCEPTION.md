@@ -45,9 +45,4 @@
 | Nuclei attention_shape_feature_shallower            | (6, 12)       | 32          | 57.50%               | 
 | Nuclei attention_morpho_feature_shallower           | (6, 12)       | 32          | 77.50%              | 
 
-|  |           |          |              |  
-|  |           |          |              |  
-| Nuclei attention_shape_feature                      | (6, 12, 24)   | 32          |                | 
-| Nuclei attention_morpho_feature                     | (6, 12, 24)   | 32          |                | 
-
 
