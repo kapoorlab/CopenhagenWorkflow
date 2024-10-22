@@ -1,4 +1,4 @@
-| Model Name                                | Block Config  | Growth Rate | Blind Test Accuracy |                      |
+| Model Name                                | Block Config  | Growth Rate | Blind Test Accuracy |                      
 |-------------------------------------------|---------------|-------------|---------------------|
 | Nuclei attention_shape_feature_shallowest_litest    | (6)           | 4           |   59.17%            |  
 | Nuclei attention_morpho_feature_shallowest_litest   | (6)           | 4           |   77.5%            |  
