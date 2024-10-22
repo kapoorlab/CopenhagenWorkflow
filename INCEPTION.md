@@ -1,5 +1,5 @@
-| Model Name                                | Block Config  | Growth Rate | Blind Test Accuracy | Metrics File Link  [metrics.npz](./metrics_gbr_inception.ipynb)                       |
-|-------------------------------------------|---------------|-------------|---------------------|------------------------------------------|
+| Model Name                                | Block Config  | Growth Rate | Blind Test Accuracy |                      |
+|-------------------------------------------|---------------|-------------|---------------------|
 | Nuclei attention_shape_feature_shallowest_litest    | (6)           | 4           |   59.17%            |  
 | Nuclei attention_morpho_feature_shallowest_litest   | (6)           | 4           |   77.5%            |  
 | Membrane attention_shape_feature_shallowest_litest  | (6)           | 4           |   37.5%            |  
@@ -45,4 +45,4 @@
 | Nuclei attention_shape_feature_shallower            | (6, 12)       | 32          | 57.50%               | 
 | Nuclei attention_morpho_feature_shallower           | (6, 12)       | 32          | 77.50%              | 
 
-
+Metrics File Link  [metrics.npz](./metrics_gbr_inception.ipynb)  
