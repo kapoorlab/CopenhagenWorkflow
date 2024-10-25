@@ -5,14 +5,16 @@ from torch.nn.modules.loss import CrossEntropyLoss
 from kapoorlabs_lightning.optimizers import Adam
 from kapoorlabs_lightning.pytorch_models import HybridAttentionDenseNet,plot_feature_importance_heatmap
 from kapoorlabs_lightning.lightning_trainer import LightningModel
-
+from napatrackmater.Trackvector import (SHAPE_FEATURES, 
+                                        DYNAMIC_FEATURES, 
+                                        SHAPE_DYNAMIC_FEATURES,
+                                        
+                                        )
 
 def main(args):
     dataset_name = args.dataset_name
     home_folder = args.home_folder
     channel = args.channel
-    t_initials = args.t_initials
-    t_finals = args.t_finals
     tracklet_length = args.tracklet_length
     model_dir = args.model_dir
     model_name = args.model_name
@@ -62,30 +64,23 @@ def main(args):
     )
 
     gbr_morpho_torch_model.eval()
-
-    # Directory to save feature importance plots
     save_dir = os.path.join(tracking_directory, "feature_importance_plots")
     os.makedirs(save_dir, exist_ok=True)
 
-    # Loop through each cell type and plot feature importance for the top tracks
     for cell_type in ["Basal", "Goblet", "Radial"]:
-        # Filter dataframe by cell type and get longest tracks
         cell_type_df = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == cell_type]
         
-        # Sort TrackMate Track IDs by track length and select the longest tracks
         track_lengths = cell_type_df.groupby("TrackMate Track ID").size()
-        longest_track_ids = track_lengths.nlargest(args.N).index  # Replace N with the number of tracks to select
+        longest_track_ids = track_lengths.nlargest(args.N).index  
 
         for track_id in longest_track_ids:
             # Get the track data
             track_df = cell_type_df[cell_type_df["TrackMate Track ID"] == track_id]
 
-            # Ensure tracklet meets minimum length requirement
             if len(track_df) < tracklet_length:
                 continue
 
-            # Create a tracklet tensor with shape (1, T, F)
-            tracklet_features = track_df.iloc[:tracklet_length, 4:].values  # Assuming features start from 5th column
+            tracklet_features = track_df[SHAPE_DYNAMIC_FEATURES].iloc[:tracklet_length].values 
             tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).to(device)  # Shape (1, T, F)
             
             # Calculate and save the feature importance plot
@@ -95,7 +90,7 @@ def main(args):
                 [tracklet_tensor],
                 save_dir=save_dir,
                 save_name=save_name,
-                feature_names=track_df.columns[4:],  # Assuming features start from 5th column
+                feature_names=SHAPE_DYNAMIC_FEATURES,  
                 track_labels=[f"Track {track_id}"]
             )
             print(f"Saved feature importance plot for {cell_type} Track ID {track_id}.")
@@ -107,8 +102,6 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
     parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
-    parser.add_argument('--t_initials', type=int, nargs='+', default=[50], help='List of initial timepoints')
-    parser.add_argument('--t_finals', type=int, nargs='+', default=[400], help='List of final timepoints')
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
     parser.add_argument('--model_name', type=str, default='morpho_feature_lightning_attention_gbr_25_membrane_', help='Model name including full path')
