@@ -86,14 +86,15 @@ def main(args):
             batch_tracklets.append(tracklet_tensor)
         if batch_tracklets:    
             batch_tensor = torch.cat(batch_tracklets, dim=0).to(device)
-            save_name = f"{cell_type}_Track_{track_id}_feature_importance.png"
+            print(batch_tensor.shape)
+            save_name = f"{cell_type}_feature_importance.png"
             plot_feature_importance_heatmap(
                 gbr_morpho_torch_model,
                 batch_tensor,
                 save_dir=save_dir,
                 save_name=save_name,
             )
-            print(f"Saved feature importance plot for {cell_type} Track ID {track_id}.")
+            print(f"Saved feature importance plot for {cell_type}.")
 
 
 
