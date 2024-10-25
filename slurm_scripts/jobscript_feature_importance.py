@@ -17,7 +17,7 @@ sbatch_command = [
     f"--output={model_name}_{channel}_{dataset}.o%j",
     f"--error={model_name}_{channel}_{dataset}.e%j",
     "--wrap",
-    f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/09_inception_prediction_attention_morpho.py --dataset_name {dataset} --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --tracklet_length 25 --model_dir /lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/ --model_name {model_name}"
+    f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/09_inception_feature_attention_morpho.py --dataset_name {dataset} --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --tracklet_length 25 --model_dir /lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/ --model_name {model_name}"
 ]
 
 # Submit the job
