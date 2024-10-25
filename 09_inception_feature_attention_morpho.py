@@ -21,8 +21,8 @@ def main(args):
   
     tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
     data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
-    tracks_goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_{model_name}.csv')
-    
+    goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_{model_name}.csv')
+    tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
     unique_cell_types = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]['Cell_Type'].unique()
     print("Number of unique cell types:", len(unique_cell_types))
     print("Unique cell types:", unique_cell_types)
