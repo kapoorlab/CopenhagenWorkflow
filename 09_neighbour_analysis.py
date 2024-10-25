@@ -58,43 +58,43 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 
 def find_neighbors_within_radius(df, radius_xy, height_z):
-            neighbors_dict = {}
-            unique_track_ids = df['Track ID'].unique()
-            unique_time_points = df['t'].unique()
+    neighbors_dict = {}
+    unique_trackmate_ids = df['TrackMate Track ID'].unique()
+    unique_time_points = df['t'].unique()
+    
+    for trackmate_id in tqdm(unique_trackmate_ids):
+        neighbors_dict[trackmate_id] = {}
+        
+        for time_point in unique_time_points:
+            # Get the current track's coordinates
+            current_track = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
+            if current_track.empty:
+                continue
             
-            for track_id in tqdm(unique_track_ids):
-                neighbors_dict[track_id] = {}
-                
-                for time_point in unique_time_points:
-                    # Get the current track's coordinates
-                    current_track = df[(df['Track ID'] == track_id) & (df['t'] == time_point)]
-                    if current_track.empty:
-                        continue
-                    
-                    current_coords = current_track.iloc[0][['z', 'y', 'x']].values 
-                    
-                    # Filter DataFrame for the current time point
-                    time_filtered_df = df[df['t'] == time_point]
-                    
-                    # Compute distances using vectorized operations
-                    distances_xy = np.sqrt((time_filtered_df['y'] - current_coords[1])**2 + 
-                                        (time_filtered_df['x'] - current_coords[2])**2)
-                    distances_z = np.abs(time_filtered_df['z'] - current_coords[0])
-                    
-                    # Apply boolean masks to filter valid indices
-                    within_radius_xy = distances_xy <= radius_xy
-                    within_height_z = distances_z <= height_z
-                    valid_indices = within_radius_xy & within_height_z
-                    
-                    # Get valid track IDs, excluding the current track ID
-                    valid_track_ids = time_filtered_df[valid_indices]['Track ID'].unique()
-                    valid_track_ids = valid_track_ids[valid_track_ids != track_id]
-                    
-                    # Get neighbor cell types
-                    neighbor_cell_types = time_filtered_df[time_filtered_df['Track ID'].isin(valid_track_ids)]['Cell_Type'].tolist()
-                    neighbors_dict[track_id][time_point] = neighbor_cell_types
+            current_coords = current_track.iloc[0][['z', 'y', 'x']].values 
             
-            return neighbors_dict
+            # Filter DataFrame for the current time point
+            time_filtered_df = df[df['t'] == time_point]
+            
+            # Compute distances using vectorized operations
+            distances_xy = np.sqrt((time_filtered_df['y'] - current_coords[1])**2 + 
+                                   (time_filtered_df['x'] - current_coords[2])**2)
+            distances_z = np.abs(time_filtered_df['z'] - current_coords[0])
+            
+            # Apply boolean masks to filter valid indices
+            within_radius_xy = distances_xy <= radius_xy
+            within_height_z = distances_z <= height_z
+            valid_indices = within_radius_xy & within_height_z
+            
+            # Get valid TrackMate Track IDs, excluding the current TrackMate Track ID
+            valid_trackmate_ids = time_filtered_df[valid_indices]['TrackMate Track ID'].unique()
+            valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
+            
+            # Get neighbor cell types
+            neighbor_cell_types = time_filtered_df[time_filtered_df['TrackMate Track ID'].isin(valid_trackmate_ids)]['Cell_Type'].tolist()
+            neighbors_dict[trackmate_id][time_point] = neighbor_cell_types
+    
+    return neighbors_dict
 
 # %%
 neighbors_dict = find_neighbors_within_radius(neighbour_dataframe, neighbour_radius_xy, neighbour_radius_z)
