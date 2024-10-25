@@ -85,7 +85,7 @@ def main(args):
             tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).permute(0, 2, 1).to(device)  # Shape (1, T, F)
             batch_tracklets.append(tracklet_tensor)
         if batch_tracklets:    
-            batch_tensor = torch.cat(batch_tracklets, dim=0).permute(0, 2, 1).to(device)
+            batch_tensor = torch.cat(batch_tracklets, dim=0).to(device)
             print(batch_tensor.shape)
             save_name = f"{cell_type}_feature_importance.png"
             plot_feature_importance_heatmap(
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
     parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest', help='Model name including full path')
-    parser.add_argument('--N', type=int, default=30, help='Number of longest tracks per cell type to analyze')
+    parser.add_argument('--N', type=int, default=32, help='Number of longest tracks per cell type to analyze')
 
     args = parser.parse_args()
     main(args)
