@@ -73,7 +73,7 @@ def main(args):
         
         track_lengths = cell_type_df.groupby("TrackMate Track ID").size()
         longest_track_ids = track_lengths.nlargest(args.N).index  
-
+        batch_tracklets = []
         for track_id in longest_track_ids:
             # Get the track data
             track_df = cell_type_df[cell_type_df["TrackMate Track ID"] == track_id]
@@ -83,16 +83,15 @@ def main(args):
 
             tracklet_features = track_df[SHAPE_DYNAMIC_FEATURES].iloc[:tracklet_length].values 
             tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).permute(0, 2, 1).to(device)  # Shape (1, T, F)
-            
-            # Calculate and save the feature importance plot
+            batch_tracklets.append(tracklet_tensor)
+        if batch_tracklets:    
+            batch_tensor = torch.cat(batch_tracklets, dim=0).to(device)
             save_name = f"{cell_type}_Track_{track_id}_feature_importance.png"
             plot_feature_importance_heatmap(
                 gbr_morpho_torch_model,
-                [tracklet_tensor],
+                batch_tensor,
                 save_dir=save_dir,
                 save_name=save_name,
-                feature_names=SHAPE_DYNAMIC_FEATURES,  
-                track_labels=[f"Track {track_id}"]
             )
             print(f"Saved feature importance plot for {cell_type} Track ID {track_id}.")
 
@@ -102,10 +101,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for morpho prediction script")
     parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
-    parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
+    parser.add_argument('--channel', type=str, default='nuclei_', help='Channel name, e.g., nuclei_ or membrane_')
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
-    parser.add_argument('--model_name', type=str, default='morpho_feature_lightning_attention_gbr_25_membrane_', help='Model name including full path')
+    parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest', help='Model name including full path')
     parser.add_argument('--N', type=int, default=30, help='Number of longest tracks per cell type to analyze')
 
     args = parser.parse_args()
