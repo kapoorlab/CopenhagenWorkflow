@@ -85,7 +85,7 @@ def main(args):
             tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).permute(0, 2, 1).to(device)  # Shape (1, T, F)
             batch_tracklets.append(tracklet_tensor)
         if batch_tracklets:    
-            batch_tensor = torch.cat(batch_tracklets, dim=0).to(device)
+            batch_tensor = torch.cat(batch_tracklets, dim=0).permute(0, 2, 1).to(device)
             print(batch_tensor.shape)
             save_name = f"{cell_type}_feature_importance.png"
             plot_feature_importance_heatmap(
