@@ -34,7 +34,8 @@ gt_dataframe_file = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 gt_tracks_goblet_basal_radial_dataframe = pd.read_csv(gt_dataframe_file)
 
-tracks_goblet_basal_radial_dataframe['Cell_Type'].fillna('Radial', inplace=True) # All negate ones are Radials
+tracks_goblet_basal_radial_dataframe['Cell_Type'] = tracks_goblet_basal_radial_dataframe['Cell_Type'].fillna('Radial')
+
 cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
 cell_types = cell_type_dataframe['Cell_Type'].unique()
