@@ -82,7 +82,7 @@ def main(args):
                 continue
 
             tracklet_features = track_df[SHAPE_DYNAMIC_FEATURES].iloc[:tracklet_length].values 
-            tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).to(device)  # Shape (1, T, F)
+            tracklet_tensor = torch.tensor(tracklet_features, dtype=torch.float32).unsqueeze(0).permute(0, 2, 1).to(device)  # Shape (1, T, F)
             
             # Calculate and save the feature importance plot
             save_name = f"{cell_type}_Track_{track_id}_feature_importance.png"
