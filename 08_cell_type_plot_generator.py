@@ -39,8 +39,8 @@ time_delta = 10
 block_size = 100
 overlap = 50
 verbose_generation_plots = False
-save_dir = os.path.join(tracking_directory, f'cell_type_clustering_plots_predicted_{channel}predicted_morpho_feature_attention_shallowest_litest/')
-distribution_dir = os.path.join(tracking_directory, f'cell_type_distribution_plots_predicted_{channel}predicted_morpho_feature_attention_shallowest_litest/')
+save_dir = os.path.join(tracking_directory, f'cell_type_clustering_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
+distribution_dir = os.path.join(tracking_directory, f'cell_type_distribution_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 Path(distribution_dir).mkdir(exist_ok=True, parents=True)
 method="ward"
