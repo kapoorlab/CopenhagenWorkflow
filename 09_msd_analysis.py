@@ -67,7 +67,7 @@ for cell_type in cell_types:
             track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
             
             # Ensure there are enough data points (e.g., at least 3 points) for fitting
-            if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
+            if len(track_data['t_normalized']) < 5 or len(track_data['MSD']) < 5:
                 continue
 
             try:
