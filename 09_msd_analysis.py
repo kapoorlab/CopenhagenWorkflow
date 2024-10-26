@@ -30,6 +30,8 @@ dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normali
 def polynomial_msd(t, a, b, c, d):
     return a * t**3 + b * t**2 + c * t + d
 
+def power_law_msd(t, D, alpha):
+    return D * t**alpha
 
 # Load Data
 track_vectors = TrackVector(master_xml_path=xml_path)
@@ -57,7 +59,7 @@ for cell_type in cell_types:
         track_ids = trackmate_data['Track ID'].unique()
         
         # Iterate over each Track ID within the TrackMate Track ID
-        for track_id in track_ids:
+        for count, track_id in enumerate(track_ids):
             # Filter the DataFrame for this specific track
             track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
             
@@ -68,46 +70,55 @@ for cell_type in cell_types:
             if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
                 continue
 
-            # Fit MSD data to the msd_model to determine alpha, handling warnings
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("error", OptimizeWarning)
-                    popt, _ = curve_fit(polynomial_msd, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
-                    a, b, c, d = popt
-                
-                    if abs(a) > abs(b) and abs(a) > abs(c):  # Cubic term dominant
+                    
+                    # Step 1: Fit polynomial model to the raw MSD data
+                    popt_poly, _ = curve_fit(polynomial_msd, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+                    a, b, c, d = popt_poly  # Extract polynomial coefficients
+                    
+                    # Generate fitted MSD data using the polynomial fit
+                    fitted_msd_data = polynomial_msd(track_data['t_normalized'], *popt_poly)
+                    
+                    # Step 2: Fit the polynomial-derived MSD data to the power-law model to extract alpha
+                    popt_msd, _ = curve_fit(power_law_msd, track_data['t_normalized'], fitted_msd_data, maxfev=5000)
+                    D, alpha = popt_msd  
+                    
+                    if alpha > 1.2:
                         motion_type = "Directed"
-                    elif abs(b) > abs(a) and abs(b) > abs(c):  # Quadratic term dominant
+                    elif 0.8 <= alpha <= 1.2:
                         motion_type = "Brownian"
-                    else:  # Linear term dominant
+                    else:
                         motion_type = "Random"
                     
-                    # Update motion type count for the cell type
                     motion_stats[cell_type][motion_type] += 1
                     
-                    # Plot the raw MSD data and fitted curve in separate subplots
                     fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
                     
-                    # Plot 1: Raw MSD data
-                    axs[0].plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
-                    axs[0].set_title(f'Raw MSD Data for {cell_type}')
-                    axs[0].set_xlabel('Normalized Time (t)')
-                    axs[0].set_ylabel('Mean Square Displacement (MSD)')
-                    
-                    # Plot 2: Fitted MSD model
-                    fitted_msd = polynomial_msd(track_data['t_normalized'], *popt)
-                    axs[1].plot(track_data['t_normalized'], fitted_msd, color="orange", linestyle="--", alpha=0.7)
-                    axs[1].set_title(f'Fitted MSD Model for {cell_type}')
-                    axs[1].set_xlabel('Normalized Time (t)')
-                    
-                    # Save the combined plot without legends
-                    plt.tight_layout()
-                    plt.savefig(os.path.join(save_dir, f'MSD_Fit_TrackMate_{trackmate_id}_Track_{track_id}_{cell_type}.png'))
-                    plt.close()
-            
+                    if count < 100:
+                        # Plot 1: Raw MSD data
+                        axs[0].plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
+                        axs[0].set_title(f'Raw MSD Data for {cell_type}')
+                        axs[0].set_xlabel('Normalized Time (t)')
+                        axs[0].set_ylabel('Mean Square Displacement (MSD)')
+                        
+                        # Plot 2: Fitted polynomial MSD and power-law MSD
+                        axs[1].plot(track_data['t_normalized'], fitted_msd_data, color="orange", linestyle="--", alpha=0.7, label="Polynomial Fit")
+                        axs[1].plot(track_data['t_normalized'], power_law_msd(track_data['t_normalized'], *popt_msd), color="green", linestyle="-.", alpha=0.7, label="Power-Law Fit")
+                        axs[1].set_title(f'Fitted Polynomial and Power-Law MSD Models for {cell_type}')
+                        axs[1].set_xlabel('Normalized Time (t)')
+                        
+                        # Save the combined plot without legends
+                        plt.tight_layout()
+                        plt.savefig(os.path.join(save_dir, f'MSD_Fit_TrackMate_{trackmate_id}_Track_{track_id}_{cell_type}.png'))
+                        plt.close()
+
             except (RuntimeError, OptimizeWarning):
                 print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
                 continue
+
+
 plt.title(f'MSD and Fitted Model for Cell Type {cell_type}')
 plt.xlabel('Normalized Time (t)')
 plt.ylabel('Mean Square Displacement (MSD)')
