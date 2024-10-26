@@ -52,14 +52,14 @@ for cell_type in cell_types:
     trackmate_track_ids = filtered_tracks['TrackMate Track ID'].unique()
     
     # Iterate over each TrackMate Track ID
-    for trackmate_id in trackmate_track_ids:
+    for count, trackmate_id in enumerate(trackmate_track_ids):
         trackmate_data = filtered_tracks[filtered_tracks['TrackMate Track ID'] == trackmate_id]
         
         # Get unique Track IDs within this TrackMate Track ID
         track_ids = trackmate_data['Track ID'].unique()
         
         # Iterate over each Track ID within the TrackMate Track ID
-        for count, track_id in enumerate(track_ids):
+        for track_id in track_ids:
             # Filter the DataFrame for this specific track
             track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
             
