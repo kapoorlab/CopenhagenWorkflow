@@ -261,7 +261,6 @@ def plot_spatial_neighbors(df, bonds, color_palette, save_dir, time_points):
 time_points = sorted(neighbour_dataframe['t'].unique())
 plot_spatial_neighbors(neighbour_dataframe, bonds, color_palette, save_dir, time_points)
 
-
 def plot_neighbour_time(df, bonds, color_palette, save_dir):
     timepoints = sorted(df['t'].unique())
     cell_types = df['Cell_Type'].unique()
@@ -274,11 +273,21 @@ def plot_neighbour_time(df, bonds, color_palette, save_dir):
         time_df = df[df['t'] == t]
         
         for trackmate_id, neighbors_at_t in bonds.items():
-            cell_type = time_df[time_df['TrackMate Track ID'] == trackmate_id]['Cell_Type'].iloc[0]
+            # Check if trackmate_id exists in time_df
+            cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
+            if cell_type_row.empty:
+                continue  # Skip if no data for this trackmate_id at this time point
+            
+            cell_type = cell_type_row['Cell_Type'].iloc[0]
             
             if t in neighbors_at_t:
                 for neighbor_id in neighbors_at_t[t]:
-                    neighbor_type = time_df[time_df['TrackMate Track ID'] == neighbor_id]['Cell_Type'].iloc[0]
+                    # Check if neighbor_id exists in time_df
+                    neighbor_type_row = time_df[time_df['TrackMate Track ID'] == neighbor_id]
+                    if neighbor_type_row.empty:
+                        continue  # Skip if no data for this neighbor_id at this time point
+                    
+                    neighbor_type = neighbor_type_row['Cell_Type'].iloc[0]
                     neighbor_counts[cell_type][neighbor_type][time_idx] += 1
 
     # Plot neighbor counts over time
