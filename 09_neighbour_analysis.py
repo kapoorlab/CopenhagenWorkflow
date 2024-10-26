@@ -22,7 +22,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 # Neighbor distance thresholds
-neighbour_radius_xy = 30  # pixels
+neighbour_radius_xy = 70  # pixels
 neighbour_radius_z = 5
 
 # Load data
