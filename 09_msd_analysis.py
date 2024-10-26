@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit, OptimizeWarning
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -49,9 +49,6 @@ for cell_type in cell_types:
     # Get unique TrackMate Track IDs for this cell type
     trackmate_track_ids = filtered_tracks['TrackMate Track ID'].unique()
     
-    # Create a new figure for MSD plots for this cell type
-    plt.figure(figsize=(12, 6))
-    
     # Iterate over each TrackMate Track ID
     for trackmate_id in trackmate_track_ids:
         trackmate_data = filtered_tracks[filtered_tracks['TrackMate Track ID'] == trackmate_id]
@@ -66,13 +63,18 @@ for cell_type in cell_types:
             
             # Normalize the time for this track (set the first time point to t = 0)
             track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
+            
             # Ensure there are enough data points (e.g., at least 3 points) for fitting
             if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
+                print(f"Skipping TrackMate Track ID {trackmate_id} / Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
                 continue
 
-            # Fit MSD data to the msd_model to determine alpha
+            # Fit MSD data to the msd_model to determine alpha, handling warnings
             try:
-                popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+                with warnings.catch_warnings():
+                    warnings.simplefilter("error", OptimizeWarning)
+                    popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+                
                 D, alpha = popt  # Extract diffusion coefficient and alpha
                 
                 # Classify track based on alpha
@@ -86,23 +88,29 @@ for cell_type in cell_types:
                 # Update motion type count for the cell type
                 motion_stats[cell_type][motion_type] += 1
                 
-                # Plot the MSD with the fitted curve
-                plt.plot(track_data['t_normalized'], track_data['MSD'], label=f'TrackMate {trackmate_id} / Track {track_id}', alpha=0.5)
-                plt.plot(track_data['t_normalized'], msd_model(track_data['t_normalized'], *popt), linestyle='--')
+                # Plot the raw MSD data and fitted curve in separate subplots
+                fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
+                
+                # Plot 1: Raw MSD data
+                axs[0].plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
+                axs[0].set_title(f'Raw MSD Data for {cell_type}')
+                axs[0].set_xlabel('Normalized Time (t)')
+                axs[0].set_ylabel('Mean Square Displacement (MSD)')
+                
+                # Plot 2: Fitted MSD model
+                fitted_msd = msd_model(track_data['t_normalized'], *popt)
+                axs[1].plot(track_data['t_normalized'], fitted_msd, color="orange", linestyle="--", alpha=0.7)
+                axs[1].set_title(f'Fitted MSD Model for {cell_type}')
+                axs[1].set_xlabel('Normalized Time (t)')
+                
+                # Save the combined plot without legends
+                plt.tight_layout()
+                plt.savefig(os.path.join(save_dir, f'MSD_Fit_TrackMate_{trackmate_id}_Track_{track_id}_{cell_type}.png'))
+                plt.close()
             
-            except RuntimeError:
+            except (RuntimeError, OptimizeWarning):
                 print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
                 continue
-    
-    # Set plot titles and labels
-    plt.title(f'MSD over Normalized Time with Fitted Motion Type for Cell Type {cell_type}')
-    plt.xlabel('Normalized Time (t)')
-    plt.ylabel('Mean Square Displacement (MSD)')
-    plt.legend()
-    
-    # Save the plot
-    plt.savefig(os.path.join(save_dir, f'MSD_Fit_Cell_Type_{cell_type}.png'))
-    plt.close()
 
 # Convert motion_stats to DataFrame for summary and save
 motion_stats_df = pd.DataFrame(motion_stats).T
