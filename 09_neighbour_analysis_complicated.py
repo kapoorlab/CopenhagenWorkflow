@@ -6,9 +6,7 @@ from tqdm import tqdm
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from collections import defaultdict, Counter
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.animation import FuncAnimation, PillowWriter
+from collections import defaultdict
 
 # Configuration
 dataset_name = 'Sixth'
@@ -195,48 +193,47 @@ def plot_spatial_neighbors(df, bonds, color_palette, save_dir, time_points):
 time_points = sorted(neighbour_dataframe['t'].unique())
 plot_spatial_neighbors(neighbour_dataframe, bonds, color_palette, save_dir, time_points)
 
-def create_animation(save_dir, time_points, output_filename="cell_neighbors_animation.mp4"):
-    fig = plt.figure(figsize=(12, 10))
-    ax = fig.add_subplot(111, projection='3d')
+
+def plot_neighbour_time(df, bonds, color_palette, save_dir):
+    timepoints = sorted(df['t'].unique())
+    cell_types = df['Cell_Type'].unique()
     
-    def update(frame):
-        ax.cla()  
-        t = time_points[frame]
-        
-        time_df = neighbour_dataframe[neighbour_dataframe['t'] == t]
-        
-        for cell_type, color in color_palette.items():
-            cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_type_df['x'], cell_type_df['y'], cell_type_df['z'], 
-                       color=color, label=cell_type, s=20, alpha=0.7)
+    # Initialize dictionary to store neighbor counts per cell type over time
+    neighbor_counts = {cell_type: {neighbor_type: [0] * len(timepoints) for neighbor_type in cell_types} for cell_type in cell_types}
+
+    # Loop over each time point and count neighbors by cell type
+    for time_idx, t in enumerate(timepoints):
+        time_df = df[df['t'] == t]
         
         for trackmate_id, neighbors_at_t in bonds.items():
+            cell_type = time_df[time_df['TrackMate Track ID'] == trackmate_id]['Cell_Type'].iloc[0]
+            
             if t in neighbors_at_t:
-                cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y', 'z']].values
-                if cell_coords.size == 0:
-                    continue
-                cell_coords = cell_coords[0]
-                
                 for neighbor_id in neighbors_at_t[t]:
-                    neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y', 'z']].values
-                    if neighbor_coords.size == 0:
-                        continue
-                    neighbor_coords = neighbor_coords[0]
-                    ax.plot([cell_coords[0], neighbor_coords[0]],
-                            [cell_coords[1], neighbor_coords[1]],
-                            [cell_coords[2], neighbor_coords[2]], color='gray', alpha=0.4)
+                    neighbor_type = time_df[time_df['TrackMate Track ID'] == neighbor_id]['Cell_Type'].iloc[0]
+                    neighbor_counts[cell_type][neighbor_type][time_idx] += 1
 
-        ax.set_title(f"Cell Neighbors at Time Point {t}")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
+    # Plot neighbor counts over time
+    fig, axs = plt.subplots(len(cell_types), 1, figsize=(16, len(cell_types) * 5), sharex=True)
+
+    if len(cell_types) == 1:
+        axs = [axs]  # Ensure axs is always a list for uniform indexing
+
+    for idx, cell_type in enumerate(cell_types):
+        ax = axs[idx]
+        for neighbor_type in cell_types:
+            y_values = neighbor_counts[cell_type][neighbor_type]
+            ax.plot(timepoints, y_values, label=f'{neighbor_type} as Neighbor', color=color_palette.get(neighbor_type, 'grey'), marker='o')
+        
+        ax.set_title(f'Neighbor Counts Over Time for {cell_type} Cells')
+        ax.set_xlabel('Timepoint')
+        ax.set_ylabel('Neighbor Count')
         ax.legend(loc='upper right')
         ax.grid(True)
 
-    ani = FuncAnimation(fig, update, frames=len(time_points), repeat=False)
-    
-    ani.save(os.path.join(save_dir, output_filename), writer='ffmpeg', fps=2)
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
+    plt.close(fig)
 
-    plt.close(fig)  
-
-create_animation(save_dir, time_points, output_filename="cell_neighbors_animation.mp4")
+# Run the function
+plot_neighbour_time(neighbour_dataframe, bonds, color_palette, save_dir)
