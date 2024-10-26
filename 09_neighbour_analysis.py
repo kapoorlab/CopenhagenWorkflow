@@ -24,7 +24,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 neighbour_radius_xy = 70 
-partner_time = 10  # Bonds lasting longer than this will be specially plotted
+partner_time = 50  # Bonds lasting longer than this will be specially plotted
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
