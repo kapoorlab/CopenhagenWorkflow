@@ -147,6 +147,7 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         plt.close(fig)
 
 
+time_points = sorted(neighbour_dataframe['t'].unique())
 plot_spatial_neighbors_with_bond_time_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
 
 
