@@ -27,9 +27,9 @@ Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
 
-# MSD model function for fitting
-def msd_model(t, D, alpha):
-    return D * t ** alpha
+def polynomial_msd(t, a, b, c, d):
+    return a * t**3 + b * t**2 + c * t + d
+
 
 # Load Data
 track_vectors = TrackVector(master_xml_path=xml_path)
@@ -66,23 +66,21 @@ for cell_type in cell_types:
             
             # Ensure there are enough data points (e.g., at least 3 points) for fitting
             if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
-                print(f"Skipping TrackMate Track ID {trackmate_id} / Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
                 continue
 
             # Fit MSD data to the msd_model to determine alpha, handling warnings
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("error", OptimizeWarning)
-                    popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
-                
+                    popt, _ = curve_fit(polynomial_msd, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+                    a, b, c, d = popt
                 D, alpha = popt  # Extract diffusion coefficient and alpha
                 
-                # Classify track based on alpha
-                if alpha > 1.2:
+                if abs(a) > abs(b) and abs(a) > abs(c):  # Cubic term dominant
                     motion_type = "Directed"
-                elif 0.8 <= alpha <= 1.2:
+                elif abs(b) > abs(a) and abs(b) > abs(c):  # Quadratic term dominant
                     motion_type = "Brownian"
-                else:
+                else:  # Linear term dominant
                     motion_type = "Random"
                 
                 # Update motion type count for the cell type
@@ -98,7 +96,7 @@ for cell_type in cell_types:
                 axs[0].set_ylabel('Mean Square Displacement (MSD)')
                 
                 # Plot 2: Fitted MSD model
-                fitted_msd = msd_model(track_data['t_normalized'], *popt)
+                fitted_msd = polynomial_msd(track_data['t_normalized'], *popt)
                 axs[1].plot(track_data['t_normalized'], fitted_msd, color="orange", linestyle="--", alpha=0.7)
                 axs[1].set_title(f'Fitted MSD Model for {cell_type}')
                 axs[1].set_xlabel('Normalized Time (t)')
@@ -111,6 +109,15 @@ for cell_type in cell_types:
             except (RuntimeError, OptimizeWarning):
                 print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
                 continue
+plt.title(f'MSD and Fitted Model for Cell Type {cell_type}')
+plt.xlabel('Normalized Time (t)')
+plt.ylabel('Mean Square Displacement (MSD)')
+plt.legend()
+
+# Save the combined plot
+plt.savefig(os.path.join(save_dir, f'Combined_MSD_Fit_Cell_Type_{cell_type}.png'))
+plt.close()
+
 
 # Convert motion_stats to DataFrame for summary and save
 motion_stats_df = pd.DataFrame(motion_stats).T
