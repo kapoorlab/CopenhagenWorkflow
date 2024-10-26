@@ -132,7 +132,7 @@ for cell_type in cell_types:
         for track_id in track_ids:
             track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
             track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
-            plt.plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
+            plt.plot(track_data['t_normalized'], track_data['MSD'], alpha=0.5)
 
     plt.title(f'MSD and for Cell Type {cell_type}')
     plt.xlabel('Normalized Time (t)')
