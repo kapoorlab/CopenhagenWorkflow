@@ -97,27 +97,26 @@ def get_bond_color(bond_time, max_bond_time):
     cmap = cm.get_cmap("coolwarm")
     return cmap(norm(bond_time))
 
-def plot_spatial_neighbors_with_bond_time(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
+def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     max_bond_time = max(bond_durations.values()) if bond_durations else 1
     
     for t in time_points:
         time_df = df[df['t'] == t]
         
-        fig = plt.figure(figsize=(12, 10))
-        ax = fig.add_subplot(111, projection='3d')
+        fig, ax = plt.subplots(figsize=(12, 10))
         
+        # Plot cells by type in 2D XY plane
         for cell_type, color in color_palette.items():
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_type_df['x'], cell_type_df['y'], cell_type_df['z'], 
-                       color=color, label=cell_type, s=20, alpha=0.7)
+            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=20, alpha=0.7)
         
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
         
         for _, row in bonds_at_time.iterrows():
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
-            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y', 'z']].values
-            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y', 'z']].values
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
             
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
@@ -126,23 +125,23 @@ def plot_spatial_neighbors_with_bond_time(df, bonds_df, bond_durations, color_pa
             bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
             bond_color = get_bond_color(bond_time, max_bond_time)
             
-            ax.plot([cell_coords[0], neighbor_coords[0]],
-                    [cell_coords[1], neighbor_coords[1]],
-                    [cell_coords[2], neighbor_coords[2]], color=bond_color, alpha=0.2)
+            ax.plot([cell_coords[0], neighbor_coords[0]], [cell_coords[1], neighbor_coords[1]], color=bond_color, alpha=0.2)
         
-        ax.set_title(f"Cell Neighbors at Time Point {t}")
+        ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
         ax.legend(loc='upper right')
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}.png'))
+        plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}_2D.png'))
         plt.close(fig)
 
 time_points = sorted(neighbour_dataframe['t'].unique())
-plot_spatial_neighbors_with_bond_time(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
+plot_spatial_neighbors_with_bond_time_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
+
+
+
 
 def detect_bond_breaks(bonds, time_points, threshold_xy, threshold_z, df):
     bond_breaks = defaultdict(list)  
