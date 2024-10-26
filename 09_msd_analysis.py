@@ -6,19 +6,12 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import norm
-from napatrackmater.Trackvector import (SHAPE_FEATURES, 
-                                        DYNAMIC_FEATURES, 
-                                        SHAPE_DYNAMIC_FEATURES,
-                                        
-                                        )
+from scipy.optimize import curve_fit
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-
-# %%
-dataset_name = 'Second'
+# Configuration
+dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
@@ -32,31 +25,23 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
-
 dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
- 
 
-shape_cols = SHAPE_FEATURES
-dynamic_cols = DYNAMIC_FEATURES
-feature_cols = SHAPE_DYNAMIC_FEATURES
+# MSD model function for fitting
+def msd_model(t, D, alpha):
+    return D * t ** alpha
 
-
-
-# %%
+# Load Data
 track_vectors = TrackVector(master_xml_path=xml_path)
-track_vectors.t_minus = 0
-track_vectors.t_plus = track_vectors.tend
-track_vectors.y_start = 0
-track_vectors.y_end = track_vectors.ymax
-track_vectors.x_start = 0
-track_vectors.x_end = track_vectors.xmax
-
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
 cell_types = cell_type_dataframe['Cell_Type'].unique()
 
+# Initialize dictionary to store motion type counts for each cell type
+motion_stats = {cell_type: {"Directed": 0, "Brownian": 0, "Random": 0} for cell_type in cell_types}
 
+# MSD Analysis and Plotting for Each Cell Type
 for cell_type in cell_types:
     # Filter DataFrame by Cell Type
     filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == cell_type]
@@ -64,10 +49,10 @@ for cell_type in cell_types:
     # Get unique Track IDs for this cell type
     track_ids = filtered_tracks['Track ID'].unique()
     
-    # Create a new figure
+    # Create a new figure for MSD plots
     plt.figure(figsize=(12, 6))
     
-    # Iterate over each Track ID and plot a line for each track
+    # Iterate over each Track ID and calculate MSD analysis for each track
     for track_id in track_ids:
         # Filter the DataFrame for this specific track
         track_data = filtered_tracks[filtered_tracks['Track ID'] == track_id].copy()
@@ -75,17 +60,42 @@ for cell_type in cell_types:
         # Normalize the time for this track (set the first time point to t = 0)
         track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
         
-        # Plot the MSD values over the normalized time
-        plt.plot(track_data['t_normalized'], track_data['MSD'], label=f'Track ID {track_id}')
+        # Fit MSD data to the model to determine alpha
+        try:
+            popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+            D, alpha = popt  # Extract diffusion coefficient and alpha
+            
+            # Classify track based on alpha
+            if alpha > 1.2:
+                motion_type = "Directed"
+            elif 0.8 <= alpha <= 1.2:
+                motion_type = "Brownian"
+            else:
+                motion_type = "Random"
+            
+            # Update motion type count for the cell type
+            motion_stats[cell_type][motion_type] += 1
+            
+            # Plot the MSD with the fitted curve
+            plt.plot(track_data['t_normalized'], track_data['MSD'], label=f'Track {track_id}', alpha=0.5)
+            plt.plot(track_data['t_normalized'], msd_model(track_data['t_normalized'], *popt), linestyle='--')
+        
+        except RuntimeError:
+            print(f"Could not fit MSD for Track ID {track_id} in Cell Type {cell_type}.")
+            continue
     
     # Set plot titles and labels
-    plt.title(f'Mean Square Displacement (MSD) over Normalized Time by Track ID for Cell Type {cell_type}')
+    plt.title(f'MSD over Normalized Time with Fitted Motion Type for Cell Type {cell_type}')
     plt.xlabel('Normalized Time (t)')
     plt.ylabel('Mean Square Displacement (MSD)')
+    plt.legend()
     
-    # Save the plot as an image
-    plt.savefig(os.path.join(save_dir, f'MSD_Cell_Type_{cell_type}.png'))
-    
-    # Adjust layout and display/save
-    plt.tight_layout()
-    plt.close()    
+    # Save the plot
+    plt.savefig(os.path.join(save_dir, f'MSD_Fit_Cell_Type_{cell_type}.png'))
+    plt.close()
+
+# Convert motion_stats to DataFrame for summary and save
+motion_stats_df = pd.DataFrame(motion_stats).T
+motion_stats_df.to_csv(os.path.join(save_dir, 'msd_motion_type_statistics.csv'))
+
+print("MSD analysis complete. Motion statistics saved as 'msd_motion_type_statistics.csv'.")
