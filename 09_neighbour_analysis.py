@@ -35,10 +35,13 @@ color_palette = {
 tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
+bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
+bond_durations_csv_path = os.path.join(save_dir, 'bond_durations.csv')
+
 def find_and_track_bonds(df, radius_xy, height_z):
     bonds = defaultdict(lambda: defaultdict(list))
-    bond_durations = bond_durations = defaultdict(int)  
-
+    bond_durations = defaultdict(int)
+    
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
     
@@ -49,43 +52,57 @@ def find_and_track_bonds(df, radius_xy, height_z):
                 continue
             
             current_coords = current_track.iloc[0][['z', 'y', 'x']].values
-            
-            # Filter DataFrame for the current time point
             time_filtered_df = df[df['t'] == time_point]
             
-            # Compute distances
             distances_xy = np.sqrt((time_filtered_df['y'] - current_coords[1])**2 + 
                                    (time_filtered_df['x'] - current_coords[2])**2)
             distances_z = np.abs(time_filtered_df['z'] - current_coords[0])
             
-            # Determine neighbors within radius
             within_radius_xy = distances_xy <= radius_xy
             within_height_z = distances_z <= height_z
             valid_indices = within_radius_xy & within_height_z
             
-            # Get valid TrackMate Track IDs (exclude self)
             valid_trackmate_ids = time_filtered_df[valid_indices]['TrackMate Track ID'].unique()
             valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
             
-            # Store neighbors (bonds) and increment bond durations
             for neighbor_id in valid_trackmate_ids:
                 bonds[trackmate_id][time_point].append(neighbor_id)
                 bond_durations[(trackmate_id, neighbor_id)] += 1
-                
-    return bonds, bond_durations
+    
+    # Convert bonds and bond_durations to DataFrames
+    bonds_df = pd.DataFrame(
+        [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
+        columns=['TrackMate Track ID', 'Time', 'Neighbor TrackMate Track ID']
+    )
+    
+    bond_durations_df = pd.DataFrame(
+        [(trackmate_id, neighbor_id, duration) for (trackmate_id, neighbor_id), duration in bond_durations.items()],
+        columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Duration']
+    )
+    
+    return bonds_df, bond_durations_df
 
-# Function to map bond durations to colors
+# Check if bonds and bond_durations CSVs exist
+if os.path.exists(bonds_csv_path) and os.path.exists(bond_durations_csv_path):
+    print("Loading bonds and bond_durations from CSV files.")
+    bonds_df = pd.read_csv(bonds_csv_path)
+    bond_durations_df = pd.read_csv(bond_durations_csv_path)
+else:
+    print("Calculating bonds and bond_durations.")
+    bonds_df, bond_durations_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy, neighbour_radius_z)
+    bonds_df.to_csv(bonds_csv_path, index=False)
+    bond_durations_df.to_csv(bond_durations_csv_path, index=False)
+
+# Load bond durations as a dictionary for plotting
+bond_durations = {(row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']): row['Duration'] for _, row in bond_durations_df.iterrows()}
+
+# Plotting functions remain similar but use bond_durations directly from the DataFrame
 def get_bond_color(bond_time, max_bond_time):
     norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
-    cmap = cm.get_cmap("coolwarm")  # Choose a colormap
+    cmap = cm.get_cmap("coolwarm")
     return cmap(norm(bond_time))
 
-# Run neighbor and bond analysis
-bonds, bond_durations = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy, neighbour_radius_z)
-time_points = sorted(neighbour_dataframe['t'].unique())
-
-# Plot spatial neighbors with bond colors based on bond_time
-def plot_spatial_neighbors_with_bond_time(df, bonds, bond_durations, color_palette, save_dir, time_points):
+def plot_spatial_neighbors_with_bond_time(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     max_bond_time = max(bond_durations.values()) if bond_durations else 1
     
@@ -95,35 +112,29 @@ def plot_spatial_neighbors_with_bond_time(df, bonds, bond_durations, color_palet
         fig = plt.figure(figsize=(12, 10))
         ax = fig.add_subplot(111, projection='3d')
         
-        # Plot cells by type
         for cell_type, color in color_palette.items():
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_type_df['x'], cell_type_df['y'], cell_type_df['z'], 
                        color=color, label=cell_type, s=20, alpha=0.7)
         
-        # Plot bonds with colors based on bond_time
-        for trackmate_id, neighbors_at_t in bonds.items():
-            if t in neighbors_at_t:
-                cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y', 'z']].values
-                if cell_coords.size == 0:
-                    continue
-                cell_coords = cell_coords[0]
-                
-                for neighbor_id in neighbors_at_t[t]:
-                    neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y', 'z']].values
-                    if neighbor_coords.size == 0:
-                        continue
-                    neighbor_coords = neighbor_coords[0]
-                    
-                    # Get the bond_time and corresponding color
-                    bond_time = bond_durations[(trackmate_id, neighbor_id)]
-                    bond_color = get_bond_color(bond_time, max_bond_time)
-                    
-                    # Plot bond with color based on bond_time
-                    ax.plot([cell_coords[0], neighbor_coords[0]],
-                            [cell_coords[1], neighbor_coords[1]],
-                            [cell_coords[2], neighbor_coords[2]], color=bond_color, alpha=0.7)
-
+        bonds_at_time = bonds_df[bonds_df['Time'] == t]
+        
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y', 'z']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y', 'z']].values
+            
+            if cell_coords.size == 0 or neighbor_coords.size == 0:
+                continue
+            
+            cell_coords, neighbor_coords = cell_coords[0], neighbor_coords[0]
+            bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
+            bond_color = get_bond_color(bond_time, max_bond_time)
+            
+            ax.plot([cell_coords[0], neighbor_coords[0]],
+                    [cell_coords[1], neighbor_coords[1]],
+                    [cell_coords[2], neighbor_coords[2]], color=bond_color, alpha=0.7)
+        
         ax.set_title(f"Cell Neighbors at Time Point {t}")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -136,7 +147,8 @@ def plot_spatial_neighbors_with_bond_time(df, bonds, bond_durations, color_palet
         plt.close(fig)
 
 # Run the plotting function
-plot_spatial_neighbors_with_bond_time(neighbour_dataframe, bonds, bond_durations, color_palette, save_dir, time_points)
+time_points = sorted(neighbour_dataframe['t'].unique())
+plot_spatial_neighbors_with_bond_time(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
 
 # Function to detect bond-breaking events over time
 def detect_bond_breaks(bonds, time_points, threshold_xy, threshold_z, df):
