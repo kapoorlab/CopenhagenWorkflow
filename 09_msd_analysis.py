@@ -99,3 +99,27 @@ motion_stats_df = pd.DataFrame(motion_stats).T
 motion_stats_df.to_csv(os.path.join(save_dir, 'msd_motion_type_statistics.csv'))
 
 print("MSD analysis complete. Motion statistics saved as 'msd_motion_type_statistics.csv'.")
+
+
+# 1. Bar Plot for Motion Types by Cell Type
+plt.figure(figsize=(10, 6))
+motion_stats_df.plot(kind='bar', stacked=True, color=['#1f77b4', '#ff7f0e', '#2ca02c'])
+plt.title('Distribution of Motion Types by Cell Type')
+plt.xlabel('Cell Type')
+plt.ylabel('Number of Tracks')
+plt.legend(title='Motion Type')
+plt.tight_layout()
+plt.savefig(os.path.join(save_dir, 'motion_type_distribution_bar.png'))
+plt.close()
+
+# 2. Pie Charts for Each Cell Type Showing Proportion of Motion Types
+for cell_type in motion_stats_df.index:
+    plt.figure(figsize=(6, 6))
+    plt.pie(motion_stats_df.loc[cell_type], labels=motion_stats_df.columns, 
+            autopct='%1.1f%%', startangle=90, colors=['#1f77b4', '#ff7f0e', '#2ca02c'])
+    plt.title(f'Motion Type Proportion for Cell Type: {cell_type}')
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_dir, f'motion_type_proportion_{cell_type}.png'))
+    plt.close()
+
+print("Motion type distribution plots saved.")
