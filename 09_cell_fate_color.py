@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+from pathlib import Path
 import tifffile as tiff
 import os
 
@@ -41,6 +41,7 @@ data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
 
 save_dir = os.path.join(tracking_directory, f'cell_fate_{channel}colored_segmentation/')
+Path(save_dir).mkdir(exist_ok=True)
 segmentation_img_path = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/seg_nuclei_timelapses/{timelapse_to_track}.tif'  
 
 output_img_path = os.path.join(save_dir, f'{timelapse_to_track}_colored.tif')
