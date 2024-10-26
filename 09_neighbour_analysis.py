@@ -37,7 +37,8 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 def find_and_track_bonds(df, radius_xy, height_z):
     bonds = defaultdict(lambda: defaultdict(list))
-    bond_durations = defaultdict(lambda: defaultdict(int))  
+    bond_durations = bond_durations = defaultdict(int)  
+
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
     
