@@ -74,37 +74,36 @@ for cell_type in cell_types:
                     warnings.simplefilter("error", OptimizeWarning)
                     popt, _ = curve_fit(polynomial_msd, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
                     a, b, c, d = popt
-                D, alpha = popt  # Extract diffusion coefficient and alpha
                 
-                if abs(a) > abs(b) and abs(a) > abs(c):  # Cubic term dominant
-                    motion_type = "Directed"
-                elif abs(b) > abs(a) and abs(b) > abs(c):  # Quadratic term dominant
-                    motion_type = "Brownian"
-                else:  # Linear term dominant
-                    motion_type = "Random"
-                
-                # Update motion type count for the cell type
-                motion_stats[cell_type][motion_type] += 1
-                
-                # Plot the raw MSD data and fitted curve in separate subplots
-                fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
-                
-                # Plot 1: Raw MSD data
-                axs[0].plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
-                axs[0].set_title(f'Raw MSD Data for {cell_type}')
-                axs[0].set_xlabel('Normalized Time (t)')
-                axs[0].set_ylabel('Mean Square Displacement (MSD)')
-                
-                # Plot 2: Fitted MSD model
-                fitted_msd = polynomial_msd(track_data['t_normalized'], *popt)
-                axs[1].plot(track_data['t_normalized'], fitted_msd, color="orange", linestyle="--", alpha=0.7)
-                axs[1].set_title(f'Fitted MSD Model for {cell_type}')
-                axs[1].set_xlabel('Normalized Time (t)')
-                
-                # Save the combined plot without legends
-                plt.tight_layout()
-                plt.savefig(os.path.join(save_dir, f'MSD_Fit_TrackMate_{trackmate_id}_Track_{track_id}_{cell_type}.png'))
-                plt.close()
+                    if abs(a) > abs(b) and abs(a) > abs(c):  # Cubic term dominant
+                        motion_type = "Directed"
+                    elif abs(b) > abs(a) and abs(b) > abs(c):  # Quadratic term dominant
+                        motion_type = "Brownian"
+                    else:  # Linear term dominant
+                        motion_type = "Random"
+                    
+                    # Update motion type count for the cell type
+                    motion_stats[cell_type][motion_type] += 1
+                    
+                    # Plot the raw MSD data and fitted curve in separate subplots
+                    fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
+                    
+                    # Plot 1: Raw MSD data
+                    axs[0].plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
+                    axs[0].set_title(f'Raw MSD Data for {cell_type}')
+                    axs[0].set_xlabel('Normalized Time (t)')
+                    axs[0].set_ylabel('Mean Square Displacement (MSD)')
+                    
+                    # Plot 2: Fitted MSD model
+                    fitted_msd = polynomial_msd(track_data['t_normalized'], *popt)
+                    axs[1].plot(track_data['t_normalized'], fitted_msd, color="orange", linestyle="--", alpha=0.7)
+                    axs[1].set_title(f'Fitted MSD Model for {cell_type}')
+                    axs[1].set_xlabel('Normalized Time (t)')
+                    
+                    # Save the combined plot without legends
+                    plt.tight_layout()
+                    plt.savefig(os.path.join(save_dir, f'MSD_Fit_TrackMate_{trackmate_id}_Track_{track_id}_{cell_type}.png'))
+                    plt.close()
             
             except (RuntimeError, OptimizeWarning):
                 print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
