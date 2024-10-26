@@ -118,15 +118,28 @@ for cell_type in cell_types:
                 print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
                 continue
 
+for cell_type in cell_types:
+    filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == cell_type]
+    
+    trackmate_track_ids = filtered_tracks['TrackMate Track ID'].unique()
+    
+    plt.figure(figsize=(12, 6))
+    for count, trackmate_id in enumerate(trackmate_track_ids):
+        trackmate_data = filtered_tracks[filtered_tracks['TrackMate Track ID'] == trackmate_id]
+        
+        track_ids = trackmate_data['Track ID'].unique()
+        
+        for track_id in track_ids:
+            track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
+            track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
+            plt.plot(track_data['t_normalized'], track_data['MSD'], color="blue", alpha=0.5)
 
-plt.title(f'MSD and Fitted Model for Cell Type {cell_type}')
-plt.xlabel('Normalized Time (t)')
-plt.ylabel('Mean Square Displacement (MSD)')
-plt.legend()
-
-# Save the combined plot
-plt.savefig(os.path.join(save_dir, f'Combined_MSD_Fit_Cell_Type_{cell_type}.png'))
-plt.close()
+    plt.title(f'MSD and for Cell Type {cell_type}')
+    plt.xlabel('Normalized Time (t)')
+    plt.ylabel('Mean Square Displacement (MSD)')
+    plt.legend()
+    plt.savefig(os.path.join(save_dir, f'MSD_Fit_Cell_Type_{cell_type}.png'))
+    plt.close()
 
 
 # Convert motion_stats to DataFrame for summary and save
