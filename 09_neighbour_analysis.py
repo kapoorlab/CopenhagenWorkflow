@@ -111,22 +111,31 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=20, alpha=0.7)
         
+        # Filter bonds at the current time
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
         
+        # Draw bonds between each cell and all of its neighbors
         for _, row in bonds_at_time.iterrows():
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+            
+            # Retrieve coordinates for the cell and its neighbor
             cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
             
+            # If either cell or neighbor coordinates are missing, skip this bond
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
             
-            cell_coords, neighbor_coords = cell_coords[0], neighbor_coords[0]
-            bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
-            bond_color = get_bond_color(bond_time, max_bond_time)
-            
-            ax.plot([cell_coords[0], neighbor_coords[0]], [cell_coords[1], neighbor_coords[1]], color=bond_color, alpha=0.2)
+            # For each cell and its neighbor, plot the bond
+            for cell_coord in cell_coords:
+                for neighbor_coord in neighbor_coords:
+                    bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
+                    bond_color = get_bond_color(bond_time, max_bond_time)
+                    
+                    # Draw the bond in 2D XY plane
+                    ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.2)
         
+        # Set plot titles and labels
         ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -137,7 +146,7 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}_2D.png'))
         plt.close(fig)
 
-time_points = sorted(neighbour_dataframe['t'].unique())
+
 plot_spatial_neighbors_with_bond_time_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
 
 
