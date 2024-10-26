@@ -24,7 +24,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 neighbour_radius_xy = 70 
-neighbour_radius_z = 5
+
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -37,7 +37,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 bond_durations_csv_path = os.path.join(save_dir, 'bond_durations.csv')
 
-def find_and_track_bonds(df, radius_xy, height_z):
+def find_and_track_bonds(df, radius_xy):
     bonds = defaultdict(lambda: defaultdict(list))
     bond_durations = defaultdict(int)
     
@@ -55,11 +55,11 @@ def find_and_track_bonds(df, radius_xy, height_z):
             
             distances_xy = np.sqrt((time_filtered_df['y'] - current_coords[1])**2 + 
                                    (time_filtered_df['x'] - current_coords[2])**2)
-            distances_z = np.abs(time_filtered_df['z'] - current_coords[0])
+           
             
             within_radius_xy = distances_xy <= radius_xy
-            within_height_z = distances_z <= height_z
-            valid_indices = within_radius_xy & within_height_z
+            
+            valid_indices = within_radius_xy 
             
             valid_trackmate_ids = time_filtered_df[valid_indices]['TrackMate Track ID'].unique()
             valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
@@ -86,7 +86,7 @@ if os.path.exists(bonds_csv_path) and os.path.exists(bond_durations_csv_path):
     bond_durations_df = pd.read_csv(bond_durations_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bonds_df, bond_durations_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy, neighbour_radius_z)
+    bonds_df, bond_durations_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
     bonds_df.to_csv(bonds_csv_path, index=False)
     bond_durations_df.to_csv(bond_durations_csv_path, index=False)
 
@@ -143,7 +143,7 @@ plot_spatial_neighbors_with_bond_time_2D(neighbour_dataframe, bonds_df, bond_dur
 
 
 
-def detect_bond_breaks(bonds, time_points, threshold_xy, threshold_z, df):
+def detect_bond_breaks(bonds, time_points, threshold_xy, df):
     bond_breaks = defaultdict(list)  
     
     for trackmate_id, time_bonds in bonds.items():
@@ -166,18 +166,17 @@ def detect_bond_breaks(bonds, time_points, threshold_xy, threshold_z, df):
                     neighbor_coords = neighbor_track.iloc[0][['z', 'y', 'x']].values
                     distance_xy = np.sqrt((neighbor_coords[1] - current_coords[1])**2 + 
                                           (neighbor_coords[2] - current_coords[2])**2)
-                    distance_z = np.abs(neighbor_coords[0] - current_coords[0])
                     
-                    if distance_xy > threshold_xy or distance_z > threshold_z:
+                    if distance_xy > threshold_xy :
                         bond_breaks[trackmate_id].append((t, broken_neighbor))
             
             previous_neighbors = current_neighbors
             
     return bond_breaks
 
-bonds = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy, neighbour_radius_z)
+bonds = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
 time_points = sorted(neighbour_dataframe['t'].unique())
-bond_breaks = detect_bond_breaks(bonds, time_points, neighbour_radius_xy, neighbour_radius_z, neighbour_dataframe)
+bond_breaks = detect_bond_breaks(bonds, time_points, neighbour_radius_xy, neighbour_dataframe)
 
 
 def plot_bond_breaks(df, bond_breaks, save_dir):
