@@ -66,10 +66,8 @@ for cell_type in cell_types:
             
             # Normalize the time for this track (set the first time point to t = 0)
             track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
-            print(track_data['MSD'].shape)
             # Ensure there are enough data points (e.g., at least 3 points) for fitting
             if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
-                print(f"Skipping TrackMate Track ID {trackmate_id} / Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
                 continue
 
             # Fit MSD data to the msd_model to determine alpha
