@@ -94,7 +94,7 @@ bond_durations = {(row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
 
 def get_bond_color(bond_time, max_bond_time):
     norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
-    cmap = cm.get_cmap("coolwarm")
+    cmap = matplotlib.colormaps.get_cmap("coolwarm")
     return cmap(norm(bond_time))
 
 def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
