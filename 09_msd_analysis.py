@@ -46,48 +46,55 @@ for cell_type in cell_types:
     # Filter DataFrame by Cell Type
     filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == cell_type]
     
-    # Get unique Track IDs for this cell type
-    track_ids = filtered_tracks['Track ID'].unique()
+    # Get unique TrackMate Track IDs for this cell type
+    trackmate_track_ids = filtered_tracks['TrackMate Track ID'].unique()
     
-    # Create a new figure for MSD plots
+    # Create a new figure for MSD plots for this cell type
     plt.figure(figsize=(12, 6))
     
-    # Iterate over each Track ID and calculate MSD analysis for each track
-    for track_id in track_ids:
-        # Filter the DataFrame for this specific track
-        track_data = filtered_tracks[filtered_tracks['Track ID'] == track_id].copy()
+    # Iterate over each TrackMate Track ID
+    for trackmate_id in trackmate_track_ids:
+        trackmate_data = filtered_tracks[filtered_tracks['TrackMate Track ID'] == trackmate_id]
         
-        # Normalize the time for this track (set the first time point to t = 0)
-        track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
+        # Get unique Track IDs within this TrackMate Track ID
+        track_ids = trackmate_data['Track ID'].unique()
         
-        # Ensure there are enough data points (e.g., at least 3 points) for fitting
-        if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
-            print(f"Skipping Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
-            continue
+        # Iterate over each Track ID within the TrackMate Track ID
+        for track_id in track_ids:
+            # Filter the DataFrame for this specific track
+            track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
+            
+            # Normalize the time for this track (set the first time point to t = 0)
+            track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
+            print(track_data['MSD'].shape)
+            # Ensure there are enough data points (e.g., at least 3 points) for fitting
+            if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
+                print(f"Skipping TrackMate Track ID {trackmate_id} / Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
+                continue
 
-        # Fit MSD data to the msd_model to determine alpha
-        try:
-            popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
-            D, alpha = popt  # Extract diffusion coefficient and alpha
+            # Fit MSD data to the msd_model to determine alpha
+            try:
+                popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
+                D, alpha = popt  # Extract diffusion coefficient and alpha
+                
+                # Classify track based on alpha
+                if alpha > 1.2:
+                    motion_type = "Directed"
+                elif 0.8 <= alpha <= 1.2:
+                    motion_type = "Brownian"
+                else:
+                    motion_type = "Random"
+                
+                # Update motion type count for the cell type
+                motion_stats[cell_type][motion_type] += 1
+                
+                # Plot the MSD with the fitted curve
+                plt.plot(track_data['t_normalized'], track_data['MSD'], label=f'TrackMate {trackmate_id} / Track {track_id}', alpha=0.5)
+                plt.plot(track_data['t_normalized'], msd_model(track_data['t_normalized'], *popt), linestyle='--')
             
-            # Classify track based on alpha
-            if alpha > 1.2:
-                motion_type = "Directed"
-            elif 0.8 <= alpha <= 1.2:
-                motion_type = "Brownian"
-            else:
-                motion_type = "Random"
-            
-            # Update motion type count for the cell type
-            motion_stats[cell_type][motion_type] += 1
-            
-            # Plot the MSD with the fitted curve
-            plt.plot(track_data['t_normalized'], track_data['MSD'], label=f'Track {track_id}', alpha=0.5)
-            plt.plot(track_data['t_normalized'], msd_model(track_data['t_normalized'], *popt), linestyle='--')
-        
-        except RuntimeError:
-            print(f"Could not fit MSD for Track ID {track_id} in Cell Type {cell_type}.")
-            continue
+            except RuntimeError:
+                print(f"Could not fit MSD for TrackMate Track ID {trackmate_id} / Track ID {track_id} in Cell Type {cell_type}.")
+                continue
     
     # Set plot titles and labels
     plt.title(f'MSD over Normalized Time with Fitted Motion Type for Cell Type {cell_type}')
