@@ -26,7 +26,7 @@ for i, shape_model_base in enumerate(shape_model_dirs_base):
             "--partition=prepost",
             "--cpus-per-task=40",
             "--time=10:00:00",
-            f"--job-name=Shape_{i}_{j}",
+            f"--job-name=Generator_{i}_{j}",
             f"--output=shape_{i}_{j}.o%j",
             f"--error=shape_{i}_{j}.e%j",
             "--wrap",

@@ -26,9 +26,9 @@ for i, shape_model_base in enumerate(morpho_model_dirs_base):
             "--partition=prepost",
             "--cpus-per-task=40",
             "--time=10:00:00",
-            f"--job-name=Morpho_{i}_{j}",
-            f"--output=shape_{i}_{j}.o%j",
-            f"--error=shape_{i}_{j}.e%j",
+            f"--job-name=Generator_{i}_{j}",
+            f"--output=morpho_{i}_{j}.o%j",
+            f"--error=morpho_{i}_{j}.e%j",
             "--wrap",
             f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/08_cell_type_dataframe_generator.py --dataset_name Sixth --home_folder /lustre/fsn1/projects/rech/jsy/uzj81mi/ --channel {channel} --model_name {shape_model_base}"
         ]

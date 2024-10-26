@@ -4,7 +4,7 @@
 
 
 #SBATCH --partition=prepost
-#SBATCH --job-name=dataframe              # Jobname 
+#SBATCH --job-name=neighbour              # Jobname 
 #SBATCH --cpus-per-task=40
 #SBATCH --output=cell.o%j            # Output file 
 #SBATCH --error=cell.o%j            # Error file 

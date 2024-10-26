@@ -60,7 +60,12 @@ for cell_type in cell_types:
         # Normalize the time for this track (set the first time point to t = 0)
         track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
         
-        # Fit MSD data to the model to determine alpha
+        # Ensure there are enough data points (e.g., at least 3 points) for fitting
+        if len(track_data['t_normalized']) < 3 or len(track_data['MSD']) < 3:
+            print(f"Skipping Track ID {track_id} for Cell Type {cell_type} due to insufficient data points.")
+            continue
+
+        # Fit MSD data to the msd_model to determine alpha
         try:
             popt, _ = curve_fit(msd_model, track_data['t_normalized'], track_data['MSD'], maxfev=5000)
             D, alpha = popt  # Extract diffusion coefficient and alpha
@@ -99,7 +104,6 @@ motion_stats_df = pd.DataFrame(motion_stats).T
 motion_stats_df.to_csv(os.path.join(save_dir, 'msd_motion_type_statistics.csv'))
 
 print("MSD analysis complete. Motion statistics saved as 'msd_motion_type_statistics.csv'.")
-
 
 # 1. Bar Plot for Motion Types by Cell Type
 plt.figure(figsize=(10, 6))
