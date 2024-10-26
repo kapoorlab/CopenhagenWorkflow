@@ -24,7 +24,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 neighbour_radius_xy = 70 
-
+partner_time = 10  # Bonds lasting longer than this will be specially plotted
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -147,8 +147,57 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         plt.close(fig)
 
 
+def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
+    Path(save_dir).mkdir(parents=True, exist_ok=True)
+    max_bond_time = max(bond_durations.values()) if bond_durations else 1
+    
+    for t in time_points:
+        time_df = df[df['t'] == t]
+        
+        fig, ax = plt.subplots(figsize=(12, 10))
+        
+        # Plot cells by type in 2D XY plane
+        for cell_type, color in color_palette.items():
+            cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
+            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=20, alpha=0.7)
+        
+        # Filter bonds at the current time
+        bonds_at_time = bonds_df[bonds_df['Time'] == t]
+        
+        # Draw bonds between each cell and all of its neighbors
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+            
+            # Retrieve coordinates for the cell and its neighbor
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+            
+            # If either cell or neighbor coordinates are missing, skip this bond
+            if cell_coords.size == 0 or neighbor_coords.size == 0:
+                continue
+            
+            # For each cell and its neighbor, plot the bond
+            for cell_coord in cell_coords:
+                for neighbor_coord in neighbor_coords:
+                    bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
+                    bond_color = get_bond_color(bond_time, max_bond_time)
+                    if bond_time > partner_time:
+                        ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.2)
+            
+        # Set plot titles and labels
+        ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.legend(loc='upper right')
+        ax.grid(True)
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_dir, f'long_duration_bonds_time_{t}_2D.png'))
+        plt.close(fig)
+
 time_points = sorted(neighbour_dataframe['t'].unique())
 plot_spatial_neighbors_with_bond_time_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
+plot_long_duration_bonds_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
 
 
 
