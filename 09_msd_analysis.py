@@ -160,11 +160,10 @@ plt.close()
 for cell_type in motion_stats_df.index:
     plt.figure(figsize=(6, 6))
     plt.pie(motion_stats_df.loc[cell_type], labels=motion_stats_df.columns, 
-            startangle=90, colors=['#1f77b4', '#ff7f0e', '#2ca02c'])
+            autopct='%1.1f%%', startangle=90, colors=['#1f77b4', '#ff7f0e', '#2ca02c'])
     plt.title(f'Motion Type Proportion for Cell Type: {cell_type}')
     plt.tight_layout()
     plt.savefig(os.path.join(save_dir, f'motion_type_proportion_{cell_type}.png'))
     plt.close()
 
 print("Motion type distribution plots saved.")
-
