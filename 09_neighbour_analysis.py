@@ -157,12 +157,12 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
 
     neighbor_counts = {cell_type: {neighbor_type: [0] * len(timepoints) for neighbor_type in cell_types} for cell_type in cell_types}
 
-    for time_idx, t in enumerate(timepoints):
+    for time_idx, t in enumerate(tqdm(timepoints)):
         time_df = df[df['t'] == t]
 
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-        for _, row in tqdm(bonds_at_time.iterrows()):
+        for _, row in bonds_at_time.iterrows():
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
 
             cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
