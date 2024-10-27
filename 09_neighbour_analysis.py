@@ -200,40 +200,56 @@ plot_long_duration_bonds_2D(neighbour_dataframe, bonds_df, bond_durations, color
 
 
 
-def detect_bond_breaks(bonds, time_points, threshold_xy, df):
-    bond_breaks = defaultdict(list)  
+def detect_bond_breaks(bonds_df, time_points, threshold_xy, df):
+    bond_breaks = defaultdict(list)
     
-    for trackmate_id, time_bonds in bonds.items():
-        previous_neighbors = set()
+    # Ensure bonds DataFrame is not empty
+    if bonds_df.empty:
+        print("No bonds available to analyze.")
+        return bond_breaks
+
+    # Iterate over each TrackMate Track ID in the bonds DataFrame
+    trackmate_ids = bonds_df['TrackMate Track ID'].unique()
+    
+    for trackmate_id in trackmate_ids:
+        previous_neighbors = set()  # Track neighbors from the previous time point
+
+        # Filter bonds for the current TrackMate ID
+        track_bonds_df = bonds_df[bonds_df['TrackMate Track ID'] == trackmate_id]
         
         for t in time_points:
-            current_neighbors = set(time_bonds.get(t, []))
+            # Get current neighbors for this TrackMate ID and time point
+            current_neighbors = set(track_bonds_df[track_bonds_df['Time'] == t]['Neighbor TrackMate Track ID'])
             
+            # Determine broken bonds as those in the previous timepoint but missing in the current
             broken_bonds = previous_neighbors - current_neighbors
             
+            # Retrieve current track's coordinates for distance checks
             current_track = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == t)]
             if not current_track.empty:
                 current_coords = current_track.iloc[0][['z', 'y', 'x']].values
-                
+
+                # Check each broken bond for distance threshold
                 for broken_neighbor in broken_bonds:
                     neighbor_track = df[(df['TrackMate Track ID'] == broken_neighbor) & (df['t'] == t)]
                     if neighbor_track.empty:
-                        continue
-                    
+                        continue  # Skip if no data for this neighbor
+
                     neighbor_coords = neighbor_track.iloc[0][['z', 'y', 'x']].values
                     distance_xy = np.sqrt((neighbor_coords[1] - current_coords[1])**2 + 
                                           (neighbor_coords[2] - current_coords[2])**2)
-                    
-                    if distance_xy > threshold_xy :
+
+                    # Record the bond break if the distance exceeds the threshold
+                    if distance_xy > threshold_xy:
                         bond_breaks[trackmate_id].append((t, broken_neighbor))
             
+            # Update previous neighbors for the next time point
             previous_neighbors = current_neighbors
             
     return bond_breaks
 
-bonds = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
 time_points = sorted(neighbour_dataframe['t'].unique())
-bond_breaks = detect_bond_breaks(bonds, time_points, neighbour_radius_xy, neighbour_dataframe)
+bond_breaks = detect_bond_breaks(bonds_df, time_points, neighbour_radius_xy, neighbour_dataframe)
 
 
 def plot_bond_breaks(df, bond_breaks, save_dir):
@@ -268,42 +284,47 @@ plot_bond_breaks(neighbour_dataframe, bond_breaks, save_dir)
 
 
 
-def plot_neighbour_time(df, bonds, color_palette, save_dir):
+def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     timepoints = sorted(df['t'].unique())
     cell_types = df['Cell_Type'].unique()
-    
+
+    # Initialize the dictionary to store neighbor counts per cell type over time
     neighbor_counts = {cell_type: {neighbor_type: [0] * len(timepoints) for neighbor_type in cell_types} for cell_type in cell_types}
 
     for time_idx, t in enumerate(timepoints):
         time_df = df[df['t'] == t]
-        
-        for trackmate_id, neighbors_at_t in bonds.items():
-            cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
-            if cell_type_row.empty:
-                continue  
-            
-            cell_type = cell_type_row['Cell_Type'].iloc[0]
-            
-            if t in neighbors_at_t:
-                for neighbor_id in neighbors_at_t[t]:
-                    neighbor_type_row = time_df[time_df['TrackMate Track ID'] == neighbor_id]
-                    if neighbor_type_row.empty:
-                        continue  
-                    
-                    neighbor_type = neighbor_type_row['Cell_Type'].iloc[0]
-                    neighbor_counts[cell_type][neighbor_type][time_idx] += 1
 
+        # Filter bonds DataFrame for the current time point
+        bonds_at_time = bonds_df[bonds_df['Time'] == t]
+
+        # Count neighbors for each cell type at this time point
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+
+            # Get cell types of the current cell and its neighbor
+            cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
+            neighbor_type_row = time_df[time_df['TrackMate Track ID'] == neighbor_id]
+
+            # Continue only if both cells exist in the time frame
+            if not cell_type_row.empty and not neighbor_type_row.empty:
+                cell_type = cell_type_row['Cell_Type'].iloc[0]
+                neighbor_type = neighbor_type_row['Cell_Type'].iloc[0]
+
+                # Increment neighbor count
+                neighbor_counts[cell_type][neighbor_type][time_idx] += 1
+
+    # Plotting
     fig, axs = plt.subplots(len(cell_types), 1, figsize=(16, len(cell_types) * 5), sharex=True)
 
     if len(cell_types) == 1:
-        axs = [axs] 
+        axs = [axs]  # Ensure axs is always a list for uniform indexing
 
     for idx, cell_type in enumerate(cell_types):
         ax = axs[idx]
         for neighbor_type in cell_types:
             y_values = neighbor_counts[cell_type][neighbor_type]
             ax.plot(timepoints, y_values, label=f'{neighbor_type} as Neighbor', color=color_palette.get(neighbor_type, 'grey'), marker='o')
-        
+
         ax.set_title(f'Neighbor Counts Over Time for {cell_type} Cells')
         ax.set_xlabel('Timepoint')
         ax.set_ylabel('Neighbor Count')
@@ -314,4 +335,4 @@ def plot_neighbour_time(df, bonds, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-plot_neighbour_time(neighbour_dataframe, bonds, color_palette, save_dir)
+plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
