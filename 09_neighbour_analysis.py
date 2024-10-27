@@ -162,7 +162,7 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
 
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-        for _, row in bonds_at_time.iterrows():
+        for _, row in tqdm(bonds_at_time.iterrows()):
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
 
             cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
