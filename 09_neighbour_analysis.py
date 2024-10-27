@@ -104,38 +104,29 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
     for t in time_points:
         time_df = df[df['t'] == t]
         
-        fig, ax = plt.subplots(figsize=(12, 10))
+        fig, ax = plt.subplots(figsize=(18, 15))  # Enlarged plot size for better visibility
         
-        # Plot cells by type in 2D XY plane
+        # Plot cells by type in 2D XY plane with larger markers
         for cell_type, color in color_palette.items():
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=20, alpha=0.7)
+            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
         
-        # Filter bonds at the current time
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
         
-        # Draw bonds between each cell and all of its neighbors
         for _, row in bonds_at_time.iterrows():
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
-            
-            # Retrieve coordinates for the cell and its neighbor
             cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
             
-            # If either cell or neighbor coordinates are missing, skip this bond
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
             
-            # For each cell and its neighbor, plot the bond
-            for cell_coord in cell_coords:
-                for neighbor_coord in neighbor_coords:
-                    bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
-                    bond_color = get_bond_color(bond_time, max_bond_time)
-                    
-                    # Draw the bond in 2D XY plane
-                    ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.2)
+            bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
+            bond_color = get_bond_color(bond_time, max_bond_time)
+            
+            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], 
+                    color=bond_color, alpha=0.2, linewidth=2)  # Increased line width for visibility
         
-
         # Color bar for bond durations
         norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
         cmap = matplotlib.colormaps.get_cmap("coolwarm")
@@ -144,8 +135,6 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
         cbar.set_label('Bond Duration (timepoints)')
         
-
-        # Set plot titles and labels
         ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -153,46 +142,38 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}_2D.png'))
+        plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
         plt.close(fig)
 
-
-def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
+def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points, partner_time=50):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     max_bond_time = max(bond_durations.values()) if bond_durations else 1
     
     for t in time_points:
         time_df = df[df['t'] == t]
         
-        fig, ax = plt.subplots(figsize=(12, 10))
+        fig, ax = plt.subplots(figsize=(18, 15))  # Enlarged plot size for better visibility
         
-        # Plot cells by type in 2D XY plane
+        # Plot cells by type in 2D XY plane with larger markers
         for cell_type, color in color_palette.items():
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=20, alpha=0.7)
+            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
         
-        # Filter bonds at the current time
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
         
-        # Draw bonds between each cell and all of its neighbors
         for _, row in bonds_at_time.iterrows():
             trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
-            
-            # Retrieve coordinates for the cell and its neighbor
             cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
             
-            # If either cell or neighbor coordinates are missing, skip this bond
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
             
-            # For each cell and its neighbor, plot the bond
-            for cell_coord in cell_coords:
-                for neighbor_coord in neighbor_coords:
-                    bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
-                    bond_color = get_bond_color(bond_time, max_bond_time)
-                    if bond_time > partner_time:
-                        ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.7)
+            bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
+            if bond_time > partner_time:
+                bond_color = get_bond_color(bond_time, max_bond_time)
+                ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], 
+                        color=bond_color, alpha=0.7, linewidth=3)  # Thicker bonds for long duration
 
         # Color bar for bond durations
         norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
@@ -202,16 +183,14 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
         cbar.set_label('Bond Duration (timepoints)')
 
-
-        # Set plot titles and labels
-        ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
+        ax.set_title(f"Long-duration Bonds at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.legend(loc='upper right')
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'long_duration_bonds_time_{t}_2D.png'))
+        plt.savefig(os.path.join(save_dir, f'long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
         plt.close(fig)
 
 time_points = sorted(neighbour_dataframe['t'].unique())
