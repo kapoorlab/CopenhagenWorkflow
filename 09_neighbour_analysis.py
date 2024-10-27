@@ -11,7 +11,7 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 
 
-dataset_name = 'Sixth'
+dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
@@ -24,7 +24,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 neighbour_radius_xy = 70 
-partner_time = 50  # Bonds lasting longer than this will be specially plotted
+partner_time = 150  # Bonds lasting longer than this will be specially plotted
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -145,7 +145,7 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
         plt.savefig(os.path.join(save_dir, f'spatial_neighbors_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
         plt.close(fig)
 
-def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points, partner_time=50):
+def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     max_bond_time = max(bond_durations.values()) if bond_durations else 1
     
@@ -190,7 +190,7 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
+        plt.savefig(os.path.join(save_dir, f'150_long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
         plt.close(fig)
 
 time_points = sorted(neighbour_dataframe['t'].unique())
