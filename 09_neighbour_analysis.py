@@ -135,6 +135,16 @@ def plot_spatial_neighbors_with_bond_time_2D(df, bonds_df, bond_durations, color
                     # Draw the bond in 2D XY plane
                     ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.2)
         
+
+        # Color bar for bond durations
+        norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
+        cmap = matplotlib.colormaps.get_cmap("coolwarm")
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
+        cbar.set_label('Bond Duration (timepoints)')
+        
+
         # Set plot titles and labels
         ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
@@ -182,8 +192,17 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
                     bond_time = bond_durations.get((trackmate_id, neighbor_id), 0)
                     bond_color = get_bond_color(bond_time, max_bond_time)
                     if bond_time > partner_time:
-                        ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.2)
-            
+                        ax.plot([cell_coord[0], neighbor_coord[0]], [cell_coord[1], neighbor_coord[1]], color=bond_color, alpha=0.7)
+
+        # Color bar for bond durations
+        norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
+        cmap = matplotlib.colormaps.get_cmap("coolwarm")
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
+        cbar.set_label('Bond Duration (timepoints)')
+
+
         # Set plot titles and labels
         ax.set_title(f"Cell Neighbors at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
