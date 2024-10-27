@@ -103,7 +103,7 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     max_bond_time = max(bond_durations.values()) if bond_durations else 1
     
-    for t in time_points:
+    for t in tqdm(time_points, desc='Long duration bonds'):
         time_df = df[df['t'] == t]
         
         fig, ax = plt.subplots(figsize=(18, 15))  # Enlarged plot size for better visibility
@@ -157,7 +157,7 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
 
     neighbor_counts = {cell_type: {neighbor_type: [0] * len(timepoints) for neighbor_type in cell_types} for cell_type in cell_types}
 
-    for time_idx, t in enumerate(tqdm(timepoints)):
+    for time_idx, t in enumerate(tqdm(timepoints, desc='Neighbour Time')):
         time_df = df[df['t'] == t]
 
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
