@@ -35,11 +35,13 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
     avg_importance = get_attention_importance(model, inputs)
     all_importances.append(avg_importance)
     features = SHAPE_DYNAMIC_FEATURES
+    print(features)
     # Convert to a 2D array where each row is a feature and each column is a track
     importance_matrix = np.array(all_importances)
     importance_matrix = importance_matrix.reshape(inputs.shape[0], inputs.shape[1])
     mean_importance = np.mean(importance_matrix, axis=0)
     feature_ranks = sorted(zip(features, mean_importance), key=lambda x: -x[1])
+    print(mean_importance)
     print("Feature importance rankings (most to least important):")
     rankings_df = pd.DataFrame(feature_ranks, columns=["Feature", "Importance"])
     rankings_df.to_csv(os.path.join(save_dir, save_name + '.csv'), index=False)
@@ -50,8 +52,7 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
         print(f"{feature}: {score:.4f}")
     # Plot the heatmap
     plt.figure(figsize=(20, 10))  # Larger figure for visibility
-    sns.heatmap(importance_matrix, cmap="coolwarm", cbar=True, annot=False)
-    plt.xticks(ticks=np.arange(len(features)), labels=features, rotation=45, ha='right')
+    sns.heatmap(importance_matrix, cmap="coolwarm", cbar=True, annot=False, xticklabels=features)
     plt.yticks([])
     plt.ylabel("Track IDs")
     plt.xlabel("Features")
