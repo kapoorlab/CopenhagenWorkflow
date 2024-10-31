@@ -7,34 +7,50 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from torch.nn.modules.loss import CrossEntropyLoss
 from kapoorlabs_lightning.optimizers import Adam
-from kapoorlabs_lightning.pytorch_models import HybridAttentionDenseNet
+from kapoorlabs_lightning.pytorch_models import HybridAttentionDenseNet, get_attention_importance
 from kapoorlabs_lightning.lightning_trainer import LightningModel
 from napatrackmater.Trackvector import (SHAPE_FEATURES, 
                                         DYNAMIC_FEATURES, 
                                         SHAPE_DYNAMIC_FEATURES,
                                         
                                         )
-def plot_feature_importance_heatmap(model, tracklet_tensor, save_dir, save_name):
-    # Predict importance scores
-    with torch.no_grad():
-        scores = model(tracklet_tensor).cpu().numpy()
+def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
+    """
+    Saves a heatmap of feature importance across multiple tracks.
+
+    Parameters:
+        model (nn.Module): The trained model with attention layers.
+        inputs (list of torch.Tensor): Input tensors, each with shape (N, F, T) for each track.
+        save_dir (str): Directory to save the plot.
+        save_name (str): Filename to save the plot as.
+    """
     
-    # Reshape scores to 2D for heatmap (features, track IDs)
-    heatmap_data = np.mean(scores, axis=2)  # Average over tracklet time axis (T) for each feature across Track IDs
-    heatmap_data = heatmap_data.T  # Transpose to make features on y-axis
+    # Ensure the save directory exists
+    os.makedirs(save_dir, exist_ok=True)
     
-    # Plot heatmap
-    plt.figure(figsize=(15, 10))  # Adjust to preferred size
-    sns.heatmap(heatmap_data, annot=False, cmap="viridis", yticklabels=SHAPE_DYNAMIC_FEATURES)
+    # Collect feature importance for each track
+    all_importances = []
+    for input_tensor in inputs:
+        avg_importance = get_attention_importance(model, input_tensor)
+        all_importances.append(avg_importance)
     
+    # Convert to a 2D array where each row is a feature and each column is a track
+    importance_matrix = np.array(all_importances).T  # Transpose for correct orientation
+    
+    # Plot the heatmap
+    plt.figure(figsize=(20, 10))  # Larger figure for visibility
+    sns.heatmap(importance_matrix, annot=False, cmap="coolwarm", yticklabels=SHAPE_DYNAMIC_FEATURES)
     plt.xlabel("Track IDs")
     plt.ylabel("Features")
     plt.title("Feature Importance Across Tracks")
     
-    # Save plot
+    # Save the plot
+    save_path = os.path.join(save_dir, save_name)
     plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, save_name))
+    plt.savefig(save_path)
     plt.close()
+
+    print(f"Saved heatmap to {save_path}")
 
 def main(args):
     dataset_name = args.dataset_name
