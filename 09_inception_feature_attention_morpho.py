@@ -2,15 +2,39 @@ import argparse
 import os
 import torch
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 from torch.nn.modules.loss import CrossEntropyLoss
 from kapoorlabs_lightning.optimizers import Adam
-from kapoorlabs_lightning.pytorch_models import HybridAttentionDenseNet,plot_feature_importance_heatmap
+from kapoorlabs_lightning.pytorch_models import HybridAttentionDenseNet
 from kapoorlabs_lightning.lightning_trainer import LightningModel
 from napatrackmater.Trackvector import (SHAPE_FEATURES, 
                                         DYNAMIC_FEATURES, 
                                         SHAPE_DYNAMIC_FEATURES,
                                         
                                         )
+def plot_feature_importance_heatmap(model, tracklet_tensor, save_dir, save_name):
+    # Predict importance scores
+    with torch.no_grad():
+        scores = model(tracklet_tensor).cpu().numpy()
+    
+    # Reshape scores to 2D for heatmap (features, track IDs)
+    heatmap_data = np.mean(scores, axis=2)  # Average over tracklet time axis (T) for each feature across Track IDs
+    heatmap_data = heatmap_data.T  # Transpose to make features on y-axis
+    
+    # Plot heatmap
+    plt.figure(figsize=(15, 10))  # Adjust to preferred size
+    sns.heatmap(heatmap_data, annot=False, cmap="viridis", yticklabels=SHAPE_DYNAMIC_FEATURES)
+    
+    plt.xlabel("Track IDs")
+    plt.ylabel("Features")
+    plt.title("Feature Importance Across Tracks")
+    
+    # Save plot
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_dir, save_name))
+    plt.close()
 
 def main(args):
     dataset_name = args.dataset_name
