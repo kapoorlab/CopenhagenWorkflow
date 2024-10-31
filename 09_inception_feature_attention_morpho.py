@@ -39,14 +39,19 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
     importance_matrix = np.array(all_importances)
     importance_matrix = importance_matrix.reshape(inputs.shape[0], inputs.shape[1])
     mean_importance = np.mean(importance_matrix, axis=0)
-    feature_ranks = sorted(zip(SHAPE_DYNAMIC_FEATURES, mean_importance), key=lambda x: -x[1])
+    feature_ranks = sorted(zip(features, mean_importance), key=lambda x: -x[1])
     print("Feature importance rankings (most to least important):")
+    rankings_df = pd.DataFrame(feature_ranks, columns=["Feature", "Importance"])
+    rankings_df.to_csv(os.path.join(save_dir, save_name + '.csv'), index=False)
+    print(f"Feature importance rankings saved to {save_name}")
+    print("Feature importance rankings (most to least important):")
+    print(rankings_df)
     for feature, score in feature_ranks:
         print(f"{feature}: {score:.4f}")
     # Plot the heatmap
     plt.figure(figsize=(20, 10))  # Larger figure for visibility
     sns.heatmap(importance_matrix, cmap="coolwarm", cbar=True, annot=False)
-    plt.xticks(ticks=np.arange(len(SHAPE_DYNAMIC_FEATURES)), labels=SHAPE_DYNAMIC_FEATURES, rotation=45, ha='right')
+    plt.xticks(ticks=np.arange(len(features)), labels=features, rotation=45, ha='right')
     plt.yticks([])
     plt.ylabel("Track IDs")
     plt.xlabel("Features")
@@ -154,7 +159,7 @@ if __name__ == "__main__":
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
     parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest', help='Model name including full path')
-    parser.add_argument('--N', type=int, default=200, help='Number of longest tracks per cell type to analyze')
+    parser.add_argument('--N', type=int, default=800, help='Number of longest tracks per cell type to analyze')
 
     args = parser.parse_args()
     main(args)
