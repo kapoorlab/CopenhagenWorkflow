@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 # Configuration
-dataset_name = 'Sixth'
+dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'

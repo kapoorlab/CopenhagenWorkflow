@@ -144,11 +144,11 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'150_long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
+        plt.savefig(os.path.join(save_dir, f'{partner_time}_long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
         plt.close(fig)
 
 time_points = sorted(neighbour_dataframe['t'].unique())
-#plot_long_duration_bonds_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
+plot_long_duration_bonds_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
