@@ -37,10 +37,11 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
 
     # Convert to a 2D array where each row is a feature and each column is a track
     importance_matrix = np.array(all_importances)
+    importance_matrix = importance_matrix.reshape(inputs.shape[0], inputs.shape[1])
     print(importance_matrix.shape)
     # Plot the heatmap
     plt.figure(figsize=(20, 10))  # Larger figure for visibility
-    sns.heatmap(importance_matrix[:,:,0], annot=False, cmap="coolwarm", xticklabels=SHAPE_DYNAMIC_FEATURES)
+    sns.heatmap(importance_matrix, annot=False, cmap="coolwarm", xticklabels=SHAPE_DYNAMIC_FEATURES)
     plt.ylabel("Track IDs")
     plt.xlabel("Features")
     plt.title("Feature Importance Across Tracks")
