@@ -40,7 +40,7 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
     
     # Plot the heatmap
     plt.figure(figsize=(20, 10))  # Larger figure for visibility
-    sns.heatmap(importance_matrix, annot=False, cmap="coolwarm", yticklabels=SHAPE_DYNAMIC_FEATURES)
+    sns.heatmap(importance_matrix[:,:,0], annot=False, cmap="coolwarm", yticklabels=SHAPE_DYNAMIC_FEATURES)
     plt.xlabel("Track IDs")
     plt.ylabel("Features")
     plt.title("Feature Importance Across Tracks")
