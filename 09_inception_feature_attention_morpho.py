@@ -30,10 +30,9 @@ def plot_feature_importance_heatmap(model, inputs, save_dir, save_name):
     
     # Collect feature importance for each track
     all_importances = []
-    for input_tensor in inputs:
-        avg_importance = get_attention_importance(model, input_tensor)
-        all_importances.append(avg_importance)
-    
+    avg_importance = get_attention_importance(model, inputs)
+    all_importances.append(avg_importance)
+
     # Convert to a 2D array where each row is a feature and each column is a track
     importance_matrix = np.array(all_importances).T  # Transpose for correct orientation
     
