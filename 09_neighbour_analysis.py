@@ -89,7 +89,7 @@ def find_and_track_bonds(df, radius_xy):
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
 
-    with ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor(max_workers = 4) as executor:
         futures = [
             executor.submit(process_trackmate_id, trackmate_id, df, radius_xy, unique_time_points)
             for trackmate_id in unique_trackmate_ids
