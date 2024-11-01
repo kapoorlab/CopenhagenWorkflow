@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Infinite loop to keep printing
-while true; do
-    echo "Hello, world!"
-    sleep 1 # This line adds a 1-second delay to prevent flooding the terminal (adjust as needed)
-done
