@@ -38,5 +38,4 @@ time_window = 10
 crop_size = [256,256,8]
 train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 Path(train_save_dir).mkdir(exist_ok=True)
-for index, tracklet_length in enumerate(time_window):
-    process_datasets(home_folder, dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
+process_datasets(home_folder, dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
