@@ -3,13 +3,14 @@ from pathlib import Path
 from napatrackmater import createNPZ, filter_and_get_tracklets
 import pandas as pd
 
-def process_datasets(home_folder, dataset_names, channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
+def process_datasets(home_folder, dataset_names, image_dataset_names,  channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
 
 
-    for dataset_name in dataset_names:
+    for idx, dataset_name in enumerate(dataset_names):
+        image_dataset_name = image_dataset_names[idx]
         tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{tracking_directory_name}'
-        raw_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{channel}timelapses/timelapse_{dataset_name.lower()}_dataset.tif'
-        segmentation_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/seg_{channel}timelapses/timelapse_{dataset_name.lower()}_dataset.tif'
+        raw_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{channel}timelapses/timelapse_{image_dataset_name.lower()}_dataset.tif'
+        segmentation_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/seg_{channel}timelapses/timelapse_{image_dataset_name.lower()}_dataset.tif'
         data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
         normalized_dataframe_file = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}.csv')
         dataset_dataframe = pd.read_csv(normalized_dataframe_file)
@@ -34,8 +35,11 @@ home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
     'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
     'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
+image_dataset_name = [
+    'Second', 'Fifth', 'Sixth', 
+    'Fifth', 'Fifth', 'Third', 'Third']
 time_window = 10
 crop_size = [256,256,8]
 train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 Path(train_save_dir).mkdir(exist_ok=True)
-process_datasets(home_folder, dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
+process_datasets(home_folder, dataset_name, image_dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
