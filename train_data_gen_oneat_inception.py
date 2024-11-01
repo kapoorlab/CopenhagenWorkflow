@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from napatrackmater import createNPZ, filter_and_get_tracklets
+from napatrackmater import create_h5, filter_and_get_tracklets
 import pandas as pd
 
 def process_datasets(home_folder, dataset_names, image_dataset_names,  channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
@@ -27,7 +27,7 @@ def process_datasets(home_folder, dataset_names, image_dataset_names,  channel, 
             filter_and_get_tracklets(cell_type_dataframe, cell_type, time_window, raw_image, crop_size, segmentation_image, dataset_name, train_save_dir, 
                                 train_label)
        
-        createNPZ(train_save_dir)
+        create_h5(train_save_dir,train_size=0.95,save_name="cellfate_vision_training_data_gbr")
  
     
 
