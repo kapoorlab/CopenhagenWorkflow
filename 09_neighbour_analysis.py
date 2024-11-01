@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
@@ -97,7 +97,7 @@ def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
         valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
 
         # Process each neighbor in parallel
-        with ProcessPoolExecutor() as executor:
+        with ThreadPoolExecutor(os.cpu_count() - 1) as executor:
             neighbor_futures = [
                 executor.submit(process_neighbor, trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords)
                 for neighbor_id in valid_trackmate_ids
