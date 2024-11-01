@@ -44,11 +44,9 @@ def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, uniqu
     bond_durations = defaultdict(int)
     bond_durations_fluid = defaultdict(lambda: defaultdict(int))
     
-    # Record initial bond
     bonds[trackmate_id][time_point].append(neighbor_id)
     bond_durations[(trackmate_id, neighbor_id)] += 1
 
-    # Calculate duration of the bond over subsequent timepoints
     duration = 0
     for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
         subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
