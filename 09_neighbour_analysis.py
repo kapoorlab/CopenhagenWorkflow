@@ -94,7 +94,8 @@ def find_and_track_bonds(df, radius_xy):
             executor.submit(process_trackmate_id, trackmate_id, df, radius_xy, unique_time_points)
             for trackmate_id in unique_trackmate_ids
         ]
-
+        
+        print(f'Sending jobs {len(futures)}')
         # Aggregating results as they complete
         bonds = defaultdict(lambda: defaultdict(list))
         bond_durations = defaultdict(int)
