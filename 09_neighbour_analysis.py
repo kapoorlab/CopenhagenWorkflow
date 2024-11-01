@@ -147,7 +147,7 @@ def find_and_track_bonds(df, radius_xy):
         columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Duration']
     )
 
-    return bonds_df, bond_durations_df, bond_durations_fluid_df
+    return bonds_df, bond_durations_fluid_df
 
 if os.path.exists(bonds_csv_path)  and os.path.exists(bond_durations_fluid_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
@@ -155,7 +155,7 @@ if os.path.exists(bonds_csv_path)  and os.path.exists(bond_durations_fluid_csv_p
     bond_durations_fluid_df = pd.read_csv(bond_durations_fluid_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bonds_df, bond_durations_df, bond_durations_fluid_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
+    bonds_df, bond_durations_fluid_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
     bonds_df.to_csv(bonds_csv_path, index=False)
     bond_durations_fluid_df.to_csv(bond_durations_fluid_csv_path, index=False)
 
