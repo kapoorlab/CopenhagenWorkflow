@@ -36,10 +36,12 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 bond_durations_csv_path = os.path.join(save_dir, 'bond_durations.csv')
+bond_durations_fluid_csv_path = os.path.join(save_dir, 'bond_durations_fluid.csv')
 
 def find_and_track_bonds(df, radius_xy):
     bonds = defaultdict(lambda: defaultdict(list))
     bond_durations = defaultdict(int)
+    bond_durations_fluid = defaultdict(lambda: defaultdict(int)) 
     
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
@@ -67,6 +69,23 @@ def find_and_track_bonds(df, radius_xy):
             for neighbor_id in valid_trackmate_ids:
                 bonds[trackmate_id][time_point].append(neighbor_id)
                 bond_durations[(trackmate_id, neighbor_id)] += 1
+
+                duration = 0
+                for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
+                    subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
+                                                   (df['t'] == subsequent_time)]
+                    if subsequent_neighbor_check.empty:
+                        break
+                    
+                    subsequent_coords = subsequent_neighbor_check.iloc[0][['z', 'y', 'x']].values
+                    distance_xy_subsequent = np.sqrt((subsequent_coords[1] - current_coords[1])**2 + 
+                                                     (subsequent_coords[2] - current_coords[2])**2)
+                    
+                    if distance_xy_subsequent > radius_xy:
+                        break
+                    duration += 1
+                
+                bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
     
     bonds_df = pd.DataFrame(
         [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
@@ -78,19 +97,44 @@ def find_and_track_bonds(df, radius_xy):
         columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Duration']
     )
     
-    return bonds_df, bond_durations_df
+    bond_durations_fluid_flat = [
+        (trackmate_id, neighbor_id, time_point, duration)
+        for (trackmate_id, neighbor_id), durations in bond_durations_fluid.items()
+        for time_point, duration in durations.items()
+    ]
 
-if os.path.exists(bonds_csv_path) and os.path.exists(bond_durations_csv_path):
+    bond_durations_fluid_df = pd.DataFrame(
+        bond_durations_fluid_flat,
+        columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Duration']
+    )
+
+    return bonds_df, bond_durations_df, bond_durations_fluid_df
+
+
+
+
+if os.path.exists(bonds_csv_path) and os.path.exists(bond_durations_csv_path) and os.path.exists(bond_durations_fluid_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
     bonds_df = pd.read_csv(bonds_csv_path)
     bond_durations_df = pd.read_csv(bond_durations_csv_path)
+    bond_durations_fluid_df = pd.read_csv(bond_durations_fluid_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bonds_df, bond_durations_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
+    bonds_df, bond_durations_df, bond_durations_fluid_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
     bonds_df.to_csv(bonds_csv_path, index=False)
     bond_durations_df.to_csv(bond_durations_csv_path, index=False)
+    bond_durations_fluid_df.to_csv(bond_durations_fluid_csv_path, index=False)
 
 bond_durations = {(row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']): row['Duration'] for _, row in bond_durations_df.iterrows()}
+bond_durations_fluid = defaultdict(lambda: defaultdict(int))
+
+for _, row in bond_durations_fluid_df.iterrows():
+    trackmate_id = row['TrackMate Track ID']
+    neighbor_id = row['Neighbor TrackMate Track ID']
+    time_point = row['Time']  
+    duration = row['Duration']  
+
+    bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
 
 def get_bond_color(bond_time, max_bond_time):
     norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
@@ -106,9 +150,8 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
     for t in tqdm(time_points, desc='Long duration bonds'):
         time_df = df[df['t'] == t]
         
-        fig, ax = plt.subplots(figsize=(18, 15))  # Enlarged plot size for better visibility
+        fig, ax = plt.subplots(figsize=(18, 15))  
         
-        # Plot cells by type in 2D XY plane with larger markers
         for cell_type, color in color_palette.items():
             cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
@@ -127,9 +170,8 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
             if bond_time > partner_time:
                 bond_color = get_bond_color(bond_time, max_bond_time)
                 ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], 
-                        color=bond_color, alpha=0.7, linewidth=3)  # Thicker bonds for long duration
+                        color=bond_color, alpha=0.7, linewidth=3)  
 
-        # Color bar for bond durations
         norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
         cmap = matplotlib.colormaps.get_cmap("coolwarm")
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
@@ -144,11 +186,60 @@ def plot_long_duration_bonds_2D(df, bonds_df, bond_durations, color_palette, sav
         ax.grid(True)
         
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'{partner_time}_long_duration_bonds_time_{t}_2D.png'), dpi=300)  # High DPI for clarity
+        plt.savefig(os.path.join(save_dir, f'{partner_time}_long_duration_bonds_time_{t}_2D.png'), dpi=300)  
         plt.close(fig)
 
+def plot_long_duration_fluid_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
+    Path(save_dir).mkdir(parents=True, exist_ok=True)
+    
+    max_bond_time = max(max(times.values()) for times in bond_durations.values()) if bond_durations else 1
+    
+    for t in tqdm(time_points, desc='Long duration bonds'):
+        time_df = df[df['t'] == t]
+        
+        fig, ax = plt.subplots(figsize=(18, 15))  
+        
+        for cell_type, color in color_palette.items():
+            cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
+            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
+        
+        bonds_at_time = bonds_df[bonds_df['Time'] == t]
+        
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+            
+            if cell_coords.size == 0 or neighbor_coords.size == 0:
+                continue
+            
+            bond_duration_at_t = bond_durations.get((trackmate_id, neighbor_id), {}).get(t, 0)
+            if bond_duration_at_t > partner_time:
+                bond_color = get_bond_color(bond_duration_at_t, max_bond_time)
+                ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], 
+                        color=bond_color, alpha=0.7, linewidth=3) 
+
+        norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
+        cmap = matplotlib.colormaps.get_cmap("coolwarm")
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
+        cbar.set_label('Bond Duration (timepoints)')
+
+        ax.set_title(f"Long-duration Bonds at Time Point {t} (XY Plane)")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.legend(loc='upper right')
+        ax.grid(True)
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_dir, f'{partner_time}_long_duration_fluid_bonds_time_{t}_2D.png'), dpi=300)  
+        plt.close(fig)
+
+
 time_points = sorted(neighbour_dataframe['t'].unique())
-plot_long_duration_bonds_2D(neighbour_dataframe, bonds_df, bond_durations, color_palette, save_dir, time_points)
+
+plot_long_duration_fluid_bonds_2D(neighbour_dataframe, bonds_df, bond_durations_fluid, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
