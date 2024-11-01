@@ -46,7 +46,8 @@ def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, uniqu
     bonds[trackmate_id][time_point].append(neighbor_id)
 
     duration = 0
-    for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
+    for subsequent_index in range(unique_time_points.index(time_point), len(unique_time_points), 5):
+        subsequent_time = unique_time_points[subsequent_index]
         subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
                                        (df['t'] == subsequent_time)]
         if subsequent_neighbor_check.empty:
