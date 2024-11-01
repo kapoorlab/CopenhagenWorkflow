@@ -8,12 +8,8 @@ from napatrackmater.Trackvector import (
     DYNAMIC_FEATURES,
     SHAPE_DYNAMIC_FEATURES
 )
-from sklearn.model_selection import train_test_split
-import h5py
 
 def process_datasets(home_folder, dataset_names, channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
-    training_arrays = [] 
-    labels = []
 
 
     for dataset_name in dataset_names:
