@@ -39,6 +39,35 @@ bond_durations_csv_path = os.path.join(save_dir, 'bond_durations.csv')
 bond_durations_fluid_csv_path = os.path.join(save_dir, 'bond_durations_fluid.csv')
 
 
+def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords):
+    bonds = defaultdict(lambda: defaultdict(list))
+    bond_durations = defaultdict(int)
+    bond_durations_fluid = defaultdict(lambda: defaultdict(int))
+    
+    # Record initial bond
+    bonds[trackmate_id][time_point].append(neighbor_id)
+    bond_durations[(trackmate_id, neighbor_id)] += 1
+
+    # Calculate duration of the bond over subsequent timepoints
+    duration = 0
+    for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
+        subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
+                                       (df['t'] == subsequent_time)]
+        if subsequent_neighbor_check.empty:
+            break
+
+        subsequent_coords = subsequent_neighbor_check.iloc[0][['z', 'y', 'x']].values
+        distance_xy_subsequent = np.sqrt((subsequent_coords[1] - current_coords[1])**2 + 
+                                         (subsequent_coords[2] - current_coords[2])**2)
+
+        if distance_xy_subsequent > radius_xy:
+            break
+        duration += 1
+
+    bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
+
+    return bonds, bond_durations, bond_durations_fluid
+
 def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
     bonds = defaultdict(lambda: defaultdict(list))
     bond_durations = defaultdict(int)
@@ -61,26 +90,21 @@ def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
         valid_trackmate_ids = time_filtered_df[valid_indices]['TrackMate Track ID'].unique()
         valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
 
-        for neighbor_id in valid_trackmate_ids:
-            bonds[trackmate_id][time_point].append(neighbor_id)
-            bond_durations[(trackmate_id, neighbor_id)] += 1
-
-            duration = 0
-            for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
-                subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
-                                               (df['t'] == subsequent_time)]
-                if subsequent_neighbor_check.empty:
-                    break
-
-                subsequent_coords = subsequent_neighbor_check.iloc[0][['z', 'y', 'x']].values
-                distance_xy_subsequent = np.sqrt((subsequent_coords[1] - current_coords[1])**2 + 
-                                                 (subsequent_coords[2] - current_coords[2])**2)
-                
-                if distance_xy_subsequent > radius_xy:
-                    break
-                duration += 1
-
-            bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
+        # Process each neighbor in parallel
+        with ThreadPoolExecutor() as executor:
+            neighbor_futures = [
+                executor.submit(process_neighbor, trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords)
+                for neighbor_id in valid_trackmate_ids
+            ]
+            
+            for future in as_completed(neighbor_futures):
+                bond, duration, fluid_duration = future.result()
+                for k, v in bond.items():
+                    bonds[k].update(v)
+                for k, v in duration.items():
+                    bond_durations[k] += v
+                for k, v in fluid_duration.items():
+                    bond_durations_fluid[k].update(v)
 
     return bonds, bond_durations, bond_durations_fluid
 
@@ -88,27 +112,20 @@ def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
 def find_and_track_bonds(df, radius_xy):
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
-
-    with ThreadPoolExecutor(max_workers = 4) as executor:
-        futures = [
-            executor.submit(process_trackmate_id, trackmate_id, df, radius_xy, unique_time_points)
-            for trackmate_id in unique_trackmate_ids
-        ]
+    
+    bonds = defaultdict(lambda: defaultdict(list))
+    bond_durations = defaultdict(int)
+    bond_durations_fluid = defaultdict(lambda: defaultdict(int))
+    
+    for trackmate_id in tqdm(unique_trackmate_ids, desc="Processing Track IDs"):
+        bond, duration, fluid_duration = process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points)
         
-        print(f'Sending jobs {len(futures)}')
-        # Aggregating results as they complete
-        bonds = defaultdict(lambda: defaultdict(list))
-        bond_durations = defaultdict(int)
-        bond_durations_fluid = defaultdict(lambda: defaultdict(int))
-        
-        for future in tqdm(as_completed(futures), total=len(futures), desc="Processing Track IDs"):
-            bond, duration, fluid_duration = future.result()
-            for k, v in bond.items():
-                bonds[k].update(v)
-            for k, v in duration.items():
-                bond_durations[k] += v
-            for k, v in fluid_duration.items():
-                bond_durations_fluid[k].update(v)
+        for k, v in bond.items():
+            bonds[k].update(v)
+        for k, v in duration.items():
+            bond_durations[k] += v
+        for k, v in fluid_duration.items():
+            bond_durations_fluid[k].update(v)
 
     bonds_df = pd.DataFrame(
         [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
@@ -132,8 +149,6 @@ def find_and_track_bonds(df, radius_xy):
     )
 
     return bonds_df, bond_durations_df, bond_durations_fluid_df
-
-
 
 if os.path.exists(bonds_csv_path) and os.path.exists(bond_durations_csv_path) and os.path.exists(bond_durations_fluid_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
