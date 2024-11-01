@@ -1,13 +1,7 @@
 import os
-import numpy as np
+from pathlib import Path
 from napatrackmater import createNPZ, filter_and_get_tracklets
-
 import pandas as pd
-from napatrackmater.Trackvector import (
-    SHAPE_FEATURES,
-    DYNAMIC_FEATURES,
-    SHAPE_DYNAMIC_FEATURES
-)
 
 def process_datasets(home_folder, dataset_names, channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
 
@@ -40,8 +34,9 @@ home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
     'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
     'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
-time_window = [10]
+time_window = 10
 crop_size = [256,256,8]
 train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
+Path(train_save_dir).mkdir(exist_ok=True)
 for index, tracklet_length in enumerate(time_window):
-    process_datasets(home_folder, dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size,  )
+    process_datasets(home_folder, dataset_name, channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
