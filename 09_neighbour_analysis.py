@@ -66,10 +66,18 @@ def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, uniqu
 
     return bonds, bond_durations, bond_durations_fluid
 
+def bonds_default():
+    return defaultdict(list)
+
+def bond_durations_fluid_default():
+    return defaultdict(int)
+
+
 def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
-    bonds = defaultdict(lambda: defaultdict(list))
+    
+    bonds = defaultdict(bonds_default)
     bond_durations = defaultdict(int)
-    bond_durations_fluid = defaultdict(lambda: defaultdict(int))
+    bond_durations_fluid = defaultdict(bond_durations_fluid_default)
     
     for time_point in unique_time_points:
         current_track = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
