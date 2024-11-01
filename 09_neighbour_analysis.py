@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
@@ -24,7 +24,7 @@ save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 
 neighbour_radius_xy = 70 
-partner_time = 150  # Bonds lasting longer than this will be specially plotted
+partner_time = 0  
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -89,8 +89,7 @@ def find_and_track_bonds(df, radius_xy):
     unique_trackmate_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
 
-    # Using ProcessPoolExecutor to manage parallel processing
-    with ProcessPoolExecutor() as executor:
+    with ThreadPoolExecutor() as executor:
         futures = [
             executor.submit(process_trackmate_id, trackmate_id, df, radius_xy, unique_time_points)
             for trackmate_id in unique_trackmate_ids
