@@ -41,11 +41,9 @@ bond_durations_fluid_csv_path = os.path.join(save_dir, 'bond_durations_fluid.csv
 
 def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords):
     bonds = defaultdict(bonds_default)
-    bond_durations = defaultdict(int)
     bond_durations_fluid = defaultdict(bond_durations_fluid_default)
     
     bonds[trackmate_id][time_point].append(neighbor_id)
-    bond_durations[(trackmate_id, neighbor_id)] += 1
 
     duration = 0
     for subsequent_time in unique_time_points[unique_time_points.index(time_point):]:
@@ -64,7 +62,7 @@ def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, uniqu
 
     bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
 
-    return bonds, bond_durations, bond_durations_fluid
+    return bonds,  bond_durations_fluid
 
 def bonds_default():
     return defaultdict(list)
