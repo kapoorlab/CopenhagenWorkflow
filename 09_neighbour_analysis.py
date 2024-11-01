@@ -59,7 +59,7 @@ def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, uniqu
 
         if distance_xy_subsequent > radius_xy:
             break
-        duration += 1
+        duration += 5
 
     bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
 
