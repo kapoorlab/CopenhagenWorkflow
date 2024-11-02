@@ -139,14 +139,18 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
     max_total_bond_breaks = max(total_bond_breaks_by_time) if total_bond_breaks_by_time else 1
 
     max_bonds = 1
+    
+    for t in tqdm(time_points):
+        total_bonds = get_total_bonds_at_time(bonds_df, t) 
+        if total_bonds > max_bonds:
+            max_bonds = total_bonds
+
     for t in tqdm(time_points, desc='Plotting Bond Breaks'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
         total_bond_breaks_at_t = bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
         total_bonds = get_total_bonds_at_time(bonds_df, t)
-        if total_bonds > max_bonds:
-            max_bonds = total_bonds
         total_bond_breaks_at_t = total_bond_breaks_at_t /total_bonds
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
