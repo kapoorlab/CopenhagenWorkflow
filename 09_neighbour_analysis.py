@@ -144,7 +144,7 @@ else:
 
 time_points = sorted(neighbour_dataframe['t'].unique())
 
-plot_bond_breaks(neighbour_dataframe, bonds_breaks,  color_palette, save_dir, time_points)
+plot_bond_breaks(neighbour_dataframe, bond_breaks_df,  color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
