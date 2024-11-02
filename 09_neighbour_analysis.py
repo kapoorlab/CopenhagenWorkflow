@@ -22,9 +22,10 @@ xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
 save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 Path(save_dir).mkdir(exist_ok=True, parents=True)
-
+bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 neighbour_radius_xy = 70 
 partner_time = 0  
+
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -34,200 +35,116 @@ color_palette = {
 tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
-bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
-bond_durations_csv_path = os.path.join(save_dir, 'bond_durations.csv')
-bond_durations_fluid_csv_path = os.path.join(save_dir, 'bond_durations_fluid.csv')
 
 
-def process_neighbor(trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords):
-    bonds = defaultdict(bonds_default)
-    bond_durations_fluid = defaultdict(bond_durations_fluid_default)
-    
-    bonds[trackmate_id][time_point].append(neighbor_id)
-
-    duration = 0
-    for subsequent_index in range(unique_time_points.index(time_point), len(unique_time_points), 5):
-        subsequent_time = unique_time_points[subsequent_index]
-        subsequent_neighbor_check = df[(df['TrackMate Track ID'] == neighbor_id) & 
-                                       (df['t'] == subsequent_time)]
-        if subsequent_neighbor_check.empty:
-            break
-
-        subsequent_coords = subsequent_neighbor_check.iloc[0][['z', 'y', 'x']].values
-        distance_xy_subsequent = np.sqrt((subsequent_coords[1] - current_coords[1])**2 + 
-                                         (subsequent_coords[2] - current_coords[2])**2)
-
-        if distance_xy_subsequent > radius_xy:
-            break
-        duration += 5
-
-    bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
-
-    return bonds,  bond_durations_fluid
-
-def bonds_default():
-    return defaultdict(list)
-
-def bond_durations_fluid_default():
-    return defaultdict(int)
-
-
-def process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points):
-    
-    
-    bonds = defaultdict(bonds_default)
-    bond_durations_fluid = defaultdict(bond_durations_fluid_default)
-    for time_point in unique_time_points:
-        current_track = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
-        if current_track.empty:
-            continue
-
-        current_coords = current_track.iloc[0][['z', 'y', 'x']].values
-        time_filtered_df = df[df['t'] == time_point]
-        
-        distances_xy = np.sqrt((time_filtered_df['y'] - current_coords[1])**2 + 
-                               (time_filtered_df['x'] - current_coords[2])**2)
-        
-        within_radius_xy = distances_xy <= radius_xy
-        valid_indices = within_radius_xy
-        
-        valid_trackmate_ids = time_filtered_df[valid_indices]['TrackMate Track ID'].unique()
-        valid_trackmate_ids = valid_trackmate_ids[valid_trackmate_ids != trackmate_id]
-
-        # Process each neighbor in parallel
-        with ThreadPoolExecutor(os.cpu_count() - 1) as executor:
-            neighbor_futures = [
-                executor.submit(process_neighbor, trackmate_id, neighbor_id, df, radius_xy, time_point, unique_time_points, current_coords)
-                for neighbor_id in valid_trackmate_ids
-            ]
-            
-            for future in as_completed(neighbor_futures):
-                bond,  fluid_duration = future.result()
-                for k, v in bond.items():
-                    bonds[k].update(v)
-                
-                for k, v in fluid_duration.items():
-                    bond_durations_fluid[k].update(v)
-
-    return bonds, bond_durations_fluid
-
-
-def find_and_track_bonds(df, radius_xy):
-    unique_trackmate_ids = df['TrackMate Track ID'].unique()
+# Function to compute bond breaks
+def compute_bond_breaks(df, radius_xy):
+    unique_track_ids = df['TrackMate Track ID'].unique()
     unique_time_points = sorted(df['t'].unique())
     
-    bonds = defaultdict(lambda: defaultdict(list))
-    bond_durations_fluid = defaultdict(lambda: defaultdict(int))
+    # Tracking bond presence and breaks
+    bond_presence = defaultdict(lambda: defaultdict(bool))
+    bond_break_counts = defaultdict(int)  # Counts of bond breaks
     
-    for trackmate_id in tqdm(unique_trackmate_ids, desc="Processing Track IDs"):
-        bond,  fluid_duration = process_trackmate_id(trackmate_id, df, radius_xy, unique_time_points)
+    for t_idx, time_point in enumerate(tqdm(unique_time_points, desc="Processing Time Points")):
+        current_df = df[df['t'] == time_point]
         
-        for k, v in bond.items():
-            bonds[k].update(v)
-       
-        for k, v in fluid_duration.items():
-            bond_durations_fluid[k].update(v)
-
-    bonds_df = pd.DataFrame(
-        [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
-        columns=['TrackMate Track ID', 'Time', 'Neighbor TrackMate Track ID']
-    )
-    
-
-    
-    bond_durations_fluid_flat = [
-        (trackmate_id, neighbor_id, time_point, duration)
-        for (trackmate_id, neighbor_id), durations in bond_durations_fluid.items()
-        for time_point, duration in durations.items()
-    ]
-
-    bond_durations_fluid_df = pd.DataFrame(
-        bond_durations_fluid_flat,
-        columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Duration']
-    )
-
-    return bonds_df, bond_durations_fluid_df
-
-if os.path.exists(bonds_csv_path)  and os.path.exists(bond_durations_fluid_csv_path):
-    print("Loading bonds and bond_durations from CSV files.")
-    bonds_df = pd.read_csv(bonds_csv_path)
-    bond_durations_fluid_df = pd.read_csv(bond_durations_fluid_csv_path)
-else:
-    print("Calculating bonds and bond_durations.")
-    bonds_df, bond_durations_fluid_df = find_and_track_bonds(neighbour_dataframe, neighbour_radius_xy)
-    bonds_df.to_csv(bonds_csv_path, index=False)
-    bond_durations_fluid_df.to_csv(bond_durations_fluid_csv_path, index=False)
-
-bond_durations_fluid = defaultdict(lambda: defaultdict(int))
-
-for _, row in bond_durations_fluid_df.iterrows():
-    trackmate_id = row['TrackMate Track ID']
-    neighbor_id = row['Neighbor TrackMate Track ID']
-    time_point = row['Time']  
-    duration = row['Duration']  
-
-    bond_durations_fluid[(trackmate_id, neighbor_id)][time_point] = duration
-
-def get_bond_color(bond_time, max_bond_time):
-    norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
-    cmap = matplotlib.colormaps.get_cmap("coolwarm")
-    return cmap(norm(bond_time))
-
-
-
-
-
-def plot_fluid_bonds_2D(df, bonds_df, bond_durations, color_palette, save_dir, time_points):
-    Path(save_dir).mkdir(parents=True, exist_ok=True)
-    
-    max_bond_time = max(max(times.values()) for times in bond_durations.values()) if bond_durations else 1
-    
-    for t in tqdm(time_points, desc='Long duration bonds'):
-        time_df = df[df['t'] == t]
-        
-        fig, ax = plt.subplots(figsize=(18, 15))  
-        
-        for cell_type, color in color_palette.items():
-            cell_type_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_type_df['x'], cell_type_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
-        
-        bonds_at_time = bonds_df[bonds_df['Time'] == t]
-        
-        for _, row in bonds_at_time.iterrows():
-            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
-            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
-            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
-            
-            if cell_coords.size == 0 or neighbor_coords.size == 0:
+        for trackmate_id in unique_track_ids:
+            cell = current_df[current_df['TrackMate Track ID'] == trackmate_id]
+            if cell.empty:
                 continue
             
-            bond_duration_at_t = bond_durations.get((trackmate_id, neighbor_id), {}).get(t, 0)
-            if bond_duration_at_t > partner_time:
-                bond_color = get_bond_color(bond_duration_at_t, max_bond_time)
-                ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], 
-                        color=bond_color, alpha=0.7, linewidth=3) 
+            cell_coords = cell.iloc[0][['z', 'y', 'x']].values
+            distances = np.sqrt((current_df['y'] - cell_coords[1]) ** 2 + (current_df['x'] - cell_coords[2]) ** 2)
+            nearby_cells = current_df[(distances <= radius_xy) & (current_df['TrackMate Track ID'] != trackmate_id)]
+            
+            current_neighbors = set(nearby_cells['TrackMate Track ID'])
+            previous_neighbors = {neighbor for neighbor, present in bond_presence[trackmate_id].items() if present}
+            
+            # Find new bonds and breaks
+            new_bonds = current_neighbors - previous_neighbors
+            broken_bonds = previous_neighbors - current_neighbors
+            
+            for neighbor_id in new_bonds:
+                bond_presence[trackmate_id][neighbor_id] = True  # New bond formed
+            
+            for neighbor_id in broken_bonds:
+                bond_presence[trackmate_id][neighbor_id] = False  # Bond broken
+                bond_break_counts[(trackmate_id, neighbor_id)] += 1  # Increment break count
+                
+    return bond_break_counts
 
-        norm = mcolors.Normalize(vmin=0, vmax=max_bond_time)
-        cmap = matplotlib.colormaps.get_cmap("coolwarm")
-        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+
+
+
+def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
+    max_break_count = bond_breaks_df['Break Count'].max() if not bond_breaks_df.empty else 1
+
+    for t in tqdm(time_points, desc='Plotting Bond Breaks'):
+        fig, ax = plt.subplots(figsize=(18, 15))
+        time_df = df[df['t'] == t]
+
+        # Plot each cell type with unique color
+        for cell_type, color in color_palette.items():
+            cell_df = time_df[time_df['Cell_Type'] == cell_type]
+            ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
+
+        # Filter the bond breaks for the current time point
+        bonds_at_time = bond_breaks_df[bond_breaks_df['Time'] == t]
+
+        # Plot each bond with color based on break count
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id = row['TrackMate Track ID']
+            neighbor_id = row['Neighbor TrackMate Track ID']
+            break_count = row['Break Count']
+
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+
+            if cell_coords.size == 0 or neighbor_coords.size == 0:
+                continue
+
+            # Set bond color based on break count
+            bond_color = cm.get_cmap("coolwarm")(break_count / max_break_count)
+            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], color=bond_color, linewidth=3)
+
+        # Add color bar for bond breaks
+        norm = mcolors.Normalize(vmin=0, vmax=max_break_count)
+        sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
-        cbar.set_label('Bond Duration (timepoints)')
+        cbar.set_label('Bond Break Count')
 
-        ax.set_title(f"Long-duration Bonds at Time Point {t} (XY Plane)")
+        ax.set_title(f"Bond Breaks at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.legend(loc='upper right')
         ax.grid(True)
-        
+
         plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'long_duration_fluid_bonds_time_{t}_2D.png'), dpi=300)  
+        plt.savefig(os.path.join(save_dir, f'bond_breaks_time_{t}.png'), dpi=300)
         plt.close(fig)
+
+
+if os.path.exists(bond_breaks_csv_path):
+    print("Loading bonds and bond_durations from CSV files.")
+    bond_breaks_df = pd.read_csv(bond_breaks_csv_path)
+else:
+    print("Calculating bonds and bond_durations.")
+    bond_breaks = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy, jump_time=jump_time)
+    bond_breaks_df = pd.DataFrame(
+    [(trackmate_id, neighbor_id, count) for (trackmate_id, neighbor_id), count in bond_breaks.items()],
+    columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Break Count']
+   )
+    bond_breaks_df.to_csv(bond_breaks_csv_path, index=False)
+    print(f"Bond breaks data saved to {bond_breaks_csv_path}")
+
+ 
 
 
 time_points = sorted(neighbour_dataframe['t'].unique())
 
-plot_fluid_bonds_2D(neighbour_dataframe, bonds_df, bond_durations_fluid, color_palette, save_dir, time_points)
+plot_bond_breaks(neighbour_dataframe, bonds_breaks,  color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
