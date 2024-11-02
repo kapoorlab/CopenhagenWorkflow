@@ -26,7 +26,7 @@ bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
 partner_time = 0  
-
+allowable_seperation_time = 5
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -58,7 +58,7 @@ def compute_bond_breaks_and_bonds(df, radius_xy):
                 continue
 
             current_coords = current_df.iloc[0][['z', 'y', 'x']].values
-            next_time = time_point + 1
+            next_time = time_point + allowable_seperation_time
             next_df = df[df['t'] == next_time]  
 
             # Calculate distances to find neighbors
