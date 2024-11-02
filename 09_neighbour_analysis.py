@@ -134,18 +134,18 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
 
     total_bond_breaks_by_time = [
         bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
-        for t in time_points - 1
+        for t in time_points 
     ]
     max_total_bond_breaks = max(total_bond_breaks_by_time) if total_bond_breaks_by_time else 1
 
     max_bonds = 1
 
-    for t in tqdm(time_points - 1) :
+    for t in tqdm(time_points ) :
         total_bonds = get_total_bonds_at_time(bonds_df, t) 
         if total_bonds > max_bonds:
             max_bonds = total_bonds
 
-    for t in tqdm(time_points - 1, desc='Plotting Bond Breaks'):
+    for t in tqdm(time_points, desc='Plotting Bond Breaks'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
@@ -210,7 +210,7 @@ else:
  
 
 
-time_points = sorted(neighbour_dataframe['t'].unique())
+time_points = sorted(neighbour_dataframe['t'].unique())[:-1]
 
 plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
 
