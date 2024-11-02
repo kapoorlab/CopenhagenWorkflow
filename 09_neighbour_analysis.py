@@ -37,7 +37,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 
 
-def compute_bond_breaks(df, radius_xy, jump_time=1):
+def compute_bond_breaks(df, radius_xy):
     """
     Computes normalized bond breaks between consecutive time points, where a bond break is defined as a neighbor 
     that is present at the current time but not in the next time point.
@@ -45,7 +45,6 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
     Args:
         df (pd.DataFrame): DataFrame containing tracking data with columns 'TrackMate Track ID', 't', 'x', 'y', 'z'.
         radius_xy (float): Distance threshold for considering a neighboring bond in the XY plane.
-        jump_time (int): Time increment for checking bond breaks (default is 1 for consecutive time points).
 
     Returns:
         dict: Normalized bond breaks with keys (trackmate_id, neighbor_id, time_point) and counts as values.
@@ -66,7 +65,7 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
                 continue
             
             current_coords = current_df.iloc[0][['z', 'y', 'x']].values
-            next_time = time_point + jump_time
+            next_time = time_point + 1
             next_df = df[df['t'] == next_time]
 
             distances = np.sqrt((next_df['y'] - current_coords[1])**2 + (next_df['x'] - current_coords[2])**2)
