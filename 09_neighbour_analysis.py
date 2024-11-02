@@ -131,7 +131,7 @@ if os.path.exists(bond_breaks_csv_path):
     bond_breaks_df = pd.read_csv(bond_breaks_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bond_breaks = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy, jump_time=jump_time)
+    bond_breaks = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy)
     bond_breaks_df = pd.DataFrame(
     [(trackmate_id, neighbor_id, count) for (trackmate_id, neighbor_id), count in bond_breaks.items()],
     columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Break Count']
