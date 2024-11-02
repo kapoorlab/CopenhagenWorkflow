@@ -135,7 +135,7 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
 
-            bond_color = cm.get_cmap("coolwarm")(total_bond_breaks_at_t)
+            bond_color = matplotlib.colormaps.get_cmap("coolwarm")(total_bond_breaks_at_t)
             ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
                     [cell_coords[0][1], neighbor_coords[0][1]], 
                     color=bond_color, linewidth=3)
