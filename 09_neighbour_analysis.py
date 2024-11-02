@@ -100,25 +100,25 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
 
 
 def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
-    max_break_count = bond_breaks_df['Break Count'].max() if not bond_breaks_df.empty else 1
+    total_bond_breaks_by_time = bond_breaks_df.groupby('Time')['Break Count'].sum()
+
+    max_total_bond_breaks = total_bond_breaks_by_time.max() if not total_bond_breaks_by_time.empty else 1
 
     for t in tqdm(time_points, desc='Plotting Bond Breaks'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
-        # Plot each cell type with unique color
+        total_bond_breaks_at_t = total_bond_breaks_by_time.get(t, 1)
+
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
 
-        # Filter the bond breaks for the current time point
         bonds_at_time = bond_breaks_df[bond_breaks_df['Time'] == t]
 
-        # Plot each bond with color based on break count
         for _, row in bonds_at_time.iterrows():
             trackmate_id = row['TrackMate Track ID']
             neighbor_id = row['Neighbor TrackMate Track ID']
-            break_count = row['Break Count']
 
             cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
@@ -126,26 +126,22 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
 
-            # Set bond color based on break count
-            bond_color = cm.get_cmap("coolwarm")(break_count / max_break_count)
-            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], color=bond_color, linewidth=3)
+            bond_color = cm.get_cmap("coolwarm")(total_bond_breaks_at_t)
+            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
+                    [cell_coords[0][1], neighbor_coords[0][1]], 
+                    color=bond_color, linewidth=3)
 
-        # Add color bar for bond breaks
-        norm = mcolors.Normalize(vmin=0, vmax=max_break_count)
+        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
-        cbar.set_label('Bond Break Count')
+        cbar.set_label(f'Total Bond Breaks at Time (Max={max_total_bond_breaks})')
 
         ax.set_title(f"Bond Breaks at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.legend(loc='upper right')
         ax.grid(True)
-
-        plt.tight_layout()
-        plt.savefig(os.path.join(save_dir, f'bond_breaks_time_{t}.png'), dpi=300)
-        plt.close(fig)
 
 
 if os.path.exists(bond_breaks_csv_path):
