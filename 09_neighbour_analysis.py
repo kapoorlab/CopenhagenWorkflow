@@ -23,6 +23,7 @@ goblet_basal_radial_dataframe = os.path.join(data_frames_dir, f'goblet_basal_dat
 save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 Path(save_dir).mkdir(exist_ok=True, parents=True)
 bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
+bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
 partner_time = 0  
 
@@ -151,6 +152,7 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
         ax.set_ylabel("Y")
         ax.legend(loc='upper right')
         ax.grid(True)
+        plt.savefig(os.path.join(save_dir, f'bond_break_{t}.png'))
         plt.close()
 
 
@@ -219,4 +221,4 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+#plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
