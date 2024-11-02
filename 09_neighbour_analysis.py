@@ -151,6 +151,7 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
         ax.set_ylabel("Y")
         ax.legend(loc='upper right')
         ax.grid(True)
+        plt.close()
 
 
 if os.path.exists(bond_breaks_csv_path):
