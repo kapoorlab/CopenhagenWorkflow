@@ -37,42 +37,46 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 
 
-# Function to compute bond breaks
-def compute_bond_breaks(df, radius_xy):
-    unique_track_ids = df['TrackMate Track ID'].unique()
+def compute_bond_breaks(df, radius_xy, jump_time=1):
+    """
+    Computes bond breaks between consecutive time points, where a bond break is defined as a neighbor 
+    that is present at the current time but not in the next time point.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing tracking data with columns 'TrackMate Track ID', 't', 'x', 'y', 'z'.
+        radius_xy (float): Distance threshold for considering a neighboring bond in the XY plane.
+        jump_time (int): Time increment for checking bond breaks (default is 1 for consecutive time points).
+
+    Returns:
+        dict: Bond breaks with keys (trackmate_id, neighbor_id, time_point) and counts as values.
+    """
+    bond_breaks = defaultdict(int)
     unique_time_points = sorted(df['t'].unique())
-    
-    # Tracking bond presence and breaks
-    bond_presence = defaultdict(lambda: defaultdict(bool))
-    bond_break_counts = defaultdict(int)  # Counts of bond breaks
-    
-    for t_idx, time_point in enumerate(tqdm(unique_time_points, desc="Processing Time Points")):
-        current_df = df[df['t'] == time_point]
-        
-        for trackmate_id in unique_track_ids:
-            cell = current_df[current_df['TrackMate Track ID'] == trackmate_id]
-            if cell.empty:
+
+    for trackmate_id in tqdm(df['TrackMate Track ID'].unique(), desc="Computing Bond Breaks"):
+        for time_point in unique_time_points:
+            # Get current neighbors
+            current_df = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
+            if current_df.empty:
                 continue
             
-            cell_coords = cell.iloc[0][['z', 'y', 'x']].values
-            distances = np.sqrt((current_df['y'] - cell_coords[1]) ** 2 + (current_df['x'] - cell_coords[2]) ** 2)
-            nearby_cells = current_df[(distances <= radius_xy) & (current_df['TrackMate Track ID'] != trackmate_id)]
-            
-            current_neighbors = set(nearby_cells['TrackMate Track ID'])
-            previous_neighbors = {neighbor for neighbor, present in bond_presence[trackmate_id].items() if present}
-            
-            # Find new bonds and breaks
-            new_bonds = current_neighbors - previous_neighbors
-            broken_bonds = previous_neighbors - current_neighbors
-            
-            for neighbor_id in new_bonds:
-                bond_presence[trackmate_id][neighbor_id] = True  # New bond formed
-            
+            current_coords = current_df.iloc[0][['z', 'y', 'x']].values
+            next_time = time_point + jump_time
+            next_df = df[df['t'] == next_time]
+
+            # Find current neighbors within radius
+            distances = np.sqrt((next_df['y'] - current_coords[1])**2 + (next_df['x'] - current_coords[2])**2)
+            current_neighbors = set(df[(distances <= radius_xy) & (df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+
+            # Find next neighbors within radius
+            next_neighbors = set(next_df[(distances <= radius_xy) & (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+
+            # Determine bond breaks by finding neighbors in current but not in the next time point
+            broken_bonds = current_neighbors - next_neighbors
             for neighbor_id in broken_bonds:
-                bond_presence[trackmate_id][neighbor_id] = False  # Bond broken
-                bond_break_counts[(trackmate_id, neighbor_id)] += 1  # Increment break count
-                
-    return bond_break_counts
+                bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
+
+    return bond_breaks
 
 
 
@@ -133,9 +137,9 @@ else:
     print("Calculating bonds and bond_durations.")
     bond_breaks = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy)
     bond_breaks_df = pd.DataFrame(
-    [(trackmate_id, neighbor_id, count) for (trackmate_id, neighbor_id), count in bond_breaks.items()],
-    columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Break Count']
-   )
+    [(trackmate_id, neighbor_id, time_point, count) for (trackmate_id, neighbor_id, time_point), count in bond_breaks.items()],
+    columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Break Count']
+)
     bond_breaks_df.to_csv(bond_breaks_csv_path, index=False)
     print(f"Bond breaks data saved to {bond_breaks_csv_path}")
 
