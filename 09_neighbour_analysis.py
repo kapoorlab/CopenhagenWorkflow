@@ -37,6 +37,8 @@ tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
 
+def bonds_default():
+       return defaultdict(list)
 
 def compute_bond_breaks(df, radius_xy):
     """
@@ -50,8 +52,10 @@ def compute_bond_breaks(df, radius_xy):
     Returns:
         dict: Normalized bond breaks with keys (trackmate_id, neighbor_id, time_point) and counts as values.
     """
+ 
     bond_breaks = defaultdict(int)
     total_bonds_at_time = defaultdict(int)
+    bonds = defaultdict(bonds_default)
     unique_time_points = sorted(df['t'].unique())
     trackmate_ids = df['TrackMate Track ID'].unique()
 
@@ -59,7 +63,7 @@ def compute_bond_breaks(df, radius_xy):
         """Processes bond breaks for a single TrackMate track ID."""
         local_bond_breaks = defaultdict(int)
         local_total_bonds = defaultdict(int)
-        
+        local_bonds = defaultdict(bonds_default)
         for time_point in unique_time_points:
             time_df = df[df['t'] == time_point]
             current_df = time_df[time_df['TrackMate Track ID'] == trackmate_id]
@@ -77,6 +81,10 @@ def compute_bond_breaks(df, radius_xy):
             current_neighbors = set(time_df[(distances <= radius_xy) & 
                                             (time_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
 
+            
+            for neighbor_id in current_neighbors:
+               local_bonds[trackmate_id][time_point].append(neighbor_id)
+
             local_total_bonds[time_point] += len(current_neighbors)
 
             next_distances = np.sqrt((next_df['y'] - current_coords[1])**2 + 
@@ -88,37 +96,40 @@ def compute_bond_breaks(df, radius_xy):
             for neighbor_id in broken_bonds:
                 local_bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
                 
-        return local_bond_breaks, local_total_bonds
+        return local_bond_breaks, local_total_bonds, local_bonds
 
-    # Run in parallel over all trackmate_ids
     with ThreadPoolExecutor(os.cpu_count() - 1) as executor:
         futures = [executor.submit(process_trackmate_id, trackmate_id) for trackmate_id in trackmate_ids]
         
         for future in tqdm(as_completed(futures), total=len(futures), desc="Computing Bond Breaks"):
-            local_bond_breaks, local_total_bonds = future.result()
+            local_bond_breaks, local_total_bonds, local_bonds = future.result()
             for k, v in local_bond_breaks.items():
                 bond_breaks[k] += v
             for k, v in local_total_bonds.items():
                 total_bonds_at_time[k] += v
+            for k, v in local_bonds.items():
+                bonds[k] +=v    
 
-    # Normalize bond breaks by the total bonds at each time point
-    normalized_bond_breaks = {key: count / total_bonds_at_time[key[2]] for key, count in bond_breaks.items()}
 
-    return normalized_bond_breaks
+    return bond_breaks, bonds
 
 
 
 
 def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
-    total_bond_breaks_by_time = bond_breaks_df.groupby('Time')['Break Count'].sum()
 
-    max_total_bond_breaks = total_bond_breaks_by_time.max() if not total_bond_breaks_by_time.empty else 1
+    total_bond_breaks_by_time = [
+        bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
+        for t in time_points
+    ]
+    max_total_bond_breaks = max(total_bond_breaks_by_time) if total_bond_breaks_by_time else 1
+
 
     for t in tqdm(time_points, desc='Plotting Bond Breaks'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
-        total_bond_breaks_at_t = total_bond_breaks_by_time.get(t, 1)
+        total_bond_breaks_at_t = bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
 
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
@@ -156,17 +167,23 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
         plt.close()
 
 
-if os.path.exists(bond_breaks_csv_path):
+if os.path.exists(bond_breaks_csv_path) and os.path.exists(bonds_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
     bond_breaks_df = pd.read_csv(bond_breaks_csv_path)
+    bonds_df = pd.read_csv(bonds_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bond_breaks = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy)
+    bond_breaks, bonds = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy)
     bond_breaks_df = pd.DataFrame(
     [(trackmate_id, neighbor_id, time_point, count) for (trackmate_id, neighbor_id, time_point), count in bond_breaks.items()],
     columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Break Count']
 )
+    bonds_df = pd.DataFrame(
+        [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
+        columns=['TrackMate Track ID', 'Time', 'Neighbor TrackMate Track ID']
+    )
     bond_breaks_df.to_csv(bond_breaks_csv_path, index=False)
+    bonds_df.to_csv(bonds_csv_path, index=False)
     print(f"Bond breaks data saved to {bond_breaks_csv_path}")
 
  
@@ -221,4 +238,4 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-#plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
