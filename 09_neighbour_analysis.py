@@ -26,7 +26,7 @@ bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
 partner_time = 0  
-allowable_seperation_time = 5
+allowable_seperation_time = 3
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -61,17 +61,14 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
 
             current_coords = current_df.iloc[0][['z', 'y', 'x']].values
 
-            # Calculate distances to find neighbors at the current time point
             distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
                                 (time_df['x'] - current_coords[2])**2)
             current_neighbors = set(time_df[(distances <= radius_xy) & 
                                             (time_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
 
-            # Track bonds for current neighbors
             for neighbor_id in current_neighbors:
                 local_bonds[trackmate_id][time_point].append(neighbor_id)
 
-            # Check if each current neighbor remains a neighbor in the next 5 time points
             for neighbor_id in current_neighbors:
                 bond_persistent = False
                 for offset in range(1, max_separation_time + 1):
@@ -86,7 +83,6 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
                         bond_persistent = True
                         break
 
-                # Only count bond breaks if the bond is not found in any of the next 5 time points
                 if not bond_persistent:
                     local_bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
 
