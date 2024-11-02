@@ -40,30 +40,17 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 def bonds_default():
        return defaultdict(list)
 
-def compute_bond_breaks(df, radius_xy):
-    """
-    Computes normalized bond breaks between consecutive time points, where a bond break is defined as a neighbor 
-    that is present at the current time but not in the next time point.
-
-    Args:
-        df (pd.DataFrame): DataFrame containing tracking data with columns 'TrackMate Track ID', 't', 'x', 'y', 'z'.
-        radius_xy (float): Distance threshold for considering a neighboring bond in the XY plane.
-
-    Returns:
-        dict: Normalized bond breaks with keys (trackmate_id, neighbor_id, time_point) and counts as values.
-    """
- 
+def compute_bond_breaks_and_bonds(df, radius_xy):
     bond_breaks = defaultdict(int)
-    total_bonds_at_time = defaultdict(int)
-    bonds = defaultdict(bonds_default)
+    bonds = defaultdict(lambda: defaultdict(list))
     unique_time_points = sorted(df['t'].unique())
     trackmate_ids = df['TrackMate Track ID'].unique()
 
     def process_trackmate_id(trackmate_id):
         """Processes bond breaks for a single TrackMate track ID."""
         local_bond_breaks = defaultdict(int)
-        local_total_bonds = defaultdict(int)
-        local_bonds = defaultdict(bonds_default)
+        local_bonds = defaultdict(lambda: defaultdict(list))
+        
         for time_point in unique_time_points:
             time_df = df[df['t'] == time_point]
             current_df = time_df[time_df['TrackMate Track ID'] == trackmate_id]
@@ -75,40 +62,48 @@ def compute_bond_breaks(df, radius_xy):
             next_time = time_point + 1
             next_df = df[df['t'] == next_time]  
 
+            # Calculate distances to find neighbors
             distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
                                 (time_df['x'] - current_coords[2])**2)
-
             current_neighbors = set(time_df[(distances <= radius_xy) & 
                                             (time_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
 
-            
+            # Track bonds for current neighbors
             for neighbor_id in current_neighbors:
-               local_bonds[trackmate_id][time_point].append(neighbor_id)
+                local_bonds[trackmate_id][time_point].append(neighbor_id)
 
-            local_total_bonds[time_point] += len(current_neighbors)
 
+            # Compute neighbors at the next time point to detect bond breaks
             next_distances = np.sqrt((next_df['y'] - current_coords[1])**2 + 
-                                    (next_df['x'] - current_coords[2])**2)
+                                     (next_df['x'] - current_coords[2])**2)
             next_neighbors = set(next_df[(next_distances <= radius_xy) & 
-                                        (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+                                         (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
 
+            # Identify broken bonds as the difference between current and next neighbors
             broken_bonds = current_neighbors - next_neighbors
             for neighbor_id in broken_bonds:
                 local_bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
                 
-        return local_bond_breaks, local_total_bonds, local_bonds
+        return local_bond_breaks, local_bonds
 
-    with ThreadPoolExecutor(os.cpu_count() - 1) as executor:
+    # Run in parallel over all trackmate_ids
+    with ThreadPoolExecutor(max_workers=os.cpu_count() - 1) as executor:
         futures = [executor.submit(process_trackmate_id, trackmate_id) for trackmate_id in trackmate_ids]
         
         for future in tqdm(as_completed(futures), total=len(futures), desc="Computing Bond Breaks"):
-            local_bond_breaks, local_total_bonds, local_bonds = future.result()
+            local_bond_breaks, local_bonds = future.result()
+            
+            # Aggregate bond breaks
             for k, v in local_bond_breaks.items():
                 bond_breaks[k] += v
-            for k, v in local_total_bonds.items():
-                total_bonds_at_time[k] += v
-            for k, v in local_bonds.items():
-                bonds[k] +=v    
+           
+            
+            # Merge local bonds into the global `bonds` structure
+            for track_id, time_dict in local_bonds.items():
+                for time_point, neighbors in time_dict.items():
+                    bonds[track_id][time_point].extend(neighbors)
+                
+      
 
 
     return bond_breaks, bonds
@@ -173,7 +168,7 @@ if os.path.exists(bond_breaks_csv_path) and os.path.exists(bonds_csv_path):
     bonds_df = pd.read_csv(bonds_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bond_breaks, bonds = compute_bond_breaks(neighbour_dataframe, neighbour_radius_xy)
+    bond_breaks, bonds = compute_bond_breaks_and_bonds(neighbour_dataframe, neighbour_radius_xy)
     bond_breaks_df = pd.DataFrame(
     [(trackmate_id, neighbor_id, time_point, count) for (trackmate_id, neighbor_id, time_point), count in bond_breaks.items()],
     columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Break Count']
