@@ -60,18 +60,28 @@ def compute_bond_breaks(df, radius_xy):
         local_total_bonds = defaultdict(int)
         
         for time_point in unique_time_points:
-            current_df = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
+            time_df = df[df['t'] == time_point]
+            current_df = time_df[time_df['TrackMate Track ID'] == trackmate_id]
+            
             if current_df.empty:
                 continue
-            
+
             current_coords = current_df.iloc[0][['z', 'y', 'x']].values
             next_time = time_point + 1
-            next_df = df[df['t'] == next_time]
+            next_df = df[df['t'] == next_time]  
 
-            distances = np.sqrt((next_df['y'] - current_coords[1])**2 + (next_df['x'] - current_coords[2])**2)
-            current_neighbors = set(df[(distances <= radius_xy) & (df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+            distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
+                                (time_df['x'] - current_coords[2])**2)
+
+            current_neighbors = set(time_df[(distances <= radius_xy) & 
+                                            (time_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+
             local_total_bonds[time_point] += len(current_neighbors)
-            next_neighbors = set(next_df[(distances <= radius_xy) & (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+
+            next_distances = np.sqrt((next_df['y'] - current_coords[1])**2 + 
+                                    (next_df['x'] - current_coords[2])**2)
+            next_neighbors = set(next_df[(next_distances <= radius_xy) & 
+                                        (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
 
             broken_bonds = current_neighbors - next_neighbors
             for neighbor_id in broken_bonds:
