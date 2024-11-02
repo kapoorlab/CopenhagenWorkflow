@@ -96,7 +96,7 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
     with ThreadPoolExecutor(max_workers=os.cpu_count() - 1) as executor:
         futures = [executor.submit(process_trackmate_id, trackmate_id) for trackmate_id in trackmate_ids]
         
-        for future in as_completed(futures):
+        for future in tqdm(as_completed(futures), total=len(futures), desc="Computing Bond Breaks"):
             local_bond_breaks, local_bonds = future.result()
             for k, v in local_bond_breaks.items():
                 bond_breaks[k] += v
