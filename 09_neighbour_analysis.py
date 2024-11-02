@@ -39,7 +39,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 def compute_bond_breaks(df, radius_xy, jump_time=1):
     """
-    Computes bond breaks between consecutive time points, where a bond break is defined as a neighbor 
+    Computes normalized bond breaks between consecutive time points, where a bond break is defined as a neighbor 
     that is present at the current time but not in the next time point.
 
     Args:
@@ -48,9 +48,10 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
         jump_time (int): Time increment for checking bond breaks (default is 1 for consecutive time points).
 
     Returns:
-        dict: Bond breaks with keys (trackmate_id, neighbor_id, time_point) and counts as values.
+        dict: Normalized bond breaks with keys (trackmate_id, neighbor_id, time_point) and normalized counts as values.
     """
     bond_breaks = defaultdict(int)
+    total_bonds_at_time = defaultdict(int)  # To track the total bonds per time point
     unique_time_points = sorted(df['t'].unique())
 
     for trackmate_id in tqdm(df['TrackMate Track ID'].unique(), desc="Computing Bond Breaks"):
@@ -59,14 +60,17 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
             current_df = df[(df['TrackMate Track ID'] == trackmate_id) & (df['t'] == time_point)]
             if current_df.empty:
                 continue
-            
+
             current_coords = current_df.iloc[0][['z', 'y', 'x']].values
             next_time = time_point + jump_time
             next_df = df[df['t'] == next_time]
 
             # Find current neighbors within radius
-            distances = np.sqrt((next_df['y'] - current_coords[1])**2 + (next_df['x'] - current_coords[2])**2)
+            distances = np.sqrt((df['y'] - current_coords[1])**2 + (df['x'] - current_coords[2])**2)
             current_neighbors = set(df[(distances <= radius_xy) & (df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+
+            # Track total bonds at the current time
+            total_bonds_at_time[time_point] += len(current_neighbors)
 
             # Find next neighbors within radius
             next_neighbors = set(next_df[(distances <= radius_xy) & (next_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
@@ -76,7 +80,10 @@ def compute_bond_breaks(df, radius_xy, jump_time=1):
             for neighbor_id in broken_bonds:
                 bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
 
-    return bond_breaks
+    # Normalize bond breaks by the total bonds at each time point
+    normalized_bond_breaks = {key: count / total_bonds_at_time[key[2]] for key, count in bond_breaks.items()}
+
+    return normalized_bond_breaks
 
 
 
