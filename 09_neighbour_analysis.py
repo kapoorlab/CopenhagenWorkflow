@@ -37,8 +37,7 @@ tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
 
-def bonds_default():
-       return defaultdict(list)
+
 
 def compute_bond_breaks_and_bonds(df, radius_xy):
     bond_breaks = defaultdict(int)
@@ -110,8 +109,28 @@ def compute_bond_breaks_and_bonds(df, radius_xy):
 
 
 
+def get_total_bonds_at_time(bonds_df, time_point):
+    """
+    Computes the total number of unique bonds at a given time point from bonds_df.
+    
+    Args:
+        bonds_df (pd.DataFrame): DataFrame with columns ['TrackMate Track ID', 'Time', 'Neighbor TrackMate Track ID']
+                                 representing bonds between trackmate IDs at each time point.
+        time_point (int): The time point at which to calculate the total number of bonds.
 
-def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
+    Returns:
+        int: Total number of bonds at the specified time point.
+    """
+    # Filter the DataFrame for the specified time point
+    bonds_at_time = bonds_df[bonds_df['Time'] == time_point]
+
+    # Count each unique bond (TrackMate Track ID and Neighbor TrackMate Track ID pair)
+    total_bonds = bonds_at_time[['TrackMate Track ID', 'Neighbor TrackMate Track ID']].drop_duplicates().shape[0]
+    
+    return total_bonds
+
+
+def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time_points):
 
     total_bond_breaks_by_time = [
         bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
@@ -119,13 +138,16 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
     ]
     max_total_bond_breaks = max(total_bond_breaks_by_time) if total_bond_breaks_by_time else 1
 
-
+    max_bonds = 1
     for t in tqdm(time_points, desc='Plotting Bond Breaks'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
         total_bond_breaks_at_t = bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
-
+        total_bonds = get_total_bonds_at_time(bonds_df, t)
+        if total_bonds > max_bonds:
+            max_bonds = total_bonds
+        total_bond_breaks_at_t = total_bond_breaks_at_t /total_bonds
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
@@ -147,7 +169,7 @@ def plot_bond_breaks(df, bond_breaks_df, color_palette, save_dir, time_points):
                     [cell_coords[0][1], neighbor_coords[0][1]], 
                     color=bond_color, linewidth=3)
 
-        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks)
+        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks/max_bonds)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
@@ -186,7 +208,7 @@ else:
 
 time_points = sorted(neighbour_dataframe['t'].unique())
 
-plot_bond_breaks(neighbour_dataframe, bond_breaks_df,  color_palette, save_dir, time_points)
+plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
