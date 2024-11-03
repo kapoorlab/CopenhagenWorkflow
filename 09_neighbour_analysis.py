@@ -147,7 +147,7 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
 
         total_bond_breaks_at_t = bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
         total_bonds = get_total_bonds_at_time(bonds_df, t)
-        total_bond_breaks_at_t = total_bond_breaks_at_t /total_bonds
+        total_bond_breaks_at_t = total_bond_breaks_at_t 
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
@@ -169,7 +169,7 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
                     [cell_coords[0][1], neighbor_coords[0][1]], 
                     color=bond_color, linewidth=3)
 
-        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks/max_bonds)
+        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
@@ -209,6 +209,56 @@ else:
 time_points = sorted(neighbour_dataframe['t'].unique())[:-1]
 
 plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
+
+def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
+    Path(save_dir).mkdir(parents=True, exist_ok=True)
+    
+    max_bond_count = bonds_df.groupby('Time').size().max()
+    
+    for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
+        fig, ax = plt.subplots(figsize=(18, 15))
+        time_df = df[df['t'] == t]
+
+        # Plot each cell type with unique color
+        for cell_type, color in color_palette.items():
+            cell_df = time_df[time_df['Cell_Type'] == cell_type]
+            ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
+
+        # Filter the bonds for the current time point
+        bonds_at_time = bonds_df[bonds_df['Time'] == t]
+
+        # Plot each bond with color based on the frequency of bonds
+        for _, row in bonds_at_time.iterrows():
+            trackmate_id = row['TrackMate Track ID']
+            neighbor_id = row['Neighbor TrackMate Track ID']
+            
+            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+
+            if cell_coords.size == 0 or neighbor_coords.size == 0:
+                continue
+
+            bond_color = cm.get_cmap("coolwarm")(len(bonds_at_time))
+            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], color=bond_color, linewidth=3)
+
+        # Add color bar for bond density
+        norm = mcolors.Normalize(vmin=0, vmax=max_bond_count)
+        sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
+        cbar.set_label('Bond Frequency')
+
+        ax.set_title(f"Bonds at Time Point {t} (XY Plane)")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.legend(loc='upper right')
+        ax.grid(True)
+
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_dir, f'bonds_time_{t}.png'), dpi=300)
+        plt.close(fig)
+
+plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
