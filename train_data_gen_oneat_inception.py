@@ -39,13 +39,13 @@ def process_datasets(home_folder, dataset_names, image_dataset_names, image_fold
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
-     'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
+    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
     'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
 image_folder_name = [
-    'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
+    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
     'Fifth_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Third_Dataset_Analysis', 'Third_Dataset_Analysis']
 image_dataset_name = [
-     'Fifth', 'Sixth', 
+    'Second', 'Fifth', 'Sixth', 
     'Fifth', 'Fifth', 'Third', 'Third']
 time_window = 25
 crop_size = [128,128,8]
