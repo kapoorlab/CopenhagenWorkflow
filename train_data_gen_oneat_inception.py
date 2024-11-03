@@ -38,7 +38,7 @@ dataset_name = [
 image_dataset_name = [
     'Second', 'Fifth', 'Sixth', 
     'Fifth', 'Fifth', 'Third', 'Third']
-time_window = 10
+time_window = 25
 crop_size = [256,256,8]
 train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 Path(train_save_dir).mkdir(exist_ok=True)
