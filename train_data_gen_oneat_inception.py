@@ -43,7 +43,7 @@ image_dataset_name = [
     'Second', 'Fifth', 'Sixth', 
     'Fifth', 'Fifth', 'Third', 'Third']
 time_window = 25
-crop_size = [128,128,8]
+crop_size = [128,128,12]
 train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 Path(train_save_dir).mkdir(exist_ok=True)
 process_datasets(home_folder, dataset_name, image_dataset_name, image_folder_name,  channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
