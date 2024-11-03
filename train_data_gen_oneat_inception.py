@@ -23,7 +23,7 @@ def process_datasets(home_folder, dataset_names, image_dataset_names, image_fold
             2: "Goblet"
         }
 
-        for train_label, cell_type in class_map_gbr.items(): 
+        for train_label, cell_type in reversed(class_map_gbr.items()): 
 
             filter_and_get_tracklets(cell_type_dataframe, cell_type, time_window, raw_image, crop_size, segmentation_image, dataset_name, train_save_dir, 
                                 train_label)
