@@ -48,45 +48,54 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
     trackmate_ids = df['TrackMate Track ID'].unique()
 
     def process_trackmate_id(trackmate_id):
-        """Processes bond breaks for a single TrackMate track ID."""
+        """Processes bond breaks for individual tracklets within a TrackMate track ID."""
         local_bond_breaks = defaultdict(int)
         local_bonds = defaultdict(lambda: defaultdict(list))
         
-        for time_point in unique_time_points:
-            time_df = df[df['t'] == time_point]
-            current_df = time_df[time_df['TrackMate Track ID'] == trackmate_id]
-            
-            if current_df.empty:
-                continue
+        # Loop through each unique track ID for the given TrackMate ID
+        for track_id in df[df['TrackMate Track ID'] == trackmate_id]['Track ID'].unique():
+            track_df = df[(df['TrackMate Track ID'] == trackmate_id) & (df['Track ID'] == track_id)]
 
-            current_coords = current_df.iloc[0][['z', 'y', 'x']].values
+            for time_point in unique_time_points:
+                time_df = track_df[track_df['t'] == time_point]
+                
+                if time_df.empty:
+                    continue
 
-            distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
-                                (time_df['x'] - current_coords[2])**2)
-            current_neighbors = set(time_df[(distances <= radius_xy) & 
-                                            (time_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
+                current_coords = time_df.iloc[0][['z', 'y', 'x']].values
 
-            for neighbor_id in current_neighbors:
-                local_bonds[trackmate_id][time_point].append(neighbor_id)
+                # Calculate distances within the same tracklet for current neighbors
+                distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
+                                    (time_df['x'] - current_coords[2])**2)
+                current_neighbors = set(df[(distances <= radius_xy) & 
+                                        (df['TrackMate Track ID'] == trackmate_id) &
+                                        (df['Track ID'] != track_id)]['Track ID'])
 
-            for neighbor_id in current_neighbors:
-                bond_persistent = False
-                for offset in range(1, max_separation_time + 1):
-                    future_time = time_point + offset
-                    future_df = df[df['t'] == future_time]
-                    future_distances = np.sqrt((future_df['y'] - current_coords[1])**2 + 
-                                               (future_df['x'] - current_coords[2])**2)
-                    future_neighbors = set(future_df[(future_distances <= radius_xy) & 
-                                                     (future_df['TrackMate Track ID'] != trackmate_id)]['TrackMate Track ID'])
-                    
-                    if neighbor_id in future_neighbors:
-                        bond_persistent = True
-                        break
+                for neighbor_id in current_neighbors:
+                    local_bonds[track_id][time_point].append(neighbor_id)
 
-                if not bond_persistent:
-                    local_bond_breaks[(trackmate_id, neighbor_id, time_point)] += 1
+                # Check if each neighbor bond persists across the next `max_separation_time` frames
+                for neighbor_id in current_neighbors:
+                    bond_persistent = False
+                    for offset in range(1, max_separation_time + 1):
+                        future_time = time_point + offset
+                        future_df = df[(df['t'] == future_time) & 
+                                    (df['TrackMate Track ID'] == trackmate_id) & 
+                                    (df['Track ID'] == track_id)]
+                        future_distances = np.sqrt((future_df['y'] - current_coords[1])**2 + 
+                                                (future_df['x'] - current_coords[2])**2)
+                        future_neighbors = set(future_df[(future_distances <= radius_xy) & 
+                                                        (future_df['Track ID'] != track_id)]['Track ID'])
+                        
+                        if neighbor_id in future_neighbors:
+                            bond_persistent = True
+                            break
+
+                    if not bond_persistent:
+                        local_bond_breaks[(track_id, neighbor_id, time_point)] += 1
 
         return local_bond_breaks, local_bonds
+
 
     # Run in parallel over all trackmate_ids
     with ThreadPoolExecutor(max_workers=os.cpu_count() - 1) as executor:
@@ -120,8 +129,7 @@ def get_total_bonds_at_time(bonds_df, time_point):
     # Filter the DataFrame for the specified time point
     bonds_at_time = bonds_df[bonds_df['Time'] == time_point]
 
-    # Count each unique bond (TrackMate Track ID and Neighbor TrackMate Track ID pair)
-    total_bonds = bonds_at_time[['TrackMate Track ID', 'Neighbor TrackMate Track ID']].drop_duplicates().shape[0]
+    total_bonds = bonds_at_time[['Track ID', 'Neighbor Track ID']].drop_duplicates().shape[0]
     
     return total_bonds
 
@@ -155,11 +163,11 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
         bonds_at_time = bond_breaks_df[bond_breaks_df['Time'] == t]
 
         for _, row in bonds_at_time.iterrows():
-            trackmate_id = row['TrackMate Track ID']
-            neighbor_id = row['Neighbor TrackMate Track ID']
+            trackmate_id = row['Track ID']
+            neighbor_id = row['Neighbor Track ID']
 
-            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
-            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+            cell_coords = time_df[time_df['Track ID'] == trackmate_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
@@ -192,12 +200,12 @@ else:
     print("Calculating bonds and bond_durations.")
     bond_breaks, bonds = compute_bond_breaks_and_bonds(neighbour_dataframe, neighbour_radius_xy)
     bond_breaks_df = pd.DataFrame(
-    [(trackmate_id, neighbor_id, time_point, count) for (trackmate_id, neighbor_id, time_point), count in bond_breaks.items()],
-    columns=['TrackMate Track ID', 'Neighbor TrackMate Track ID', 'Time', 'Break Count']
+    [(track_id, neighbor_id, time_point, count) for (track_id, neighbor_id, time_point), count in bond_breaks.items()],
+    columns=['Track ID', 'Neighbor Track ID', 'Time', 'Break Count']
 )
     bonds_df = pd.DataFrame(
-        [(trackmate_id, time, neighbor_id) for trackmate_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
-        columns=['TrackMate Track ID', 'Time', 'Neighbor TrackMate Track ID']
+        [(track_id, time, neighbor_id) for track_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
+        columns=['Track ID', 'Time', 'Neighbor Track ID']
     )
     bond_breaks_df.to_csv(bond_breaks_csv_path, index=False)
     bonds_df.to_csv(bonds_csv_path, index=False)
@@ -208,7 +216,7 @@ else:
 
 time_points = sorted(neighbour_dataframe['t'].unique())[:-1]
 
-plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
+#plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
 
 def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
@@ -229,11 +237,11 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
 
         # Plot each bond with color based on the frequency of bonds
         for _, row in bonds_at_time.iterrows():
-            trackmate_id = row['TrackMate Track ID']
-            neighbor_id = row['Neighbor TrackMate Track ID']
+            track_id = row['Track ID']
+            neighbor_id = row['Neighbor Track ID']
             
-            cell_coords = time_df[time_df['TrackMate Track ID'] == trackmate_id][['x', 'y']].values
-            neighbor_coords = time_df[time_df['TrackMate Track ID'] == neighbor_id][['x', 'y']].values
+            cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
+            neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
@@ -258,7 +266,7 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
         plt.savefig(os.path.join(save_dir, f'bonds_time_{t}.png'), dpi=300)
         plt.close(fig)
 
-plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
+#plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
@@ -273,10 +281,10 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
         for _, row in bonds_at_time.iterrows():
-            trackmate_id, neighbor_id = row['TrackMate Track ID'], row['Neighbor TrackMate Track ID']
+            track_id, neighbor_id = row['Track ID'], row['Neighbor Track ID']
 
-            cell_type_row = time_df[time_df['TrackMate Track ID'] == trackmate_id]
-            neighbor_type_row = time_df[time_df['TrackMate Track ID'] == neighbor_id]
+            cell_type_row = time_df[time_df['Track ID'] == track_id]
+            neighbor_type_row = time_df[time_df['Track ID'] == neighbor_id]
 
             if not cell_type_row.empty and not neighbor_type_row.empty:
                 cell_type = cell_type_row['Cell_Type'].iloc[0]
@@ -305,4 +313,4 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+#plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
