@@ -162,10 +162,10 @@ def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time
         bonds_at_time = bond_breaks_df[bond_breaks_df['Time'] == t]
 
         for _, row in bonds_at_time.iterrows():
-            trackmate_id = row['Track ID']
+            track_id = row['Track ID']
             neighbor_id = row['Neighbor Track ID']
 
-            cell_coords = time_df[time_df['Track ID'] == trackmate_id][['x', 'y']].values
+            cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
             if cell_coords.size == 0 or neighbor_coords.size == 0:
@@ -215,7 +215,7 @@ else:
 
 time_points = sorted(neighbour_dataframe['t'].unique())[:-1]
 
-#plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
+plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
 
 def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
@@ -265,7 +265,7 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
         plt.savefig(os.path.join(save_dir, f'bonds_time_{t}.png'), dpi=300)
         plt.close(fig)
 
-#plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
+plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
@@ -312,4 +312,4 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-#plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
