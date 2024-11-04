@@ -67,7 +67,7 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
                 distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
                                     (time_df['x'] - current_coords[2])**2)
                 current_neighbors = set(df[(distances <= radius_xy) & 
-                                        (df['TrackMate Track ID'] == trackmate_id) &
+                                        
                                         (df['Track ID'] != track_id)]['Track ID'])
 
                 for neighbor_id in current_neighbors:
