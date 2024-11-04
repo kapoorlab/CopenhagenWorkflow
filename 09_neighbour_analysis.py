@@ -238,7 +238,7 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
 
-            bond_color = cm.get_cmap("coolwarm")(len(bonds_at_time))
+            bond_color =  matplotlib.colormaps["coolwarm"](len(bonds_at_time))
             ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], color=bond_color, linewidth=3)
 
         # Add color bar for bond density
