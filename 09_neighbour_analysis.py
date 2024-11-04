@@ -40,7 +40,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 
 
-def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=5):
+def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
     bond_breaks = defaultdict(int)
     bonds = defaultdict(lambda: defaultdict(list))
     unique_time_points = sorted(df['t'].unique())
