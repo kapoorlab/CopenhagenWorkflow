@@ -26,7 +26,6 @@ bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
 partner_time = 0  
-allowable_seperation_time = 3
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
