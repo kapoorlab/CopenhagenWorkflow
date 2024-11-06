@@ -147,7 +147,8 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
     # Filter bonds that persist for at least partner_time frames
     persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
 
-    max_bond_count = bonds_df.groupby('Time').size().max()
+    # Find the maximum persistence for color normalization
+    max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
     for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
         fig, ax = plt.subplots(figsize=(18, 15))
@@ -176,6 +177,9 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
                 # If no persistence data is found or it doesn't meet the threshold, skip
                 continue
 
+            # Get the persistence value for coloring
+            persistence = bond_persist_row['Persistence'].values[0]
+
             # Get the coordinates for track and neighbor
             cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
@@ -183,25 +187,21 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
 
-            # Compute bond length for coloring the plot
-            bond_length = np.sqrt((cell_coords[0][0] - neighbor_coords[0][0])**2 + 
-                                  (cell_coords[0][1] - neighbor_coords[0][1])**2)
-
-            # Normalize bond length for color mapping
-            bond_length_norm = bond_length / max_bond_count if max_bond_count > 0 else 0
-            bond_color = matplotlib.colormaps["coolwarm"](bond_length_norm)
+            # Normalize persistence for color mapping
+            persistence_norm = persistence 
+            bond_color = plt.cm.coolwarm(persistence_norm)
 
             # Plot the bond with a line between track and neighbor
             ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
                     [cell_coords[0][1], neighbor_coords[0][1]], 
                     color=bond_color, linewidth=3)
 
-        # Add color bar for bond length
-        norm = mcolors.Normalize(vmin=0, vmax=max_bond_count)
+        # Add color bar for bond persistence
+        norm = mcolors.Normalize(vmin=0, vmax=max_persistence)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
-        cbar.set_label('Bond Length')
+        cbar.set_label('Bond Persistence (Time Points)')
 
         ax.set_title(f"Bonds at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
