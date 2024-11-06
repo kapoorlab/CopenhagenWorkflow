@@ -25,7 +25,7 @@ Path(save_dir).mkdir(exist_ok=True, parents=True)
 bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
-partner_time = 0  
+partner_time = 20  
 color_palette = {
     'Basal': '#1f77b4',  
     'Radial': '#ff7f0e',
@@ -40,15 +40,13 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 
 
 
-def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
-    bond_breaks = defaultdict(int)
+def compute_bond_breaks_and_bonds(df, radius_xy):
     bonds = defaultdict(lambda: defaultdict(list))
     unique_time_points = sorted(df['t'].unique())
     trackmate_ids = df['TrackMate Track ID'].unique()
 
     def process_trackmate_id(trackmate_id):
         """Processes bond breaks for individual tracklets within a TrackMate track ID."""
-        local_bond_breaks = defaultdict(int)
         local_bonds = defaultdict(lambda: defaultdict(list))
         
         # Loop through each unique track ID for the given TrackMate ID
@@ -73,43 +71,19 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
                     for neighbor_id in current_neighbors:
                         local_bonds[track_id][time_point].append(neighbor_id)
                     
-                    # Check if each neighbor bond persists across the next `max_separation_time` frames
-                    for neighbor_id in current_neighbors:
-                        bond_persistent = False
-                        for offset in range(1, max_separation_time + 1):
-                            future_time = time_point + offset
-                            future_df = df[(df['t'] == future_time)]
-                            future_track_df = future_df[future_df['Track ID'] == track_id]
-                            if not future_track_df.empty:
-                                future_coords = future_track_df.iloc[0][['z', 'y', 'x']].values
-                                future_distances = np.sqrt((future_df['y'] - future_coords[1])**2 + 
-                                                        (future_df['x'] - future_coords[2])**2)
-                                future_neighbors = set(future_df[(future_distances <= radius_xy) & 
-                                                                (future_df['Track ID'] != track_id)]['Track ID'])
-                                
-                                if neighbor_id in future_neighbors:
-                                    bond_persistent = True
-                                    break
-                            else:
-                                    bond_persistent = True
-                                    break
+                    
 
-
-                        if not bond_persistent:
-                            local_bond_breaks[(track_id, neighbor_id, time_point)] += 1
-
-        return local_bond_breaks, local_bonds
+        return local_bonds
 
 
     for trackmate_id in tqdm(trackmate_ids,  desc="Computing Bond Breaks"):    
-            local_bond_breaks, local_bonds = process_trackmate_id(trackmate_id)
-            for k, v in local_bond_breaks.items():
-                bond_breaks[k] += v
+            local_bonds = process_trackmate_id(trackmate_id)
+            
             for track_id, bond_times in local_bonds.items():
                 for time, neighbors in bond_times.items():
                     bonds[track_id][time].extend(neighbors)
 
-    return bond_breaks, bonds
+    return  bonds
 
 
 
@@ -133,63 +107,6 @@ def get_total_bonds_at_time(bonds_df, time_point):
     
     return total_bonds
 
-
-def plot_bond_breaks(df, bond_breaks_df, bonds_df, color_palette, save_dir, time_points):
-
-    total_bond_breaks_by_time = [
-        bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
-        for t in time_points 
-    ]
-    max_total_bond_breaks = max(total_bond_breaks_by_time) if total_bond_breaks_by_time else 1
-
-    max_bonds = 1
-
-    for t in tqdm(time_points ) :
-        total_bonds = get_total_bonds_at_time(bonds_df, t) 
-        if total_bonds > max_bonds:
-            max_bonds = total_bonds
-
-    for t in tqdm(time_points, desc='Plotting Bond Breaks'):
-        fig, ax = plt.subplots(figsize=(18, 15))
-        time_df = df[df['t'] == t]
-
-        total_bond_breaks_at_t = bond_breaks_df[bond_breaks_df['Time'] == t]['Break Count'].sum()
-        total_bonds = get_total_bonds_at_time(bonds_df, t)
-        total_bond_breaks_at_t = total_bond_breaks_at_t 
-        for cell_type, color in color_palette.items():
-            cell_df = time_df[time_df['Cell_Type'] == cell_type]
-            ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
-
-        bonds_at_time = bond_breaks_df[bond_breaks_df['Time'] == t]
-
-        for _, row in bonds_at_time.iterrows():
-            track_id = row['Track ID']
-            neighbor_id = row['Neighbor Track ID']
-
-            cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
-            neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
-
-            if cell_coords.size == 0 or neighbor_coords.size == 0:
-                continue
-
-            bond_color = matplotlib.colormaps["coolwarm"](total_bond_breaks_at_t)
-            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
-                    [cell_coords[0][1], neighbor_coords[0][1]], 
-                    color=bond_color, linewidth=3)
-
-        norm = mcolors.Normalize(vmin=0, vmax=max_total_bond_breaks)
-        sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
-        sm.set_array([])
-        cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
-        cbar.set_label(f'Total Bond Breaks at Time (Max={max_total_bond_breaks})')
-
-        ax.set_title(f"Bond Breaks at Time Point {t} (XY Plane)")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.legend(loc='upper right')
-        ax.grid(True)
-        plt.savefig(os.path.join(save_dir, f'bond_break_{t}.png'))
-        plt.close()
 
 
 if os.path.exists(bond_breaks_csv_path) and os.path.exists(bonds_csv_path):
@@ -216,13 +133,22 @@ else:
 
 time_points = sorted(neighbour_dataframe['t'].unique())
 
-plot_bond_breaks(neighbour_dataframe, bond_breaks_df,bonds_df, color_palette, save_dir, time_points)
-
-def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
+def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, partner_time):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     
+    # Compute bond persistence directly from bonds_df
+    # Group by Track ID and Neighbor Track ID and calculate the number of unique time points for each bond
+    bond_persistence = (
+        bonds_df.groupby(['Track ID', 'Neighbor Track ID'])['Time']
+        .nunique()
+        .reset_index(name='Persistence')
+    )
+
+    # Filter bonds that persist for at least partner_time frames
+    persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
+
     max_bond_count = bonds_df.groupby('Time').size().max()
-    
+
     for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
@@ -235,26 +161,47 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
         # Filter the bonds for the current time point
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-        # Plot each bond with color based on the frequency of bonds
+        # Plot each bond that has enough persistence
         for _, row in bonds_at_time.iterrows():
             track_id = row['Track ID']
             neighbor_id = row['Neighbor Track ID']
-            
+
+            # Check if the bond meets the persistence threshold
+            bond_persist_row = persistent_bonds_df[
+                (persistent_bonds_df['Track ID'] == track_id) &
+                (persistent_bonds_df['Neighbor Track ID'] == neighbor_id)
+            ]
+
+            if bond_persist_row.empty:
+                # If no persistence data is found or it doesn't meet the threshold, skip
+                continue
+
+            # Get the coordinates for track and neighbor
             cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
 
-            bond_color =  matplotlib.colormaps["coolwarm"](len(bonds_at_time))
-            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], [cell_coords[0][1], neighbor_coords[0][1]], color=bond_color, linewidth=3)
+            # Compute bond length for coloring the plot
+            bond_length = np.sqrt((cell_coords[0][0] - neighbor_coords[0][0])**2 + 
+                                  (cell_coords[0][1] - neighbor_coords[0][1])**2)
 
-        # Add color bar for bond density
+            # Normalize bond length for color mapping
+            bond_length_norm = bond_length / max_bond_count if max_bond_count > 0 else 0
+            bond_color = matplotlib.colormaps["coolwarm"](bond_length_norm)
+
+            # Plot the bond with a line between track and neighbor
+            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
+                    [cell_coords[0][1], neighbor_coords[0][1]], 
+                    color=bond_color, linewidth=3)
+
+        # Add color bar for bond length
         norm = mcolors.Normalize(vmin=0, vmax=max_bond_count)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=ax, orientation='vertical')
-        cbar.set_label('Bond Frequency')
+        cbar.set_label('Bond Length')
 
         ax.set_title(f"Bonds at Time Point {t} (XY Plane)")
         ax.set_xlabel("X")
@@ -266,7 +213,8 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points):
         plt.savefig(os.path.join(save_dir, f'bonds_time_{t}.png'), dpi=300)
         plt.close(fig)
 
-plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points)
+
+plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points, partner_time)
 
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
