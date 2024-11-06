@@ -80,15 +80,20 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
                             future_time = time_point + offset
                             future_df = df[(df['t'] == future_time)]
                             future_track_df = future_df[future_df['Track ID'] == track_id]
-                            future_coords = future_track_df.iloc[0][['z', 'y', 'x']].values
-                            future_distances = np.sqrt((future_df['y'] - future_coords[1])**2 + 
-                                                    (future_df['x'] - future_coords[2])**2)
-                            future_neighbors = set(future_df[(future_distances <= radius_xy) & 
-                                                            (future_df['Track ID'] != track_id)]['Track ID'])
-                            
-                            if neighbor_id in future_neighbors:
-                                bond_persistent = True
-                                break
+                            if not future_track_df.empty:
+                                future_coords = future_track_df.iloc[0][['z', 'y', 'x']].values
+                                future_distances = np.sqrt((future_df['y'] - future_coords[1])**2 + 
+                                                        (future_df['x'] - future_coords[2])**2)
+                                future_neighbors = set(future_df[(future_distances <= radius_xy) & 
+                                                                (future_df['Track ID'] != track_id)]['Track ID'])
+                                
+                                if neighbor_id in future_neighbors:
+                                    bond_persistent = True
+                                    break
+                            else:
+                                    bond_persistent = True
+                                    break
+
 
                         if not bond_persistent:
                             local_bond_breaks[(track_id, neighbor_id, time_point)] += 1
