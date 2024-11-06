@@ -169,16 +169,14 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
 
             # Get the persistence value for coloring
             persistence = bond_persist_row['Persistence'].values[0]
-
+ 
             # Get the coordinates for track and neighbor
             cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
             if cell_coords.size == 0 or neighbor_coords.size == 0:
                 continue
-
-            # Normalize persistence for color mapping
-            persistence_norm = persistence 
+            persistence_norm = persistence / max_persistence if max_persistence > 0 else 0 
             bond_color = plt.cm.coolwarm(persistence_norm)
 
             # Plot the bond with a line between track and neighbor
