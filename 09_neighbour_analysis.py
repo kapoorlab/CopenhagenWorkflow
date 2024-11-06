@@ -22,7 +22,6 @@ xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
 save_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 Path(save_dir).mkdir(exist_ok=True, parents=True)
-bond_breaks_csv_path = os.path.join(save_dir, 'bond_breaks.csv')
 bonds_csv_path = os.path.join(save_dir, 'bonds.csv')
 neighbour_radius_xy = 70 
 partner_time = 20  
@@ -34,10 +33,6 @@ color_palette = {
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-
-
-
-
 
 
 def compute_bond_breaks_and_bonds(df, radius_xy):
@@ -109,22 +104,18 @@ def get_total_bonds_at_time(bonds_df, time_point):
 
 
 
-if os.path.exists(bond_breaks_csv_path) and os.path.exists(bonds_csv_path):
+if  os.path.exists(bonds_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
     bond_breaks_df = pd.read_csv(bond_breaks_csv_path)
     bonds_df = pd.read_csv(bonds_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bond_breaks, bonds = compute_bond_breaks_and_bonds(neighbour_dataframe, neighbour_radius_xy)
-    bond_breaks_df = pd.DataFrame(
-    [(track_id, neighbor_id, time_point, count) for (track_id, neighbor_id, time_point), count in bond_breaks.items()],
-    columns=['Track ID', 'Neighbor Track ID', 'Time', 'Break Count']
-)
+    bonds = compute_bond_breaks_and_bonds(neighbour_dataframe, neighbour_radius_xy)
+    
     bonds_df = pd.DataFrame(
         [(track_id, time, neighbor_id) for track_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
         columns=['Track ID', 'Time', 'Neighbor Track ID']
     )
-    bond_breaks_df.to_csv(bond_breaks_csv_path, index=False)
     bonds_df.to_csv(bonds_csv_path, index=False)
     print(f"Bond breaks data saved to {bond_breaks_csv_path}")
 
