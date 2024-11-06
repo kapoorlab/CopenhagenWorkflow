@@ -59,8 +59,8 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
                 
                 if time_df.empty:
                     continue
-
-                current_coords = time_df.iloc[0][['z', 'y', 'x']].values
+                current_track_df = time_df[time_df['Track ID'] == track_id]
+                current_coords = current_track_df.iloc[0][['z', 'y', 'x']].values
 
                 # Calculate distances within the same tracklet for current neighbors
                 distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
@@ -78,8 +78,10 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
                     for offset in range(1, max_separation_time + 1):
                         future_time = time_point + offset
                         future_df = df[(df['t'] == future_time)]
-                        future_distances = np.sqrt((future_df['y'] - current_coords[1])**2 + 
-                                                (future_df['x'] - current_coords[2])**2)
+                        future_track_df = future_df[future_df['Track ID'] == track_id]
+                        future_coords = future_track_df.iloc[0][['z', 'y', 'x']].values
+                        future_distances = np.sqrt((future_df['y'] - future_coords[1])**2 + 
+                                                (future_df['x'] - future_coords[2])**2)
                         future_neighbors = set(future_df[(future_distances <= radius_xy) & 
                                                         (future_df['Track ID'] != track_id)]['Track ID'])
                         
