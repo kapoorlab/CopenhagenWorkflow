@@ -41,7 +41,6 @@ def compute_bonds(df, radius_xy):
     trackmate_ids = df['TrackMate Track ID'].unique()
 
     def process_trackmate_id(trackmate_id):
-        """Processes bond breaks for individual tracklets within a TrackMate track ID."""
         local_bonds = defaultdict(lambda: defaultdict(list))
         
         # Loop through each unique track ID for the given TrackMate ID
@@ -71,7 +70,7 @@ def compute_bonds(df, radius_xy):
         return local_bonds
 
 
-    for trackmate_id in tqdm(trackmate_ids,  desc="Computing Bond Breaks"):    
+    for trackmate_id in tqdm(trackmate_ids,  desc="Computing Bonds"):    
             local_bonds = process_trackmate_id(trackmate_id)
             
             for track_id, bond_times in local_bonds.items():
