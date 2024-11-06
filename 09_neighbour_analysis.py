@@ -53,10 +53,9 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
         
         # Loop through each unique track ID for the given TrackMate ID
         for track_id in df[df['TrackMate Track ID'] == trackmate_id]['Track ID'].unique():
-            track_df = df[(df['TrackMate Track ID'] == trackmate_id) & (df['Track ID'] == track_id)]
 
             for time_point in unique_time_points:
-                time_df = track_df[track_df['t'] == time_point]
+                time_df = df[df['t'] == time_point]
                 
                 if time_df.empty:
                     continue
@@ -72,7 +71,7 @@ def compute_bond_breaks_and_bonds(df, radius_xy, max_separation_time=3):
 
                 for neighbor_id in current_neighbors:
                     local_bonds[track_id][time_point].append(neighbor_id)
-                print('local bonds', len(local_bonds))
+                
                 # Check if each neighbor bond persists across the next `max_separation_time` frames
                 for neighbor_id in current_neighbors:
                     bond_persistent = False
