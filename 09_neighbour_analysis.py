@@ -35,7 +35,7 @@ tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 
 
-def compute_bond_breaks_and_bonds(df, radius_xy):
+def compute_bonds(df, radius_xy):
     bonds = defaultdict(lambda: defaultdict(list))
     unique_time_points = sorted(df['t'].unique())
     trackmate_ids = df['TrackMate Track ID'].unique()
@@ -106,18 +106,17 @@ def get_total_bonds_at_time(bonds_df, time_point):
 
 if  os.path.exists(bonds_csv_path):
     print("Loading bonds and bond_durations from CSV files.")
-    bond_breaks_df = pd.read_csv(bond_breaks_csv_path)
     bonds_df = pd.read_csv(bonds_csv_path)
 else:
     print("Calculating bonds and bond_durations.")
-    bonds = compute_bond_breaks_and_bonds(neighbour_dataframe, neighbour_radius_xy)
+    bonds = compute_bonds(neighbour_dataframe, neighbour_radius_xy)
     
     bonds_df = pd.DataFrame(
         [(track_id, time, neighbor_id) for track_id, time_dict in bonds.items() for time, neighbors in time_dict.items() for neighbor_id in neighbors],
         columns=['Track ID', 'Time', 'Neighbor Track ID']
     )
     bonds_df.to_csv(bonds_csv_path, index=False)
-    print(f"Bond breaks data saved to {bond_breaks_csv_path}")
+    print(f"Bond data saved to {bonds_csv_path}")
 
  
 
