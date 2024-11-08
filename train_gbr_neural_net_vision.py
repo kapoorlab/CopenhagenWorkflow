@@ -5,7 +5,6 @@ from napatrackmater.Trackvector import train_gbr_vision_neural_net
 # Argument parsing to configure parameters for multiple runs
 parser = argparse.ArgumentParser(description='Train Cell Fate Vision Model.')
 parser.add_argument('--vision_model_dir', type=str, required=True, help='Path to save the trained model.')
-parser.add_argument('--input_shape', type=str, required=True, help='Input TZYX shape tuple.')
 parser.add_argument('--batch_size', type=int, default=64, help='Batch Size.')
 parser.add_argument('--vision_gbr_h5_file', type=str, required=True, help='H5 file containing training data.')
 
@@ -13,6 +12,7 @@ parser.add_argument('--vision_gbr_h5_file', type=str, required=True, help='H5 fi
 args = parser.parse_args()
 depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
 stage_number = 4
+input_shape = [10,128,128,8]
 block_config_str = args.block_config.strip("()")
 if "," in block_config_str:
     block_config = tuple(map(int, block_config_str.split(',')))
