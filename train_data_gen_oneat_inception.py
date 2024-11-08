@@ -24,8 +24,8 @@ def process_datasets(home_folder, dataset_names, image_dataset_names, image_fold
         cell_type_dataframe = dataset_dataframe[~dataset_dataframe['Cell_Type'].isna()]
         class_map_gbr = {
             0: "Basal",
-            1: "Radial",
-            2: "Goblet"
+        #    1: "Radial",
+        #    2: "Goblet"
         }
 
         for train_label, cell_type in reversed(class_map_gbr.items()): 
@@ -33,22 +33,21 @@ def process_datasets(home_folder, dataset_names, image_dataset_names, image_fold
             filter_and_get_tracklets(cell_type_dataframe, cell_type, time_window, raw_image, crop_size, segmentation_image, dataset_name, train_save_dir, 
                                 train_label)
        
-    create_h5(train_save_dir,train_size=0.95,save_name="cellfate_vision_training_data_gbr")
+    create_h5(train_save_dir,train_size=0.95,save_name="cellfate_vision_training_data_gbr_64")
  
     
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
-     
-    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
+    'Sixth_Dataset_Analysis'
+    ]
 image_folder_name = [
-   
-    'Fifth_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Third_Dataset_Analysis', 'Third_Dataset_Analysis']
+     'Sixth_Dataset_Analysis'
+   ]
 image_dataset_name = [
-   
-    'Fifth', 'Fifth', 'Third', 'Third']
+    'Sixth']
 time_window = 25
-crop_size = [128,128,8]
-train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
+crop_size = [64,64,8]
+train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data_64/'
 Path(train_save_dir).mkdir(exist_ok=True)
 process_datasets(home_folder, dataset_name, image_dataset_name, image_folder_name,  channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
