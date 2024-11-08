@@ -7,7 +7,6 @@ parser = argparse.ArgumentParser(description='Train Cell Fate Vision Model.')
 parser.add_argument('--vision_model_dir', type=str, required=True, help='Path to save the trained model.')
 parser.add_argument('--input_shape', type=str, required=True, help='Input TZYX shape tuple.')
 parser.add_argument('--batch_size', type=int, default=64, help='Batch Size.')
-parser.add_argument('--channel', type=str, default='nuclei_', help='Channel type (e.g., "membrane_", "nuclei_").')
 parser.add_argument('--vision_gbr_h5_file', type=str, required=True, help='H5 file containing training data.')
 
 
