@@ -23,9 +23,9 @@ os.makedirs(args.vision_model_dir, exist_ok=True)
 train_gbr_vision_neural_net(
     save_path=args.vision_model_dir,
     h5_file=os.path.join(base_dir, args.vision_gbr_h5_file),
-    input_shape = args.input_shape,
+    input_shape = input_shape,
     num_classes=3,
-    batch_size=64,
+    batch_size=args.batch_size,
     epochs=100,
     stage_number=stage_number,
     depth=depth,
