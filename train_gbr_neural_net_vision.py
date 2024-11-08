@@ -13,11 +13,8 @@ args = parser.parse_args()
 depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
 stage_number = 4
 input_shape = [10,128,128,8]
-block_config_str = args.block_config.strip("()")
-if "," in block_config_str:
-    block_config = tuple(map(int, block_config_str.split(',')))
-else:
-    block_config = (int(block_config_str),)
+
+
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 base_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 
