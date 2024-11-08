@@ -8,7 +8,7 @@ vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackMode
 Path(vision_model_dir).mkdir(exist_ok=True)
 depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
 stage_number = 4
-input_shape = [10,128,128,8]
+input_shape = [25,128,128,8]
 batch_size = 32
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
