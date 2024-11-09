@@ -56,6 +56,7 @@ def main(args):
     )
 
     vision_inception_torch_model.eval()
+    raw_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/{channel}timelapses/timelapse_{dataset_name.lower()}_dataset.tif'
 
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
@@ -65,7 +66,7 @@ def main(args):
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for trackmate_id in tqdm(tracks_dataframe_short['TrackMate Track ID'].unique()):
-            gbr_prediction[trackmate_id] = vision_inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, model=vision_inception_torch_model, device=device, crop_size = input_shape)
+            gbr_prediction[trackmate_id] = vision_inception_model_prediction(tracks_dataframe_short, trackmate_id, raw_image , class_map_gbr, model=vision_inception_torch_model, device=device, crop_size = input_shape)
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
         save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel + 'vision')
