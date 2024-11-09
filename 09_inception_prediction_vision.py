@@ -26,7 +26,7 @@ def main(args):
     tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
     data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cpu'
     box_vector = 7
     categories = 3
     channel = 'nuclei_'
