@@ -28,6 +28,7 @@ def main(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     box_vector = 7
     categories = 3
+    channel = 'nuclei_'
     input_shape = [25,8,128,128]
     normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
     print(f'reading data from {normalized_dataframe}')
