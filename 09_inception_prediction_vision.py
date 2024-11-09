@@ -60,15 +60,15 @@ def main(args):
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}morpho_dynamic/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}vision/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
         for trackmate_id in tqdm(tracks_dataframe_short['TrackMate Track ID'].unique()):
-            gbr_prediction[trackmate_id] = vision_inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, morphodynamic_model=gbr_morpho_torch_model, device=device)
+            gbr_prediction[trackmate_id] = vision_inception_model_prediction(tracks_dataframe_short, trackmate_id, tracklet_length, class_map_gbr, morphodynamic_model=vision_inception_torch_model, device=device)
 
         filtered_gbr_prediction = {k: v for k, v in gbr_prediction.items() if v is not None and v != "UnClassified"}
-        save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel)
+        save_cell_type_predictions(tracks_dataframe_short, class_map_gbr, filtered_gbr_prediction, annotations_prediction_dir, channel + 'vision')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for morpho prediction script")
