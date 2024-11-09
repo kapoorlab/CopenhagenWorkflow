@@ -16,7 +16,6 @@ from napatrackmater.Trackvector import (
 def main(args):
     dataset_name = args.dataset_name
     home_folder = args.home_folder
-    channel = args.channel
     t_initials = args.t_initials
     t_finals = args.t_finals
     tracklet_length = args.tracklet_length
