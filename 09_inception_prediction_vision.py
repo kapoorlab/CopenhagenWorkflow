@@ -52,7 +52,7 @@ def main(args):
         loss_func,
         Adam,
         map_location=torch.device(device),
-        local_model_path=os.path.join(model_dir, model_name + f'_{channel}')
+        local_model_path=os.path.join(model_dir, model_name)
     )
 
     vision_inception_torch_model.eval()
