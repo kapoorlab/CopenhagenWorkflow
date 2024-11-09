@@ -4,6 +4,7 @@ import os
 import torch
 import pandas as pd
 from tqdm import tqdm
+from tifffile import imread
 from kapoorlabs_lightning.optimizers import Adam
 from kapoorlabs_lightning.pytorch_models import DenseVollNet
 from kapoorlabs_lightning.pytorch_losses import VolumeYoloLoss
@@ -56,8 +57,8 @@ def main(args):
     )
 
     vision_inception_torch_model.eval()
-    raw_image = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/{channel}timelapses/timelapse_{dataset_name.lower()}_dataset.tif'
-
+    raw_image_path = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/{channel}timelapses/timelapse_{dataset_name.lower()}_dataset.tif'
+    raw_image = imread(raw_image_path)
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
