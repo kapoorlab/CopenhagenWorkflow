@@ -7,7 +7,7 @@ vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackMode
 
 Path(vision_model_dir).mkdir(exist_ok=True)
 depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
-input_shape = [25,8,64,64]
+input_shape = [15,8,64,64]
 batch_size = 16
 crop_size = [15, 8, 64, 64]
 growth_rate = 1
