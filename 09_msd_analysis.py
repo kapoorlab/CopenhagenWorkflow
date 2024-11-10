@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 # Configuration
-dataset_name = 'Fifth'
+dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
@@ -20,7 +20,7 @@ channel = 'nuclei_'
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
-save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
+save_dir = os.path.join(tracking_directory, f'msd_plots_first_half_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
@@ -37,8 +37,9 @@ def power_law_msd(t, D, alpha):
 track_vectors = TrackVector(master_xml_path=xml_path)
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-
+max_timepoint = cell_type_dataframe['t'].max()
 cell_types = cell_type_dataframe['Cell_Type'].unique()
+cell_type_dataframe = cell_type_dataframe[cell_type_dataframe['t'] < max_timepoint //2]
 
 # Initialize dictionary to store motion type counts for each cell type
 motion_stats = {cell_type: {"Directed": 0, "Brownian": 0, "Random": 0} for cell_type in cell_types}
