@@ -6,9 +6,10 @@ from napatrackmater.Trackvector import train_gbr_vision_neural_net
 vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/vision_inception/'
 
 Path(vision_model_dir).mkdir(exist_ok=True)
-depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
-input_shape = [25,8,128,128]
+depth = {'depth_1': 12,'depth_2': 24,'depth_3': 16 }
+input_shape = [25,8,64,64]
 batch_size = 16
+resize_size = 0.5
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 base_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
 vision_gbr_h5_file = 'cellfate_vision_training_data_gbr.h5'
@@ -23,5 +24,6 @@ train_gbr_vision_neural_net(
     epochs=100,
     depth=depth,
     experiment_name='vision_cellfate',
-    num_workers=10
+    num_workers=10,
+    resize_size = resize_size
 )

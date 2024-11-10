@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
