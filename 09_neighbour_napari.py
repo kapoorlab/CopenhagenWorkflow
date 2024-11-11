@@ -37,6 +37,7 @@ segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer = napari.Viewer()
 viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
+viewer.dims.set_current_step(0, 0)
 print('Added image to Napari Viewer')
 
 
