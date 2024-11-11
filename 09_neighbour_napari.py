@@ -93,13 +93,13 @@ for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
             vector = np.array([cell_coords_4d, neighbor_coords_4d])  # Create a 4D vector from cell to neighbor
             vectors.append(vector)
 
-            if vectors:
-                viewer.add_vectors(
-                    np.array(vectors),
-                    edge_color=np.array(colors),
-                    edge_width=1,
-                    name=f'Bonds at t={t}'
-                )
+    if vectors:
+        viewer.add_vectors(
+            np.array(vectors),
+            edge_color=np.array(colors),
+            edge_width=1,
+            name=f'Bonds at t={t}'
+        )
  
 napari.run()
 
