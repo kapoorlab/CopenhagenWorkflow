@@ -121,8 +121,8 @@ def update_view(event):
         layer_visibility(t)
 
 def on_mouse_release(event):
-    print(event.type)
-    if event.type == 'mouse_release':
+    print('a type', event.type)
+    if event.type == 'current_step':
         update_view(event)
 
 
