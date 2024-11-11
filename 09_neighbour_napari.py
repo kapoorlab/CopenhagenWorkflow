@@ -91,8 +91,10 @@ def plot_bonds_at_time(t):
         bond_color = plt.cm.coolwarm(persistence_norm)
         colors.append(bond_color[:3])
 
-       
+        print('cell_coords', cell_coords)
         for cell, neighbor in zip(cell_coords, neighbor_coords):
+            print('cell',cell)
+            print('neighbor', neighbor)
             line = np.array([cell, neighbor])
             lines.append(line)
 
