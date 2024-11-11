@@ -8,7 +8,6 @@ from tqdm import tqdm
 from tifffile import imread
 import matplotlib.pyplot as plt
 import napari
-import concurrent
 # %%
 dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
@@ -111,14 +110,12 @@ def layer_visibility(t):
            if isinstance(layer, napari.layers.Labels):
                layer.visible = True 
 
-def parallel_plot_bonds():
-    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() - 1) as executor:
-        executor.map(plot_bonds_at_time, time_points)
 
-parallel_plot_bonds()
+
 
 def update_view(event):
         t = time_points[viewer.dims.current_step[0]] 
+        plot_bonds_at_time(t)
         layer_visibility(t)
     
 viewer.dims.events.connect(update_view)
