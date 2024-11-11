@@ -69,7 +69,7 @@ def plot_bonds_at_time(t):
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
     bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-    for _, row in tqdm(bonds_at_time.iterrows()):
+    for _, row in tqdm(bonds_at_time.iterrows(), desc=f'Computing bonds view {t}'):
         track_id = row['Track ID']
         neighbor_id = row['Neighbor Track ID']
 
