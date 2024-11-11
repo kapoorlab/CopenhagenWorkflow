@@ -95,6 +95,7 @@ def plot_bonds_at_time(t):
             lines.append(line)
 
     if lines:
+        print(f'Adding the points layer for timepoint {t}')
         viewer.add_shapes(
             lines,
             shape_type='line',
@@ -121,7 +122,6 @@ def update_view(event):
         layer_visibility(t)
 
 def on_mouse_release(event):
-    print('a type', event.type)
     if event.type == 'current_step':
         update_view(event)
 
