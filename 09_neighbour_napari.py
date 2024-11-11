@@ -19,7 +19,9 @@ data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
-segmentation_img_path = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/seg_nuclei_timelapses/{timelapse_to_track}.tif'  
+
+cell_fate_img_path = os.path.join(tracking_directory, f'cell_fate_{channel}colored_segmentation/')
+segmentation_img_path = os.path.join(cell_fate_img_path, f'{timelapse_to_track}_colored.tif')
 
 bonds_dir = os.path.join(tracking_directory, f'neighbour_plots_{channel}predicted_morpho_feature_attention_shallowest_litest/')
 bonds_csv_path = os.path.join(bonds_dir, 'bonds.csv')
@@ -37,7 +39,8 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer = napari.Viewer()
-viewer.add_image(segmentation_image,scale=[1, 1, 1, 1])
+viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
+viewer.dims.ndisplay = 3
 viewer.dims.set_current_step(0, 0)
 print('Added image to Napari Viewer')
 
