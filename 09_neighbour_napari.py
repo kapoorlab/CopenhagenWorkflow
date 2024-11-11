@@ -35,7 +35,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 viewer = napari.Viewer()
 segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
-viewer.add_labels(segmentation_image)
+#viewer.add_labels(segmentation_image)
 print('Added image to Napari Viewer')
 napari.run()
 
