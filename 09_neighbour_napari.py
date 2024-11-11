@@ -111,7 +111,7 @@ def plot_bonds_at_time(t):
 
 
 def parallel_plot_bonds():
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() - 1) as executor:
         executor.map(plot_bonds_at_time, time_points)
 
 # Call the function to compute bonds in parallel
