@@ -87,9 +87,8 @@ def plot_bonds_at_time(t):
         bond_color = plt.cm.coolwarm(persistence_norm)
         colors.append(bond_color[:3])
 
-        cell_coords_4d = np.insert(cell_coords[0], 0, t)
-        neighbor_coords_4d = np.insert(neighbor_coords[0], 0, t)
-        vector = np.array([cell_coords_4d, neighbor_coords_4d])
+       
+        vector = np.array([cell_coords, neighbor_coords])
         vectors.append(vector)
 
     if vectors:
