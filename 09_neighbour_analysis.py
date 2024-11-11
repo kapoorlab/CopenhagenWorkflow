@@ -42,7 +42,6 @@ def compute_bonds(df, radius_xy):
     def process_trackmate_id(trackmate_id):
         local_bonds = defaultdict(lambda: defaultdict(list))
         
-        # Loop through each unique track ID for the given TrackMate ID
         for track_id in df[df['TrackMate Track ID'] == trackmate_id]['Track ID'].unique():
 
             for time_point in unique_time_points:
@@ -54,7 +53,6 @@ def compute_bonds(df, radius_xy):
                 if not current_track_df.empty:
                     current_coords = current_track_df.iloc[0][['z', 'y', 'x']].values
 
-                    # Calculate distances within the same tracklet for current neighbors
                     distances = np.sqrt((time_df['y'] - current_coords[1])**2 +
                                         (time_df['x'] - current_coords[2])**2)
                     current_neighbors = set(time_df[(distances <= radius_xy) & 
@@ -93,7 +91,6 @@ def get_total_bonds_at_time(bonds_df, time_point):
     Returns:
         int: Total number of bonds at the specified time point.
     """
-    # Filter the DataFrame for the specified time point
     bonds_at_time = bonds_df[bonds_df['Time'] == time_point]
 
     total_bonds = bonds_at_time[['Track ID', 'Neighbor Track ID']].drop_duplicates().shape[0]
@@ -124,51 +121,40 @@ time_points = sorted(neighbour_dataframe['t'].unique())
 def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, partner_time):
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     
-    # Compute bond persistence directly from bonds_df
-    # Group by Track ID and Neighbor Track ID and calculate the number of unique time points for each bond
     bond_persistence = (
         bonds_df.groupby(['Track ID', 'Neighbor Track ID'])['Time']
         .nunique()
         .reset_index(name='Persistence')
     )
 
-    # Filter bonds that persist for at least partner_time frames
     persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
 
-    # Find the maximum persistence for color normalization
     max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
     for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
         fig, ax = plt.subplots(figsize=(18, 15))
         time_df = df[df['t'] == t]
 
-        # Plot each cell type with unique color
         for cell_type, color in color_palette.items():
             cell_df = time_df[time_df['Cell_Type'] == cell_type]
             ax.scatter(cell_df['x'], cell_df['y'], color=color, label=cell_type, s=100, alpha=0.7)
 
-        # Filter the bonds for the current time point
         bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-        # Plot each bond that has enough persistence
         for _, row in bonds_at_time.iterrows():
             track_id = row['Track ID']
             neighbor_id = row['Neighbor Track ID']
 
-            # Check if the bond meets the persistence threshold
             bond_persist_row = persistent_bonds_df[
                 (persistent_bonds_df['Track ID'] == track_id) &
                 (persistent_bonds_df['Neighbor Track ID'] == neighbor_id)
             ]
 
             if bond_persist_row.empty:
-                # If no persistence data is found or it doesn't meet the threshold, skip
                 continue
 
-            # Get the persistence value for coloring
             persistence = bond_persist_row['Persistence'].values[0]
  
-            # Get the coordinates for track and neighbor
             cell_coords = time_df[time_df['Track ID'] == track_id][['x', 'y']].values
             neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['x', 'y']].values
 
@@ -177,14 +163,12 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
             persistence_norm = persistence / max_persistence if max_persistence > 0 else 0 
             bond_color = plt.cm.coolwarm(persistence_norm)
 
-            # Plot the bond with a line between track and neighbor
             for cell, neighbor in zip(cell_coords, neighbor_coords):
 
                 ax.plot([cell[0], neighbor[0]], 
                         [cell[1], neighbor[1]], 
                         color=bond_color, linewidth=3)
 
-        # Add color bar for bond persistence
         norm = mcolors.Normalize(vmin=0, vmax=max_persistence)
         sm = plt.cm.ScalarMappable(cmap="coolwarm", norm=norm)
         sm.set_array([])
