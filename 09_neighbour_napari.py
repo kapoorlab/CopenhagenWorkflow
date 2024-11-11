@@ -38,7 +38,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer = napari.Viewer()
-viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
+labels_layer = viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
 viewer.dims.ndisplay = 3
 viewer.dims.set_current_step(0, 0)
 print('Added image to Napari Viewer')
@@ -120,8 +120,17 @@ def update_view(event):
         plot_bonds_at_time(t)
         layer_visibility(t)
 
+@labels_layer.mouse_drag_callbacks.append
 def on_mouse_release(event):
-    if event.type == 'mouse_release':
+    print('mouse down')
+    dragged = False
+    yield
+    while event.type == 'mouse_move':
+        dragged = True
+        yield
+    if dragged:
+        print('drag end')
+   
         update_view(event)
 
 
