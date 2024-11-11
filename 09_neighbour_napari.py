@@ -92,19 +92,16 @@ def plot_bonds_at_time(t):
             name=f'Bonds at t={t}'
         )
 
-with napari.gui_qt():
-    viewer = napari.Viewer()
-
-    def update_view(event):
+def update_view(event):
         t = time_points[int(event.value)]
         plot_bonds_at_time(t)
     
-    time_dim = viewer.dims
-    time_dim.ndim = len(time_points)
-    time_dim.set_point(0, 0)  
-    time_dim.events.current_step.connect(update_view)
+time_dim = viewer.dims
+time_dim.ndim = len(time_points)
+time_dim.set_point(0, 0)  
+time_dim.events.current_step.connect(update_view)
 
-    plot_bonds_at_time(time_points[0])  
+plot_bonds_at_time(time_points[0])  
 
 napari.run()
 
