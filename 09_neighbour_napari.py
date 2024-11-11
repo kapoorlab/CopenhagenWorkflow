@@ -38,8 +38,10 @@ segmentation_image = dask_imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer.add_labels(segmentation_image)
 print('Added image to Napari Viewer')
+napari.run()
 
 # %%
+print(f'Reading bonds csv file')
 time_points = sorted(neighbour_dataframe['t'].unique())
 bonds_df = pd.read_csv(bonds_csv_path)
 bond_persistence = (
@@ -52,6 +54,7 @@ persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partne
 
 max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
+print('bonds file read')
 def plot_bonds_at_time(t):
     layer_name = f'Bonds at t={t}'
     if layer_name in [layer.name for layer in viewer.layers]:
@@ -106,11 +109,8 @@ time_dim = viewer.dims
 time_dim.ndim = len(time_points)
 time_dim.set_point(0, 0)  
 time_dim.events.current_step.connect(update_view)
-
-
 print('Ready for interactive view')
 plot_bonds_at_time(time_points[0])  
 
-napari.run()
 
 
