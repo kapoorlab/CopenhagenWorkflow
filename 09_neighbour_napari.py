@@ -47,52 +47,43 @@ bond_persistence = (
     )
 
 persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
-bond_persistence = (
-        bonds_df.groupby(['Track ID', 'Neighbor Track ID'])['Time']
-        .nunique()
-        .reset_index(name='Persistence')
-    )
-persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
+
 max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
-for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
+def plot_bonds_at_time(t):
     vectors = []
     colors = []
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
     bonds_at_time = bonds_df[bonds_df['Time'] == t]
+
     for _, row in bonds_at_time.iterrows():
-            track_id = row['Track ID']
-            neighbor_id = row['Neighbor Track ID']
+        track_id = row['Track ID']
+        neighbor_id = row['Neighbor Track ID']
 
-            bond_persist_row = persistent_bonds_df[
-                (persistent_bonds_df['Track ID'] == track_id) &
-                (persistent_bonds_df['Neighbor Track ID'] == neighbor_id)
-            ]
+        bond_persist_row = persistent_bonds_df[
+            (persistent_bonds_df['Track ID'] == track_id) &
+            (persistent_bonds_df['Neighbor Track ID'] == neighbor_id)
+        ]
 
-            if bond_persist_row.empty:
-                # If no persistence data is found or it doesn't meet the threshold, skip
-                continue
+        if bond_persist_row.empty:
+            continue
 
-            # Get the persistence value for coloring
-            persistence = bond_persist_row['Persistence'].values[0]
- 
-            # Get the coordinates for track and neighbor
-            cell_coords = time_df[time_df['Track ID'] == track_id][['z', 'y', 'x']].values
-            neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['z', 'y', 'x']].values
-            persistence_norm = persistence / max_persistence if max_persistence > 0 else 0 
-            bond_color = plt.cm.coolwarm(persistence_norm)
-            colors.append(bond_color[:3])
-            if cell_coords.size == 0 or neighbor_coords.size == 0:
-                continue  # Skip if coordinates are missing
+        persistence = bond_persist_row['Persistence'].values[0]
+        cell_coords = time_df[time_df['Track ID'] == track_id][['z', 'y', 'x']].values
+        neighbor_coords = time_df[time_df['Track ID'] == neighbor_id][['z', 'y', 'x']].values
+        if cell_coords.size == 0 or neighbor_coords.size == 0:
+            continue
 
-            # Add time dimension as the first coordinate
-            cell_coords_4d = np.insert(cell_coords[0], 0, t)  # Add `t` as the first element of cell_coords
-            neighbor_coords_4d = np.insert(neighbor_coords[0], 0, t)  # Add `t` as the first element of neighbor_coords
+        persistence_norm = persistence / max_persistence if max_persistence > 0 else 0
+        bond_color = plt.cm.coolwarm(persistence_norm)
+        colors.append(bond_color[:3])
 
-            # Convert to vectors format
-            vector = np.array([cell_coords_4d, neighbor_coords_4d])  # Create a 4D vector from cell to neighbor
-            vectors.append(vector)
+        cell_coords_4d = np.insert(cell_coords[0], 0, t)
+        neighbor_coords_4d = np.insert(neighbor_coords[0], 0, t)
+        vector = np.array([cell_coords_4d, neighbor_coords_4d])
+        vectors.append(vector)
 
+    viewer.layers.clear()
     if vectors:
         viewer.add_vectors(
             np.array(vectors),
@@ -100,7 +91,21 @@ for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
             edge_width=1,
             name=f'Bonds at t={t}'
         )
- 
+
+with napari.gui_qt():
+    viewer = napari.Viewer()
+
+    def update_view(event):
+        t = time_points[int(event.value)]
+        plot_bonds_at_time(t)
+    
+    time_dim = viewer.dims
+    time_dim.ndim = len(time_points)
+    time_dim.set_point(0, 0)  
+    time_dim.events.current_step.connect(update_view)
+
+    plot_bonds_at_time(time_points[0])  
+
 napari.run()
 
 
