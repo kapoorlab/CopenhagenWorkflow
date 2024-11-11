@@ -126,7 +126,7 @@ def on_mouse_release(event):
 
 
 viewer.dims.events.connect(on_mouse_release)
-
+plot_bonds_at_time(0)
 napari.run()
 
 
