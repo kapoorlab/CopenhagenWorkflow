@@ -100,13 +100,13 @@ def plot_bonds_at_time(t):
         )
 
 def update_view(event):
-        print(event.value)
+        print("The number of dims shown is now:", event.value)
         t = time_points[int(event.value[0])]
         plot_bonds_at_time(t)
     
 viewer.dims.events.ndim.connect(update_view)
 print('Ready for interactive view')
-#plot_bonds_at_time(time_points[0])  
+  
 napari.run()
 
 
