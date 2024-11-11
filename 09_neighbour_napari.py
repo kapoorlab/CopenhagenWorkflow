@@ -106,7 +106,7 @@ def plot_bonds_at_time(t):
         )
         for layer in viewer.layers:
            layer.visible = (layer.name == layer_name)
-           if isinstance(layer, napari.layers.Image):
+           if isinstance(layer, napari.layers.Labels):
                layer.visible = True   
 
 def update_view(event):
