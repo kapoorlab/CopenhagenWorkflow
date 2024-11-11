@@ -178,9 +178,11 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
             bond_color = plt.cm.coolwarm(persistence_norm)
 
             # Plot the bond with a line between track and neighbor
-            ax.plot([cell_coords[0][0], neighbor_coords[0][0]], 
-                    [cell_coords[0][1], neighbor_coords[0][1]], 
-                    color=bond_color, linewidth=3)
+            for cell, neighbor in zip(cell_coords, neighbor_coords):
+
+                ax.plot([cell[0], neighbor[0]], 
+                        [cell[1], neighbor[1]], 
+                        color=bond_color, linewidth=3)
 
         # Add color bar for bond persistence
         norm = mcolors.Normalize(vmin=0, vmax=max_persistence)
