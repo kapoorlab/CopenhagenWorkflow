@@ -34,8 +34,9 @@ tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 viewer = napari.Viewer()
 segmentation_image = imread(segmentation_img_path)
+print('Read Segmentation image')
 viewer.add_labels(segmentation_image)
-
+print('Added image to Napari Viewer')
 
 # %%
 time_points = sorted(neighbour_dataframe['t'].unique())
@@ -101,6 +102,8 @@ time_dim.ndim = len(time_points)
 time_dim.set_point(0, 0)  
 time_dim.events.current_step.connect(update_view)
 
+
+print('Ready for interactive view')
 plot_bonds_at_time(time_points[0])  
 
 napari.run()
