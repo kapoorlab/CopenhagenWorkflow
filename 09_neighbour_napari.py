@@ -53,6 +53,10 @@ persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partne
 max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
 def plot_bonds_at_time(t):
+    layer_name = f'Bonds at t={t}'
+    if layer_name in [layer.name for layer in viewer.layers]:
+        print(f"Layer for time {t} already exists, skipping computation.")
+        return 
     vectors = []
     colors = []
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
@@ -85,7 +89,6 @@ def plot_bonds_at_time(t):
         vector = np.array([cell_coords_4d, neighbor_coords_4d])
         vectors.append(vector)
 
-    viewer.layers.clear()
     if vectors:
         viewer.add_vectors(
             np.array(vectors),
