@@ -32,10 +32,11 @@ color_palette = {
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-viewer = napari.Viewer()
-#segmentation_image = imread(segmentation_img_path)
+
+segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
-#viewer.add_labels(segmentation_image)
+viewer = napari.Viewer()
+viewer.add_labels(segmentation_image)
 print('Added image to Napari Viewer')
 
 
