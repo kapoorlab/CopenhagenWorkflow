@@ -114,7 +114,7 @@ def update_view(event):
     
 viewer.dims.events.connect(update_view)
 print('Ready for interactive view')
-  
+plot_bonds_at_time(0)  
 napari.run()
 
 
