@@ -121,12 +121,8 @@ def update_view(event):
         plot_bonds_at_time(t)
         layer_visibility(t)
 
-def on_mouse_release(event):
-    if event.type == 'current_step':
-        update_view(event)
 
-
-viewer.dims.events.connect(on_mouse_release)
+viewer.dims.events.connect(update_view)
 plot_bonds_at_time(0)
 napari.run()
 
