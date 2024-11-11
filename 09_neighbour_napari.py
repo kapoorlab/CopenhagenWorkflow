@@ -8,7 +8,7 @@ from tqdm import tqdm
 from tifffile import imread
 import matplotlib.pyplot as plt
 import napari
-
+import concurrent
 # %%
 dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
@@ -110,8 +110,12 @@ def plot_bonds_at_time(t):
                layer.visible = True   
 
 
-for t in tqdm(time_points, desc='Computing bonds for timepoint'):
-    plot_bonds_at_time(t)
+def parallel_plot_bonds():
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(plot_bonds_at_time, time_points)
+
+# Call the function to compute bonds in parallel
+parallel_plot_bonds()
 
 def update_view(event):
         print("The number of dims shown is now:", event.value)
