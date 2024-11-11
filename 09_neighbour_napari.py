@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from tifffile import imread
+from dask_image.imread import imread as dask_imread
 import matplotlib.pyplot as plt
 import napari
 
@@ -33,7 +34,7 @@ color_palette = {
 tracks_goblet_basal_radial_dataframe = pd.read_csv(goblet_basal_radial_dataframe)
 neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
 viewer = napari.Viewer()
-segmentation_image = imread(segmentation_img_path)
+segmentation_image = dask_imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer.add_labels(segmentation_image)
 print('Added image to Napari Viewer')
@@ -94,7 +95,8 @@ def plot_bonds_at_time(t):
         )
 
 def update_view(event):
-        t = time_points[int(event.value)]
+        print(event.value)
+        t = time_points[int(event.value[0])]
         plot_bonds_at_time(t)
     
 time_dim = viewer.dims
