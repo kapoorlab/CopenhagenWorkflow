@@ -61,9 +61,7 @@ max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bon
 print('bonds file read')
 def plot_bonds_at_time(t):
     layer_name = f'Bonds at t={t}'
-    if layer_name in [layer.name for layer in viewer.layers]:
-        print(f"Layer for time {t} already exists, skipping computation.")
-        return 
+    
     lines = []
     colors = []
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
@@ -103,23 +101,25 @@ def plot_bonds_at_time(t):
             edge_width=1,
             name=layer_name
         )
-        for layer in viewer.layers:
+          
+
+def layer_visibility(t):
+    
+    layer_name = f'Bonds at t={t}'
+    for layer in viewer.layers:
            layer.visible = (layer.name == layer_name)
            if isinstance(layer, napari.layers.Labels):
-               layer.visible = True   
-
+               layer.visible = True 
 
 def parallel_plot_bonds():
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count() - 1) as executor:
         executor.map(plot_bonds_at_time, time_points)
 
-# Call the function to compute bonds in parallel
 parallel_plot_bonds()
 
 def update_view(event):
-        print("The number of dims shown is now:", event.value)
         t = time_points[viewer.dims.current_step[0]] 
-        plot_bonds_at_time(t)
+        layer_visibility(t)
     
 viewer.dims.events.connect(update_view)
 
