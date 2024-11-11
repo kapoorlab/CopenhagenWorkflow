@@ -92,8 +92,6 @@ def plot_bonds_at_time(t):
         colors.append(bond_color[:3])
 
         for cell, neighbor in zip(cell_coords, neighbor_coords):
-            print('cell',cell)
-            print('neighbor', neighbor)
             line = np.array([cell, neighbor])
             lines.append(line)
 
