@@ -60,7 +60,7 @@ def plot_bonds_at_time(t):
     if layer_name in [layer.name for layer in viewer.layers]:
         print(f"Layer for time {t} already exists, skipping computation.")
         return 
-    vectors = []
+    lines = []
     colors = []
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
     bonds_at_time = bonds_df[bonds_df['Time'] == t]
@@ -88,16 +88,20 @@ def plot_bonds_at_time(t):
         colors.append(bond_color[:3])
 
        
-        vector = np.array([cell_coords, neighbor_coords])
-        vectors.append(vector)
+        for cell, neighbor in zip(cell_coords, neighbor_coords):
+            line = np.array([cell, neighbor])
+            lines.append(line)
 
-    if vectors:
-        viewer.add_vectors(
-            np.array(vectors),
+    if lines:
+        viewer.add_shapes(
+            lines,
+            shape_type='line',
             edge_color=np.array(colors),
             edge_width=1,
-            name=f'Bonds at t={t}'
+            name=layer_name
         )
+        for layer in viewer.layers:
+           layer.visible = (layer.name == layer_name)
 
 def update_view(event):
         print("The number of dims shown is now:", event.value)
