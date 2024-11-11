@@ -109,15 +109,17 @@ def plot_bonds_at_time(t):
            if isinstance(layer, napari.layers.Labels):
                layer.visible = True   
 
+
+for t in tqdm(time_points, desc='Computing bonds for timepoint'):
+    plot_bonds_at_time(t)
+
 def update_view(event):
         print("The number of dims shown is now:", event.value)
         t = time_points[viewer.dims.current_step[0]] 
-        print(f'Computing bonds for timepoint {t}')
         plot_bonds_at_time(t)
     
 viewer.dims.events.connect(update_view)
-print('Ready for interactive view')
-plot_bonds_at_time(0)  
+
 napari.run()
 
 
