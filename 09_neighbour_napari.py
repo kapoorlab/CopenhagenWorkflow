@@ -103,6 +103,7 @@ def plot_bonds_at_time(t):
             edge_width=1,
             name=layer_name
         )
+        print('Added')
           
 
 def layer_visibility(t):
