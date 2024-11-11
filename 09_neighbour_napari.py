@@ -36,7 +36,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer = napari.Viewer()
-viewer.add_labels(segmentation_image)
+viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
 print('Added image to Napari Viewer')
 
 
@@ -64,7 +64,7 @@ def plot_bonds_at_time(t):
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
     bonds_at_time = bonds_df[bonds_df['Time'] == t]
 
-    for _, row in bonds_at_time.iterrows():
+    for _, row in tqdm(bonds_at_time.iterrows()):
         track_id = row['Track ID']
         neighbor_id = row['Neighbor Track ID']
 
@@ -101,7 +101,8 @@ def plot_bonds_at_time(t):
 
 def update_view(event):
         print("The number of dims shown is now:", event.value)
-        t = time_points[int(event.value[0])]
+        t = time_points[viewer.dims.current_step[0]] 
+        print(f'Computing bonds for timepoint {t}')
         plot_bonds_at_time(t)
     
 viewer.dims.events.connect(update_view)
