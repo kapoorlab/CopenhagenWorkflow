@@ -125,9 +125,9 @@ def update_view(event):
 def get_event(viewer, event):
     print(event)
 
-    
+
 @labels_layer.mouse_drag_callbacks.append
-def on_mouse_release(event):
+def on_slider_release(event):
     print('mouse down')
     dragged = False
     yield
@@ -141,7 +141,7 @@ def on_mouse_release(event):
         update_view(event)
 
 
-
+viewer.dims.events.connect(on_slider_release)
 plot_bonds_at_time(0)
 napari.run()
 
