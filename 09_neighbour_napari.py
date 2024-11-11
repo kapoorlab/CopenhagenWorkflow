@@ -60,7 +60,9 @@ max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bon
 print('bonds file read')
 def plot_bonds_at_time(t):
     layer_name = f'Bonds at t={t}'
-    
+    if layer_name in [layer.name for layer in viewer.layers]:
+        print(f"Layer for time {t} already exists, skipping computation.")
+        return
     lines = []
     colors = []
     time_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['t'] == t]
@@ -117,8 +119,13 @@ def update_view(event):
         t = time_points[viewer.dims.current_step[0]] 
         plot_bonds_at_time(t)
         layer_visibility(t)
-    
-viewer.dims.events.connect(update_view)
+
+def on_mouse_release(event):
+    if event.type == 'mouse_release':
+        update_view(event)
+
+
+viewer.dims.events.connect(on_mouse_release)
 
 napari.run()
 
