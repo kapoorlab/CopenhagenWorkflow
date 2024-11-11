@@ -104,7 +104,7 @@ def update_view(event):
         t = time_points[int(event.value[0])]
         plot_bonds_at_time(t)
     
-viewer.dims.events.ndim.connect(update_view)
+viewer.dims.events.connect(update_view)
 print('Ready for interactive view')
   
 napari.run()
