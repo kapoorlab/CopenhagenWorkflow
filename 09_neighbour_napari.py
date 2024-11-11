@@ -1,6 +1,7 @@
 # %%
 from pathlib import Path 
 import os
+import napari.viewer
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -36,7 +37,7 @@ neighbour_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_
 segmentation_image = imread(segmentation_img_path)
 print('Read Segmentation image')
 viewer = napari.Viewer()
-viewer.add_labels(segmentation_image,scale=[1, 1, 1, 1])
+viewer.add_image(segmentation_image,scale=[1, 1, 1, 1])
 viewer.dims.set_current_step(0, 0)
 print('Added image to Napari Viewer')
 
@@ -102,6 +103,8 @@ def plot_bonds_at_time(t):
         )
         for layer in viewer.layers:
            layer.visible = (layer.name == layer_name)
+           if isinstance(layer, napari.layers.Image):
+               layer.visible = True   
 
 def update_view(event):
         print("The number of dims shown is now:", event.value)
