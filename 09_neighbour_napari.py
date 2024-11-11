@@ -37,9 +37,8 @@ viewer = napari.Viewer()
 print('Read Segmentation image')
 #viewer.add_labels(segmentation_image)
 print('Added image to Napari Viewer')
-napari.run()
 
-# %%
+
 print(f'Reading bonds csv file')
 time_points = sorted(neighbour_dataframe['t'].unique())
 bonds_df = pd.read_csv(bonds_csv_path)
@@ -111,6 +110,6 @@ time_dim.set_point(0, 0)
 #time_dim.events.current_step.connect(update_view)
 print('Ready for interactive view')
 #plot_bonds_at_time(time_points[0])  
-
+napari.run()
 
 
