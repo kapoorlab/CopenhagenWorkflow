@@ -3,10 +3,10 @@ from pathlib import Path
 from napatrackmater.Trackvector import train_gbr_vision_neural_net
 
 
-vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/vision_inception_d1/'
+vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/vision_inception_d3_s64/'
 
 Path(vision_model_dir).mkdir(exist_ok=True)
-depth = {'depth_0': 6}#,'depth_1': 24,'depth_2': 16 }
+depth = {'depth_0': 12,'depth_1': 24,'depth_2': 16 }
 input_shape = [50,8,64,64]
 batch_size = 16
 crop_size = [50, 8, 64, 64]
@@ -24,7 +24,7 @@ train_gbr_vision_neural_net(
     batch_size=batch_size,
     epochs=100,
     depth=depth,
-    experiment_name='vision_cellfate_d1',
+    experiment_name='vision_cellfate_d3_s64',
     num_workers=10,
     crop_size = crop_size,
     growth_rate = growth_rate
