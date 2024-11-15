@@ -8,7 +8,7 @@ vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackMode
 Path(vision_model_dir).mkdir(exist_ok=True)
 depth = {'depth_0': 12,'depth_1': 24,'depth_2': 16 }
 input_shape = [50,8,64,64]
-batch_size = 64
+batch_size = 128
 crop_size = [50, 8, 64, 64]
 growth_rate = 32
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
@@ -28,5 +28,5 @@ train_gbr_vision_neural_net(
     num_workers=10,
     crop_size = crop_size,
     growth_rate = growth_rate,
-    startfilter=128
+    startfilter=32
 )
