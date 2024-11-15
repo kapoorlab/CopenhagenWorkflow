@@ -27,5 +27,6 @@ train_gbr_vision_neural_net(
     experiment_name='vision_cellfate',
     num_workers=10,
     crop_size = crop_size,
-    growth_rate = growth_rate
+    growth_rate = growth_rate,
+    startfilter=128
 )
