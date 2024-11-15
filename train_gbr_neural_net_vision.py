@@ -7,13 +7,13 @@ vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackMode
 
 Path(vision_model_dir).mkdir(exist_ok=True)
 depth = {'depth_0': 6,'depth_1': 12,'depth_2': 24,'depth_3': 16 }
-input_shape = [15,8,64,64]
+input_shape = [50,8,64,64]
 batch_size = 128
-crop_size = [15, 8, 64, 64]
+crop_size = [50, 8, 64, 64]
 growth_rate = 1
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-base_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data/'
-vision_gbr_h5_file = 'cellfate_vision_training_data_gbr.h5'
+base_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data_large/'
+vision_gbr_h5_file = 'cellfate_vision_training_data_gbr_large.h5'
 
 
 train_gbr_vision_neural_net(
