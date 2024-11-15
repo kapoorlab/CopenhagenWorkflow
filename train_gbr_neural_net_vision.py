@@ -28,5 +28,5 @@ train_gbr_vision_neural_net(
     num_workers=10,
     crop_size = crop_size,
     growth_rate = growth_rate,
-    startfilter=128
+    startfilter=32
 )
