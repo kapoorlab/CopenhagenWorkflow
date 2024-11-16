@@ -3,14 +3,14 @@ from pathlib import Path
 from napatrackmater.Trackvector import train_gbr_vision_neural_net
 
 
-vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/vision_inception_sf32/'
+vision_model_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/vision_inception/'
 
 Path(vision_model_dir).mkdir(exist_ok=True)
 depth = {'depth_0': 12,'depth_1': 24,'depth_2': 16 }
 crop_size = [50, 8, 128, 128]
 input_shape = crop_size
 batch_size = 16
-growth_rate = 32
+growth_rate = 4
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 base_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data_large/'
 vision_gbr_h5_file = 'cellfate_vision_training_data_gbr_large.h5'
@@ -27,6 +27,6 @@ train_gbr_vision_neural_net(
     experiment_name='vision_cellfate',
     num_workers=10,
     crop_size = crop_size,
-    growth_rate = growth_rate,
-    startfilter=32
+    growth_rate = growth_rate
+    
 )
