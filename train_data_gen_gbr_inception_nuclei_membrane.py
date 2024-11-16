@@ -55,18 +55,19 @@ def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei
                 for track_id in tracklet_ids:
                     try:
                         (shape_dynamic_dataframe_list, shape_dataframe_list, dynamic_dataframe_list, full_dataframe_list) = analysis_vectors[track_id]
-                        (second_shape_dynamic_dataframe_list, second_shape_dataframe_list, second_dynamic_dataframe_list, second_full_dataframe_list) = second_analysis_vectors[track_id]
-                        shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
-                        dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
-                        second_shape_track_array = np.array([[item for item in record.values()] for record in second_shape_dataframe_list])
-                        # Combine shape and dynamic features
-                        print(shape_track_array.shape, dynamic_track_array.shape, second_shape_track_array.shape)
-                        combined_track_array = np.concatenate((shape_track_array, dynamic_track_array, second_shape_track_array), axis=-1)
+                        if track_id in second_analysis_vectors.keys():
+                            (second_shape_dynamic_dataframe_list, second_shape_dataframe_list, second_dynamic_dataframe_list, second_full_dataframe_list) = second_analysis_vectors[track_id]
+                            shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
+                            dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
+                            second_shape_track_array = np.array([[item for item in record.values()] for record in second_shape_dataframe_list])
+                            # Combine shape and dynamic features
+                            if shape_track_array.shape[0] == dynamic_track_array.shape[0] == second_shape_track_array.shape[0]:
+                                combined_track_array = np.concatenate((shape_track_array, dynamic_track_array, second_shape_track_array), axis=-1)
 
-                        # Create training arrays
-                        training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
-                        training_arrays.extend(training_subarrays)
-                        labels.extend([cell_label] * len(training_subarrays))
+                                # Create training arrays
+                                training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
+                                training_arrays.extend(training_subarrays)
+                                labels.extend([cell_label] * len(training_subarrays))
                     except KeyError:
                         print(f'key {track_id} not found, skipping')
 
