@@ -47,7 +47,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
                         morphodynamic_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
                         target_array.extend(morphodynamic_subarrays)
                     except KeyError:
-                        print(f'Key {track_id} not found, skipping')
+                        pass
 
     # Convert lists to numpy arrays
     dividing_arrays = np.asarray(dividing_arrays)
@@ -79,7 +79,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 
 # Parameters
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_names = ['Third', 'Second', 'Fifth', 'Sixth']
+dataset_names = ['Third_Dataset_Analysis', 'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis']
 tracklet_lengths = [25]
 strides = [4]
 

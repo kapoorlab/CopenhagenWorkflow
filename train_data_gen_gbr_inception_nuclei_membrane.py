@@ -60,6 +60,7 @@ def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei
                         dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
                         second_shape_track_array = np.array([[item for item in record.values()] for record in second_shape_dataframe_list])
                         # Combine shape and dynamic features
+                        print(shape_track_array.shape, dynamic_track_array.shape, second_shape_track_array.shape)
                         combined_track_array = np.concatenate((shape_track_array, dynamic_track_array, second_shape_track_array), axis=-1)
 
                         # Create training arrays
