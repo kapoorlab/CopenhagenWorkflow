@@ -13,7 +13,7 @@ model_dir = f'{home_folder}Mari_Models/TrackModels/'
 
 dynamic_model_dir = os.path.join(model_dir, 'morphodynamic_features_mitosis')
 os.makedirs(dynamic_model_dir, exist_ok = True)
-morphodynamic_mitosis_h5_file = 'morphodynamic_training_data_mitosis_nuclei_25'
+morphodynamic_mitosis_h5_file = 'morphodynamic_training_data_mitosis_nuclei_25.h5'
 
 num_classes = 2
 batch_size = 98000
