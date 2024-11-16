@@ -76,7 +76,7 @@ def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei
 
     # Split the combined data into training and validation sets
     train_arrays, val_arrays, train_labels, val_labels = train_test_split(
-        training_arrays, labels, test_size=0.2, random_state=42
+        training_arrays, labels, test_size=0.1, random_state=42
     )
 
     train_save_dir = f'{home_folder}Mari_Data_Training/track_training_data/'

@@ -47,7 +47,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
                         morphodynamic_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
                         target_array.extend(morphodynamic_subarrays)
                     except KeyError:
-                        pass
+                        print(f'Key {track_id} not found, skipping')
 
     # Convert lists to numpy arrays
     dividing_arrays = np.asarray(dividing_arrays)
