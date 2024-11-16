@@ -22,13 +22,13 @@ channel = 'nuclei_'
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
-save_dir = os.path.join(tracking_directory, f'cell_fate_accuracy_shallowest_lite_morpho_dynamic/')
+save_dir = os.path.join(tracking_directory, f'dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic/')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
+dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic.csv')
 gt_dataframe_file = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_normalized_{channel}.csv') 
 
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
