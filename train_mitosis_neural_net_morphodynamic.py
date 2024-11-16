@@ -27,7 +27,7 @@ train_mitosis_neural_net(
     num_classes = num_classes,
     batch_size = batch_size,
     epochs = epochs,
-    model_type = 'densenet',
+    model_type = 'attention',
     experiment_name='morphodynamic_mitosis_densenet',
     num_workers = 10,
     block_config=block_config,
