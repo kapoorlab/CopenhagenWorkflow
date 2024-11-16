@@ -4,7 +4,7 @@ import pandas as pd
 from napatrackmater import create_analysis_tracklets
 from sklearn.model_selection import train_test_split
 import h5py
-
+from tqdm import tqdm 
 def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=25, stride=4):
     dividing_arrays, non_dividing_arrays = [], []  # Combined morphodynamic arrays
 
@@ -20,7 +20,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
                 processed_arrays.append(sub_array)
         return np.asarray(processed_arrays)
 
-    for dataset_name in dataset_names:
+    for dataset_name in tqdm(dataset_names):
         tracking_directory = os.path.join(home_folder, f'Mari_Data_Oneat/Mari_{dataset_name}/{tracking_directory_name}')
         data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
         normalized_dataframe_file = os.path.join(data_frames_dir, f'results_dataframe_normalized_{channel}.csv')
@@ -28,7 +28,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         analysis_vectors, _ = create_analysis_tracklets(dataset_dataframe)
 
         # Process dividing and non-dividing tracklets
-        for trackmate_track_id, group_df in dataset_dataframe.groupby('TrackMate Track ID'):
+        for trackmate_track_id, group_df in tqdm(dataset_dataframe.groupby('TrackMate Track ID')):
             dividing_tracklet_ids = group_df[group_df['Dividing'] == 1]['Track ID']
             non_dividing_tracklet_ids = group_df[group_df['Dividing'] == 0]['Track ID']
 
