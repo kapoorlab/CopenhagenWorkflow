@@ -69,7 +69,7 @@ def main(args):
         local_model_path=os.path.join(model_dir, second_model_name)
     )
 
-    gbr_morpho_torch_model.eval()
+    second_gbr_morpho_torch_model.eval()
 
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
