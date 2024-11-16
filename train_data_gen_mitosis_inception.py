@@ -61,7 +61,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
     train_arrays, val_arrays, train_labels, val_labels = train_test_split(
         np.concatenate((dividing_arrays, non_dividing_arrays)),
         np.concatenate((dividing_labels, non_dividing_labels)),
-        test_size=0.2, random_state=42
+        test_size=0.1, random_state=42
     )
 
     # Save combined morphodynamic features to a single H5 file
