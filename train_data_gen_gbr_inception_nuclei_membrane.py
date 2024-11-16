@@ -29,7 +29,7 @@ def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei
                 processed_arrays.append(sub_array)
         return np.asarray(processed_arrays)
 
-    for dataset_name in dataset_names:
+    for dataset_name in tqdm(dataset_names):
         tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{tracking_directory_name}'
         data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
         normalized_dataframe_file = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}.csv')
