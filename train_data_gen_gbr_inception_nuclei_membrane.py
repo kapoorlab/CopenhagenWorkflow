@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 import h5py
 
 def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=25, stride=4):
-    training_arrays = []  # Combined morphodynamic arrays
+    training_arrays = []  
     labels = []
     channel='nuclei_'
     second_channel = 'membrane_'
