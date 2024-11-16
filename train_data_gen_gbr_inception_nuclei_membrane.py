@@ -2,6 +2,7 @@ import os
 import numpy as np
 from napatrackmater import create_analysis_tracklets
 import pandas as pd
+from tqdm import tqdm 
 from napatrackmater.Trackvector import (
     SHAPE_FEATURES,
     DYNAMIC_FEATURES,
@@ -41,7 +42,7 @@ def process_datasets(home_folder, dataset_names, tracking_directory_name='nuclei
         second_analysis_vectors, _ = create_analysis_tracklets(second_dataset_dataframe)
 
         # Iterate over TrackMate Track IDs instead of individual Track IDs directly
-        for trackmate_track_id, group_df in cell_type_dataframe.groupby("TrackMate Track ID"):
+        for trackmate_track_id, group_df in tqdm(cell_type_dataframe.groupby("TrackMate Track ID")):
             basal_tracklet_ids = group_df[group_df['Cell_Type'] == 'Basal']['Track ID']
             goblet_tracklet_ids = group_df[group_df['Cell_Type'] == 'Goblet']['Track ID']
             radial_tracklet_ids = group_df[group_df['Cell_Type'] == 'Radial']['Track ID']
