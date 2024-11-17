@@ -44,8 +44,6 @@ mitosis_types = cell_type_dataframe['Cell_Type'].unique()
 for mitosis_type in mitosis_types:
 
     filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == mitosis_type]
- 
-    
     
 
     if mitosis_type == 'Mitosis':
@@ -92,8 +90,8 @@ print(f'Predicted Non Dividing but actually Dividing: {misclassifications_non_di
 
 # Create the confusion matrix
 conf_matrix_array = np.array([
-    [tp_dividing, misclassifications_dividing_as_non_dividing],  
-    [misclassifications_non_dividing_as_dividing, tp_non_dividing],  
+    [tp_non_dividing, misclassifications_non_dividing_as_dividing],  
+    [misclassifications_dividing_as_non_dividing, tp_dividing],  
     
 ])
 
