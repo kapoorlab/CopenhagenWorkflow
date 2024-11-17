@@ -102,7 +102,7 @@ for cell_type in unique_cell_types:
     dividing_count = 0
     for track_id in unique_track_ids:
         track_df = cell_type_df[cell_type_df['TrackMate Track ID'] == track_id]
-        if track_df['Mitosis'].iloc[0] == 1:
+        if track_df['Cell_Type'].iloc[0] == 1:
             dividing_count += 1
     
     count = len(cell_type_df)
