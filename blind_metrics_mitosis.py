@@ -44,15 +44,17 @@ mitosis_types = cell_type_dataframe['Cell_Type'].unique()
 for mitosis_type in mitosis_types:
 
     filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == mitosis_type]
+ 
+    
+    
 
-    gt_filtered_tracks = gt_tracks_mitosis_dataframe[gt_tracks_mitosis_dataframe['Cell_Type'] == mitosis_type]
-    
-    
     if mitosis_type == 'Mitosis':
+        gt_filtered_tracks = gt_tracks_mitosis_dataframe[gt_tracks_mitosis_dataframe['Dividing'] == 1]
         dividing_track_ids = filtered_tracks['TrackMate Track ID'].unique()
         gt_dividing_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {mitosis_type}: {len(gt_dividing_track_ids)} total predicted tracks {len(dividing_track_ids)}')
     elif mitosis_type == 'Non Mitosis':
+        gt_filtered_tracks = gt_tracks_mitosis_dataframe[gt_tracks_mitosis_dataframe['Dividing'] == 0]
         non_dividing_track_ids = filtered_tracks['TrackMate Track ID'].unique()
         gt_non_dividing_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {mitosis_type}: {len(gt_non_dividing_track_ids)} total predicted tracks {len(non_dividing_track_ids)}')
