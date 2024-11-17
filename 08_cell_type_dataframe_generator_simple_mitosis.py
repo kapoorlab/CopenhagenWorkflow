@@ -92,7 +92,7 @@ unique_cell_types = tracks_mitosis_dataframe[~tracks_mitosis_dataframe['Cell_Typ
 print("Number of unique cell types:", len(unique_cell_types))
 print("Unique cell types:", unique_cell_types)
 cell_type_label_mapping = {
-    "Non_Mitosis": 0,
+    "Non Mitosis": 0,
     "Mitosis":1, 
 }
 
