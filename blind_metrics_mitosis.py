@@ -28,31 +28,31 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_dual_{channel}mitosis.csv')
+dataframe_file = os.path.join(data_frames_dir , f'mitosis_dataframe_normalized_{channel}.csv')
 gt_dataframe_file = os.path.join(data_frames_dir , f'val_goblet_basal_dataframe_normalized_{channel}.csv') 
 
-tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
-gt_tracks_goblet_basal_radial_dataframe = pd.read_csv(gt_dataframe_file)
+tracks_mitosis_dataframe = pd.read_csv(dataframe_file)
+gt_tracks_mitosis_dataframe = pd.read_csv(gt_dataframe_file)
 
 
 
-cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Dividing'].isna()]
+cell_type_dataframe = tracks_mitosis_dataframe[~tracks_mitosis_dataframe['Cell_Type'].isna()]
 
-mitosis_types = cell_type_dataframe['Dividing'].unique()
+mitosis_types = cell_type_dataframe['Cell_Type'].unique()
 
 
 for mitosis_type in mitosis_types:
 
-    filtered_tracks = cell_type_dataframe[cell_type_dataframe['Dividing'] == mitosis_type]
+    filtered_tracks = cell_type_dataframe[cell_type_dataframe['Cell_Type'] == mitosis_type]
 
-    gt_filtered_tracks = gt_tracks_goblet_basal_radial_dataframe[gt_tracks_goblet_basal_radial_dataframe['Dividing'] == mitosis_type]
+    gt_filtered_tracks = gt_tracks_mitosis_dataframe[gt_tracks_mitosis_dataframe['Cell_Type'] == mitosis_type]
     
     
-    if mitosis_type == 1:
+    if mitosis_type == 'Mitosis':
         dividing_track_ids = filtered_tracks['TrackMate Track ID'].unique()
         gt_dividing_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {mitosis_type}: {len(gt_dividing_track_ids)} total predicted tracks {len(dividing_track_ids)}')
-    elif mitosis_type == 0:
+    elif mitosis_type == 'Non Mitosis':
         non_dividing_track_ids = filtered_tracks['TrackMate Track ID'].unique()
         gt_non_dividing_track_ids = gt_filtered_tracks['TrackMate Track ID'].unique()
         print(f'GT tracks for {mitosis_type}: {len(gt_non_dividing_track_ids)} total predicted tracks {len(non_dividing_track_ids)}')
@@ -60,10 +60,10 @@ for mitosis_type in mitosis_types:
 
 
 class_map_gbr = {
-    0: "Non-Mitosis",
+    0: "Non Mitosis",
     1: "Mitosis",
 }
-class_names = ['Non-Mitosis', 'Mitosis']
+class_names = ['Non Mitosis', 'Mitosis']
 
 
 def compute_counts(predicted_ids, gt_ids):
