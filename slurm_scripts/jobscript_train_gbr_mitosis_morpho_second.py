@@ -19,9 +19,8 @@ morpho_gbr_h5_files = [
    
 ]
 
-for i in enumerate(growth_rates):
+for i, growth_rate in enumerate(growth_rates):
     block_config = block_configs[i]
-    growth_rate = growth_rates[i]
 
     for j, channel in enumerate(channels):
         morpho_gbr_h5_file = morpho_gbr_h5_files[j]
