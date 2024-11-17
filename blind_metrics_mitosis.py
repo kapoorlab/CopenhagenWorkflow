@@ -83,8 +83,8 @@ misclassifications_dividing_as_non_dividing = compute_misclassifications(dividin
 misclassifications_non_dividing_as_dividing = compute_misclassifications(non_dividing_track_ids, gt_dividing_track_ids)
 
 
-print(f'Predicted Dividing and actually Non Dividing: {tp_dividing}')
-print(f'Predicted Non Dividing and actually Dividing: {tp_non_dividing}')
+print(f'Predicted Dividing and actually Dividing: {tp_dividing}')
+print(f'Predicted Non Dividing and actually non Dividing: {tp_non_dividing}')
 
 print(f'Predicted Dividing but actually Non Dividing: {misclassifications_dividing_as_non_dividing}')
 print(f'Predicted Non Dividing but actually Dividing: {misclassifications_non_dividing_as_dividing}')
