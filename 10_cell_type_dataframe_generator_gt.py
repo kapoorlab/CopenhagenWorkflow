@@ -90,37 +90,3 @@ for index, row in tracks_goblet_basal_radial_dataframe.iterrows():
 tracks_goblet_basal_radial_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
         
 
-
-unique_cell_types = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]['Cell_Type'].unique()
-
-print("Number of unique cell types:", len(unique_cell_types))
-print("Unique cell types:", unique_cell_types)
-cell_type_label_mapping = {
-    "Basal": 1,
-    "Radial":2, 
-    "Goblet":3
-}
-
-print("Cell type counts, unique TrackMate Track IDs, and count of mitotic tracks:")
-for cell_type in unique_cell_types:
-    cell_type_df = tracks_goblet_basal_radial_dataframe[tracks_goblet_basal_radial_dataframe['Cell_Type'] == cell_type]
-    unique_track_ids = cell_type_df['TrackMate Track ID'].unique()
-    
-    dividing_count = 0
-    for track_id in unique_track_ids:
-        track_df = cell_type_df[cell_type_df['TrackMate Track ID'] == track_id]
-        if track_df['Dividing'].iloc[0] == 1:
-            dividing_count += 1
-    
-    count = len(cell_type_df)
-    print(f"{cell_type}: {count} rows, unique TrackMate Track IDs: {len(unique_track_ids)}, mitotic tracks: {dividing_count}")
-
-cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-cell_type_dataframe['Cell_Type'].unique()
-print(cell_type_label_mapping)
-cell_type_dataframe.loc[:, 'Cell_Type_Label'] = cell_type_dataframe['Cell_Type'].map(cell_type_label_mapping)
-
-correlation_dataframe = cell_type_dataframe.copy()
-
-# %%
-correlation_dataframe.head()

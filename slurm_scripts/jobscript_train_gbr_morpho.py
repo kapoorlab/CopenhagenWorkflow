@@ -33,7 +33,7 @@ for i, morpho_model_base in enumerate(morpho_model_dirs_base):
         morpho_gbr_h5_file = morpho_gbr_h5_files[j]
         
         # Include the channel name in the model directory
-        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}_{channel}_augmented/"
+        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}_{channel}augmented/"
         
         # Construct the sbatch command
         sbatch_command = [
