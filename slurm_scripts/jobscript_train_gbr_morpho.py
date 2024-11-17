@@ -3,28 +3,24 @@ import subprocess
 # Define arrays for the different parameter values for morpho models
 morpho_model_dirs_base = [
     "morpho_feature_attention_shallowest_litest",
-    "morpho_feature_attention_shallowest_liter",
-    "morpho_feature_attention_shallowest_lite",
-    "morpho_feature_attention_shallowest"
+    
 ]
 
 block_configs = [
     "6",
-    "6",
-    "6",
-    "6"
+   
 ]
 
-growth_rates = [4, 8, 16, 32]
+growth_rates = [4]
 
 channels = [
-    #"nuclei_",
-    "membrane_"
+    "nuclei_",
+   
 ]
 
 morpho_gbr_h5_files = [
-    #"morphodynamic_training_data_gbr_25_nuclei_.h5",
-    "morphodynamic_training_data_gbr_25_membrane_.h5"
+    "morphodynamic_training_data_gbr_25_nuclei_.h5",
+   
 ]
 
 # Loop through each model configuration
@@ -37,7 +33,7 @@ for i, morpho_model_base in enumerate(morpho_model_dirs_base):
         morpho_gbr_h5_file = morpho_gbr_h5_files[j]
         
         # Include the channel name in the model directory
-        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}_{channel}/"
+        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}_{channel}_augmented/"
         
         # Construct the sbatch command
         sbatch_command = [

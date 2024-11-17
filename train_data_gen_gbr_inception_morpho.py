@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 import h5py
 
 def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_directory_name='nuclei_membrane_tracking/', tracklet_length=25, stride=4):
-    training_arrays = []  # Combined morphodynamic arrays
+    training_arrays = []  
     labels = []
 
     def create_training_arrays(array, tracklet_length, stride):
@@ -35,7 +35,6 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         
         cell_type_dataframe = dataset_dataframe[~dataset_dataframe['Cell_Type'].isna()]
 
-        # Iterate over TrackMate Track IDs instead of individual Track IDs directly
         for trackmate_track_id, group_df in cell_type_dataframe.groupby("TrackMate Track ID"):
             basal_tracklet_ids = group_df[group_df['Cell_Type'] == 'Basal']['Track ID']
             goblet_tracklet_ids = group_df[group_df['Cell_Type'] == 'Goblet']['Track ID']
@@ -52,23 +51,19 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
                         shape_track_array = np.array([[item for item in record.values()] for record in shape_dataframe_list])
                         dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_dataframe_list])
                         
-                        # Combine shape and dynamic features
                         combined_track_array = np.concatenate((shape_track_array, dynamic_track_array), axis=-1)
 
-                        # Create training arrays
                         training_subarrays = create_training_arrays(combined_track_array, tracklet_length, stride)
                         training_arrays.extend(training_subarrays)
                         labels.extend([cell_label] * len(training_subarrays))
                     except KeyError:
                         print(f'key {track_id} not found, skipping')
 
-    # Convert lists to numpy arrays
     training_arrays = np.asarray(training_arrays)
     labels = np.asarray(labels)
 
-    # Split the combined data into training and validation sets
     train_arrays, val_arrays, train_labels, val_labels = train_test_split(
-        training_arrays, labels, test_size=0.2, random_state=42
+        training_arrays, labels, test_size=0.01, random_state=42
     )
 
     train_save_dir = f'{home_folder}Mari_Data_Training/track_training_data/'
@@ -80,7 +75,6 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_labels
     }
 
-    # Save combined shape and dynamic features in a single H5 file
     with h5py.File(os.path.join(train_save_dir, f'morphodynamic_training_data_gbr_{tracklet_length}_{channel}.h5'), 'w') as hf:
         for key, value in combined_h5_training_data.items():
             hf.create_dataset(key, data=value)
@@ -88,10 +82,9 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
     'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
-    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial']
- #, 'Third_Extra_Goblet', 'Third_Extra_Radial']
+    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
 tracklet_lengths = [25]
-strides = [4]
+strides = [2]
 for index, tracklet_length in enumerate(tracklet_lengths):
     stride = strides[index]
-    process_datasets(home_folder, dataset_name, channel='membrane_', tracklet_length=tracklet_length, stride=stride)
+    process_datasets(home_folder, dataset_name, channel='nuclei_', tracklet_length=tracklet_length, stride=stride)

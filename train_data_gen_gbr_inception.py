@@ -102,13 +102,13 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
             hf.create_dataset(key, data=value)
 
     dynamic_goblet_train_arrays, dynamic_goblet_val_arrays, dynamic_goblet_train_labels, dynamic_goblet_val_labels = train_test_split(
-        dynamic_training_arrays_goblet, dynamic_goblet_labels, test_size=0.2, random_state=42)
+        dynamic_training_arrays_goblet, dynamic_goblet_labels, test_size=0.01, random_state=42)
 
     dynamic_basal_train_arrays, dynamic_basal_val_arrays, dynamic_basal_train_labels, dynamic_basal_val_labels = train_test_split(
-        dynamic_training_arrays_basal, dynamic_basal_labels, test_size=0.2, random_state=42)
+        dynamic_training_arrays_basal, dynamic_basal_labels, test_size=0.01, random_state=42)
 
     dynamic_radial_train_arrays, dynamic_radial_val_arrays, dynamic_radial_train_labels, dynamic_radial_val_labels = train_test_split(
-        dynamic_training_arrays_radial, dynamic_radial_labels, test_size=0.2, random_state=42)
+        dynamic_training_arrays_radial, dynamic_radial_labels, test_size=0.01, random_state=42)
 
     train_dynamic_arrays = np.concatenate((dynamic_basal_train_arrays, dynamic_radial_train_arrays, dynamic_goblet_train_arrays))
     train_dynamic_labels = np.concatenate((dynamic_basal_train_labels, dynamic_radial_train_labels, dynamic_goblet_train_labels))
@@ -129,10 +129,10 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_name = [
     'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis',
-    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial']#, 'Third_Extra_Goblet', 'Third_Extra_Radial'
-#]
+    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial'
+]
 tracklet_lengths = [25]
-strides = [4]
+strides = [2]
 for index, tracklet_length in enumerate(tracklet_lengths):
     stride = strides[index]
-    process_datasets(home_folder, dataset_name, channel='membrane_', tracklet_length=tracklet_length, stride=stride)
+    process_datasets(home_folder, dataset_name, channel='nuclei_', tracklet_length=tracklet_length, stride=stride)
