@@ -80,8 +80,8 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
 # Parameters
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 dataset_names = ['Third_Dataset_Analysis', 'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis']
-tracklet_lengths = [25]
-strides = [4]
+tracklet_lengths = [50]
+strides = [2]
 
 for index, tracklet_length in enumerate(tracklet_lengths):
     stride = strides[index]

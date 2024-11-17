@@ -65,7 +65,7 @@ tracks_mitosis_dataframe = tracks_dataframe
 mitosis_track_ids = mitosis_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for mitosis cells {len(mitosis_track_ids)}')
 non_mitosis_track_ids = non_mitosis_cells_dataframe['TrackMate Track ID']
-print(f'Total Trackmate IDs for basal cells {len(non_mitosis_track_ids)}')
+print(f'Total Trackmate IDs for non mitosis cells {len(non_mitosis_track_ids)}')
 mitosis_df = pd.DataFrame({'TrackMate Track ID': mitosis_track_ids, 'Cell_Type': 'Mitosis'})
 non_mitosis_df = pd.DataFrame({'TrackMate Track ID': non_mitosis_track_ids, 'Cell_Type': 'Non Mitosis'})
 
