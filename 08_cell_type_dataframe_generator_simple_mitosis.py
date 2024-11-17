@@ -20,7 +20,6 @@ channel = 'nuclei_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
-oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
 model_name = 'morphodynamic_features_mitosis_gr32'
 
@@ -51,8 +50,7 @@ feature_cols = SHAPE_DYNAMIC_FEATURES
 
 # %%
 track_vectors = TrackVector(master_xml_path=xml_path)
-track_vectors.oneat_csv_file = oneat_detections
-track_vectors.oneat_threshold_cutoff = 0.9999
+
 track_vectors.t_minus = 0
 track_vectors.t_plus = track_vectors.tend
 track_vectors.y_start = 0
@@ -62,23 +60,23 @@ track_vectors.x_end = track_vectors.xmax
 
 print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
-track_vectors._interactive_function()
+
 tracks_mitosis_dataframe = tracks_dataframe
-mitosis_track_ids = track_vectors._get_trackmate_ids_by_location(mitosis_cells_dataframe)
+mitosis_track_ids = mitosis_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for mitosis cells {len(mitosis_track_ids)}')
-non_mitosis_track_ids = track_vectors._get_trackmate_ids_by_location(non_mitosis_cells_dataframe)
+non_mitosis_track_ids = non_mitosis_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for basal cells {len(non_mitosis_track_ids)}')
 mitosis_df = pd.DataFrame({'TrackMate Track ID': mitosis_track_ids, 'Cell_Type': 'Mitosis'})
 non_mitosis_df = pd.DataFrame({'TrackMate Track ID': non_mitosis_track_ids, 'Cell_Type': 'Non Mitosis'})
 
-basal_radial_dataframe = pd.concat([mitosis_df, non_mitosis_df], ignore_index=True)
-basal_radial_dataframe['TrackMate Track ID'] = basal_radial_dataframe['TrackMate Track ID'].astype(str)
+tracks_mitosis_dataframe = pd.concat([mitosis_df, non_mitosis_df], ignore_index=True)
+tracks_mitosis_dataframe['TrackMate Track ID'] = tracks_mitosis_dataframe['TrackMate Track ID'].astype(str)
 tracks_mitosis_dataframe['TrackMate Track ID'] = tracks_mitosis_dataframe['TrackMate Track ID'].astype(str)
 
 
 for index, row in tracks_mitosis_dataframe.iterrows():
             track_id = row['TrackMate Track ID']
-            match_row = basal_radial_dataframe[basal_radial_dataframe['TrackMate Track ID'] == track_id]
+            match_row = tracks_mitosis_dataframe[tracks_mitosis_dataframe['TrackMate Track ID'] == track_id]
             if not match_row.empty:
                 cell_type = match_row.iloc[0]['Cell_Type']
                 tracks_mitosis_dataframe.at[index, 'Cell_Type'] = cell_type
