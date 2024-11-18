@@ -5,11 +5,12 @@ block_configs = [
     "6",
     "6",
     "6",
+    "6",
     
    
 ]
 
-growth_rates = [8, 16, 32]
+growth_rates = [4, 8, 16, 32]
 
 channels = [
     "nuclei_",

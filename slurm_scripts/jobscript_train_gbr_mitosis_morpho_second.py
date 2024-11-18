@@ -5,10 +5,11 @@ block_configs = [
     "6",
     "6",
     "6",
+    "6",
    
 ]
 
-growth_rates = [8, 16, 32]
+growth_rates = [4, 8, 16, 32]
 
 channels = [
     "nuclei_",
@@ -43,7 +44,7 @@ for i, growth_rate in enumerate(growth_rates):
             f"--output=morpho_{i}_{j}.o%j",
             f"--error=morpho_{i}_{j}.e%j",
             "--wrap",
-            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_mitosis_neural_net_morphodynamic.py --morpho_model_dir {morpho_model_dir} --block_config {block_config} --growth_rate {growth_rate}  --morpho_gbr_h5_file {morpho_gbr_h5_file}"
+            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_mitosis_neural_net_morphodynamic_argparse.py --morpho_model_dir {morpho_model_dir} --block_config {block_config} --growth_rate {growth_rate}  --morpho_gbr_h5_file {morpho_gbr_h5_file}"
         ]
         
         # Submit the job
