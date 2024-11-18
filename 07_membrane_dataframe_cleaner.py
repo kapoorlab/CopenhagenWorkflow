@@ -11,8 +11,8 @@ channel = 'nuclei_'
 second_channel = 'membrane_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
-normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-second_normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{second_channel}.csv')
+normalized_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}.csv')
+second_normalized_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{second_channel}.csv')
 
 
 tracks_dataframe = pd.read_csv(normalized_dataframe)
