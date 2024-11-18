@@ -69,21 +69,13 @@ print(f'Total Trackmate IDs for non mitosis cells {len(non_mitosis_track_ids)}')
 mitosis_df = pd.DataFrame({'TrackMate Track ID': mitosis_track_ids, 'Cell_Type': 'Mitosis'})
 non_mitosis_df = pd.DataFrame({'TrackMate Track ID': non_mitosis_track_ids, 'Cell_Type': 'Non Mitosis'})
 
-tracks_mitosis_dataframe = pd.concat([mitosis_df, non_mitosis_df], ignore_index=True)
+mitosis_dataframe = pd.concat([mitosis_df, non_mitosis_df], ignore_index=True)
+mitosis_dataframe['TrackMate Track ID'] = mitosis_dataframe['TrackMate Track ID'].astype(str)
 tracks_mitosis_dataframe['TrackMate Track ID'] = tracks_mitosis_dataframe['TrackMate Track ID'].astype(str)
-tracks_mitosis_dataframe['TrackMate Track ID'] = tracks_mitosis_dataframe['TrackMate Track ID'].astype(str)
+
+merged_dataframe = tracks_mitosis_dataframe.merge(mitosis_dataframe, on='TrackMate Track ID', how='left')
+
+merged_dataframe.to_csv(tracks_mitosis_dataframe, index=False)
 
 
-for index, row in tracks_mitosis_dataframe.iterrows():
-            track_id = row['TrackMate Track ID']
-            match_row = tracks_mitosis_dataframe[tracks_mitosis_dataframe['TrackMate Track ID'] == track_id]
-            if not match_row.empty:
-                cell_type = match_row.iloc[0]['Cell_Type']
-                tracks_mitosis_dataframe.at[index, 'Cell_Type'] = cell_type
-
-tracks_mitosis_dataframe.to_csv(mitosis_dataframe, index=False)
-        
-
-
-unique_cell_types = tracks_mitosis_dataframe[~tracks_mitosis_dataframe['Cell_Type'].isna()]['Cell_Type'].unique()
 
