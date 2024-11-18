@@ -32,7 +32,7 @@ def main(args):
     print(f'reading data from {normalized_dataframe}')
     tracks_dataframe = pd.read_csv(normalized_dataframe)
 
-    gbr_morpho_model_json = f'{model_dir}{model_name}_{channel}/morpho_attention.json'
+    gbr_morpho_model_json = f'{model_dir}{model_name}/morpho_attention.json'
 
     class_map_gbr = {
         0: "Basal",
