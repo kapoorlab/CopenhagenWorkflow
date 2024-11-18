@@ -17,7 +17,7 @@ channels = [
    
 ]
 
-morpho_gbr_h5_files = [
+morphodynamic_mitosis_h5_files = [
     "morphodynamic_training_data_mitosis_nuclei_25.h5",
    
 ]
@@ -26,7 +26,7 @@ for i, growth_rate in enumerate(growth_rates):
     block_config = block_configs[i]
 
     for j, channel in enumerate(channels):
-        morpho_gbr_h5_file = morpho_gbr_h5_files[j]
+        morphodynamic_mitosis_h5_file = morphodynamic_mitosis_h5_files[j]
         
         morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/morphodynamic_feature_mitosis_25_growth_rate_{growth_rate}/"
         
@@ -45,7 +45,7 @@ for i, growth_rate in enumerate(growth_rates):
             f"--output=morpho_{i}_{j}.o%j",
             f"--error=morpho_{i}_{j}.e%j",
             "--wrap",
-            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_mitosis_neural_net_morphodynamic_argparse.py --morpho_model_dir {morpho_model_dir} --block_config {block_config} --growth_rate {growth_rate}  --morpho_gbr_h5_file {morpho_gbr_h5_file}"
+            f"module purge && module load anaconda-py3 && conda deactivate && conda activate capedenv && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/ && export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/ && module load cuda/11.8.0 && python /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_mitosis_neural_net_morphodynamic_argparse.py --morpho_model_dir {morpho_model_dir} --block_config {block_config} --growth_rate {growth_rate}  --morphodynamic_mitosis_h5_file {morphodynamic_mitosis_h5_file}"
         ]
         
         # Submit the job
