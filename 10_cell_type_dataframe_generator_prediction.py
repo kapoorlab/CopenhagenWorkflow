@@ -61,7 +61,7 @@ track_vectors.x_end = track_vectors.xmax
 
 print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
-track_vectors._interactive_function()
+
 tracks_goblet_basal_radial_dataframe = tracks_dataframe
 globlet_track_ids = goblet_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for globlet cells {len(globlet_track_ids)}')
