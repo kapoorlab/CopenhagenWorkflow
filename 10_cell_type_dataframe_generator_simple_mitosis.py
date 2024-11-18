@@ -1,17 +1,14 @@
-# %%
-# %%
+
 from pathlib import Path 
 import os
 import pandas as pd
 
-from napatrackmater.Trackvector import (TrackVector,
+from napatrackmater.Trackvector import (
                                         SHAPE_FEATURES, 
                                         DYNAMIC_FEATURES, 
                                         SHAPE_DYNAMIC_FEATURES,
-                                        
                                         )
 
-# %%
 dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
@@ -45,18 +42,6 @@ shape_cols = SHAPE_FEATURES
 dynamic_cols = DYNAMIC_FEATURES
 feature_cols = SHAPE_DYNAMIC_FEATURES
 
-
-
-
-# %%
-track_vectors = TrackVector(master_xml_path=xml_path)
-
-track_vectors.t_minus = 0
-track_vectors.t_plus = track_vectors.tend
-track_vectors.y_start = 0
-track_vectors.y_end = track_vectors.ymax
-track_vectors.x_start = 0
-track_vectors.x_end = track_vectors.xmax
 
 print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)

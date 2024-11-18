@@ -1,25 +1,19 @@
-# %%
-# %%
-from pathlib import Path 
+ 
 import os
 import pandas as pd
 
-from napatrackmater.Trackvector import (TrackVector,
+from napatrackmater.Trackvector import (
                                         SHAPE_FEATURES, 
                                         DYNAMIC_FEATURES, 
                                         SHAPE_DYNAMIC_FEATURES,
-                                        
                                         )
 
-# %%
 dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
 channel = 'nuclei_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
-master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
-xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
 
 goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_morpho_feature_attention_shallowest_litest_nuclei_augmented_nuclei_morpho_dynamic_augmented/goblet_cells_nuclei_annotations_inception.csv'
@@ -48,20 +42,8 @@ feature_cols = SHAPE_DYNAMIC_FEATURES
 
 
 
-
-# %%
-track_vectors = TrackVector(master_xml_path=xml_path)
-track_vectors.oneat_threshold_cutoff = 0.9999
-track_vectors.t_minus = 0
-track_vectors.t_plus = track_vectors.tend
-track_vectors.y_start = 0
-track_vectors.y_end = track_vectors.ymax
-track_vectors.x_start = 0
-track_vectors.x_end = track_vectors.xmax
-
 print(f'reading data from {normalized_dataframe}')
 tracks_dataframe = pd.read_csv(normalized_dataframe)
-
 tracks_goblet_basal_radial_dataframe = tracks_dataframe
 globlet_track_ids = goblet_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for globlet cells {len(globlet_track_ids)}')
