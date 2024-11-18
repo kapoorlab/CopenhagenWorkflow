@@ -77,13 +77,8 @@ basal_radial_dataframe = pd.concat([goblet_df, basal_df, radial_df], ignore_inde
 basal_radial_dataframe['TrackMate Track ID'] = basal_radial_dataframe['TrackMate Track ID'].astype(str)
 tracks_goblet_basal_radial_dataframe['TrackMate Track ID'] = tracks_goblet_basal_radial_dataframe['TrackMate Track ID'].astype(str)
 
+merged_dataframe = tracks_goblet_basal_radial_dataframe.merge(basal_radial_dataframe, on='TrackMate Track ID', how='left')
 
-for index, row in tracks_goblet_basal_radial_dataframe.iterrows():
-            track_id = row['TrackMate Track ID']
-            match_row = basal_radial_dataframe[basal_radial_dataframe['TrackMate Track ID'] == track_id]
-            if not match_row.empty:
-                cell_type = match_row.iloc[0]['Cell_Type']
-                tracks_goblet_basal_radial_dataframe.at[index, 'Cell_Type'] = cell_type
+merged_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
 
-tracks_goblet_basal_radial_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
-        
+     
