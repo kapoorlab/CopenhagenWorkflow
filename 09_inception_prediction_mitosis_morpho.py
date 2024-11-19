@@ -55,7 +55,7 @@ def main(args):
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        mitosis_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_{model_name}_morpho_dynamic/'
+        mitosis_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_{model_name}/'
         Path(mitosis_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
@@ -69,12 +69,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for morpho prediction script")
     parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
-    parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
+    parser.add_argument('--channel', type=str, default='nuclei_', help='Channel name, e.g., nuclei_ or membrane_')
     parser.add_argument('--t_initials', type=int, nargs='+', default=[0], help='List of initial timepoints')
     parser.add_argument('--t_finals', type=int, nargs='+', default=[400], help='List of final timepoints')
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
-    parser.add_argument('--model_name', type=str, default='morphodynamic_features_mitosis_gr32', help='Model name including full path')
+    parser.add_argument('--model_name', type=str, default='morphodynamic_features_mitosis_25_growth_rate_16', help='Model name including full path')
 
     args = parser.parse_args()
     main(args)
