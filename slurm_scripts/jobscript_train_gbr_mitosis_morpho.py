@@ -2,10 +2,10 @@ import subprocess
 
 
 block_configs = [
-    "6",
-    "6",
-    "6",
-    "6",
+    "(6,12)",
+    "(6,12)",
+    "(6,12)",
+    "(6,12)",
     
    
 ]
@@ -28,7 +28,7 @@ for i, growth_rate in enumerate(growth_rates):
     for j, channel in enumerate(channels):
         morphodynamic_mitosis_h5_file = morphodynamic_mitosis_h5_files[j]
         
-        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/morphodynamic_feature_mitosis_25_growth_rate_{growth_rate}/"
+        morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/morphodynamic_feature_mitosis_25_growth_rate_{growth_rate}_block_config_6_12/"
         
         sbatch_command = [
             "sbatch",
