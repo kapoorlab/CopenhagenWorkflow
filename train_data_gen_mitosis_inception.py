@@ -38,6 +38,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
             ]:
                 for track_id in tracklet_ids:
                     try:
+
                         shape_dynamic_df, shape_df, dynamic_df, _ = analysis_vectors[track_id]
                         shape_track_array = np.array([[item for item in record.values()] for record in shape_df])
                         dynamic_track_array = np.array([[item for item in record.values()] for record in dynamic_df])

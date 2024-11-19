@@ -18,10 +18,10 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
-model_name = 'morphodynamic_features_mitosis_gr32'
+model_name = 'morphodynamic_features_mitosis_growth_rate_16'
 
-mitosis_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_morphodynamic_features_mitosis_gr32_morpho_dynamic/Mitotic_inception.csv'
-non_mitosis_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_morphodynamic_features_mitosis_gr32_morpho_dynamic/Non-Mitotic_inception.csv'
+mitosis_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_morphodynamic_feature_mitosis_25_growth_rate_16/Mitotic_inception.csv'
+non_mitosis_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/mitosis_predicted_attention_morphodynamic_feature_mitosis_25_growth_rate_16/Non-Mitotic_inception.csv'
 
 
 mitosis_cells_dataframe = pd.read_csv(mitosis_cells_file)
