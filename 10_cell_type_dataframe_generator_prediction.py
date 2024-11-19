@@ -25,25 +25,13 @@ goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
 basal_cells_dataframe = pd.read_csv(basal_cells_file)
 radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
-normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_attention_shallowest_litest_nuclei_augmented_nuclei_morpho_dynamic_augmented.csv')
-
-time_delta = 2
-block_size = 100
-overlap = 50
-verbose_generation_plots = False
-method="ward"
-criterion="distance"
-metric="euclidean" 
-
-shape_cols = SHAPE_FEATURES
-dynamic_cols = DYNAMIC_FEATURES
-feature_cols = SHAPE_DYNAMIC_FEATURES
+normalized_dataframe_file = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
+goblet_basal_radial_dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_attention_shallowest_litest_nuclei_augmented_nuclei_morpho_dynamic_augmented.csv')
 
 
 
-print(f'reading data from {normalized_dataframe}')
-tracks_dataframe = pd.read_csv(normalized_dataframe)
+print(f'reading data from {normalized_dataframe_file}')
+tracks_dataframe = pd.read_csv(normalized_dataframe_file)
 tracks_goblet_basal_radial_dataframe = tracks_dataframe
 globlet_track_ids = goblet_cells_dataframe['TrackMate Track ID']
 print(f'Total Trackmate IDs for globlet cells {len(globlet_track_ids)}')
@@ -61,6 +49,6 @@ tracks_goblet_basal_radial_dataframe['TrackMate Track ID'] = tracks_goblet_basal
 
 merged_dataframe = tracks_goblet_basal_radial_dataframe.merge(basal_radial_dataframe, on='TrackMate Track ID', how='left')
 
-merged_dataframe.to_csv(goblet_basal_radial_dataframe, index=False)
+merged_dataframe.to_csv(goblet_basal_radial_dataframe_file, index=False)
 
      

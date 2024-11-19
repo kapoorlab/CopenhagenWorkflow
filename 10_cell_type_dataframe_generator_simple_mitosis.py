@@ -27,24 +27,13 @@ non_mitosis_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Data
 mitosis_cells_dataframe = pd.read_csv(mitosis_cells_file)
 non_mitosis_cells_dataframe = pd.read_csv(non_mitosis_cells_file)
 
-normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-mitosis_dataframe = os.path.join(data_frames_dir , f'mitosis_dataframe_normalized_{channel}.csv')
-
-time_delta = 2
-block_size = 100
-overlap = 50
-verbose_generation_plots = False
-method="ward"
-criterion="distance"
-metric="euclidean" 
-
-shape_cols = SHAPE_FEATURES
-dynamic_cols = DYNAMIC_FEATURES
-feature_cols = SHAPE_DYNAMIC_FEATURES
+normalized_dataframe_file = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
+mitosis_dataframe_file = os.path.join(data_frames_dir , f'mitosis_dataframe_normalized_{channel}.csv')
 
 
-print(f'reading data from {normalized_dataframe}')
-tracks_dataframe = pd.read_csv(normalized_dataframe)
+
+print(f'reading data from {normalized_dataframe_file}')
+tracks_dataframe = pd.read_csv(normalized_dataframe_file)
 
 tracks_mitosis_dataframe = tracks_dataframe
 mitosis_track_ids = mitosis_cells_dataframe['TrackMate Track ID']
@@ -60,7 +49,7 @@ tracks_mitosis_dataframe['TrackMate Track ID'] = tracks_mitosis_dataframe['Track
 
 merged_dataframe = tracks_mitosis_dataframe.merge(mitosis_dataframe, on='TrackMate Track ID', how='left')
 
-merged_dataframe.to_csv(tracks_mitosis_dataframe, index=False)
+merged_dataframe.to_csv(mitosis_dataframe_file, index=False)
 
 
 

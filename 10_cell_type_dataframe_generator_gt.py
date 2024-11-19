@@ -35,17 +35,6 @@ radial_cells_dataframe = pd.read_csv(radial_cells_file)
 normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic.csv')
 
-time_delta = 2
-block_size = 100
-overlap = 50
-verbose_generation_plots = False
-method="ward"
-criterion="distance"
-metric="euclidean" 
-
-shape_cols = SHAPE_FEATURES
-dynamic_cols = DYNAMIC_FEATURES
-feature_cols = SHAPE_DYNAMIC_FEATURES
 
 
 
