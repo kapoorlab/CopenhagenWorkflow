@@ -1,14 +1,12 @@
 #!/bin/bash
 #SBATCH --nodes=1             # Number of nodes 
-#SBATCH -A jsy@a100
-
-
-#SBATCH --partition=prepost
-#SBATCH --job-name=dataframe              # Jobname 
+#SBATCH -A jsy@v100
+#SBATCH --partition=gpu_p2
+#SBATCH --job-name=augmented              # Jobname 
 #SBATCH --cpus-per-task=40
 #SBATCH --output=cell.o%j            # Output file 
 #SBATCH --error=cell.o%j            # Error file 
-#SBATCH --time=10:00:00       # Expected runtime HH:MM:SS (max 100h)
+#SBATCH --time=20:00:00       # Expected runtime HH:MM:SS (max 100h)
 module purge # purging modules inherited by default
 
 module load anaconda-py3/2020.11
@@ -18,6 +16,6 @@ conda activate capedenv
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/lib/
 export XLA_FLAGS=--xla_gpu_cuda_data_dir=/linkhome/rech/gengoq01/uzj81mi/.conda/envs/capedenv/	
 
-python  /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/08_cell_type_plot_generator.py
+python  /gpfswork/rech/jsy/uzj81mi/CopenhagenWorkflow/train_gbr_neural_net_morpho.py
 
 
