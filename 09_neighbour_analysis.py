@@ -186,8 +186,6 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
         plt.close(fig)
 
 
-plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points, partner_time)
-
 
 def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     timepoints = sorted(df['t'].unique())
@@ -233,4 +231,100 @@ def plot_neighbour_time(df, bonds_df, color_palette, save_dir):
     plt.savefig(os.path.join(save_dir, 'neighbor_counts_over_time.png'))
     plt.close(fig)
 
-plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+
+
+
+def plot_persistent_times(bonds_df, neighbour_dataframe, color_palette, save_dir):
+    """
+    Plots the persistent times for each cell type and saves the plot as a PNG.
+    
+    Args:
+        persistent_bonds_df (pd.DataFrame): DataFrame containing bond persistence information.
+        neighbour_dataframe (pd.DataFrame): DataFrame with cell type information.
+        color_palette (dict): Dictionary mapping cell types to colors.
+        save_dir (str): Directory to save the plot.
+    """
+    # Merge to associate persistence with cell types
+
+
+    bond_persistence = (
+        bonds_df.groupby(['Track ID', 'Neighbor Track ID'])['Time']
+        .nunique()
+        .reset_index(name='Persistence')
+    )
+
+    persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
+
+
+
+    merged_df = persistent_bonds_df.merge(
+        neighbour_dataframe[['Track ID', 'Cell_Type']].drop_duplicates(),
+        how='left',
+        left_on='Track ID',
+        right_on='Track ID'
+    )
+    
+    # Group by cell type and calculate average persistence
+    cell_type_persistence = (
+        merged_df.groupby('Cell_Type')['Persistence']
+        .mean()
+        .reset_index()
+        .sort_values('Persistence', ascending=False)
+    )
+
+    print("Average persistence times for each cell type:")
+    print(cell_type_persistence)
+    
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(
+        cell_type_persistence['Cell_Type'],
+        cell_type_persistence['Persistence'],
+        color=[color_palette.get(ct, 'grey') for ct in cell_type_persistence['Cell_Type']]
+    )
+    plt.title("Average Bond Persistence by Cell Type", fontsize=16)
+    plt.xlabel("Cell Type", fontsize=14)
+    plt.ylabel("Average Persistence (Time Points)", fontsize=14)
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+    
+    # Save the plot
+    plot_path = os.path.join(save_dir, "average_persistence_by_cell_type.png")
+    plt.tight_layout()
+    plt.savefig(plot_path, dpi=300)
+    plt.close()
+    print(f"Average persistence plot saved at {plot_path}")
+
+
+    # Create the plot
+    plt.figure(figsize=(12, 8))
+    for cell_type, color in color_palette.items():
+        cell_type_data = merged_df[merged_df['Cell_Type'] == cell_type]
+        plt.plot(
+            cell_type_data['Track ID'], 
+            cell_type_data['Persistence'], 
+            label=cell_type, 
+            color=color, 
+            marker='o', 
+            linestyle='-'
+        )
+    
+    # Add labels, legend, and title
+    plt.title("Persistent Time of Bonds for Each Cell Type", fontsize=16)
+    plt.xlabel("Track ID", fontsize=14)
+    plt.ylabel("Persistence (Time Points)", fontsize=14)
+    plt.legend(title="Cell Type", fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.6)
+    
+    # Save the plot
+    plot_path = os.path.join(save_dir, "persistent_time_plot.png")
+    plt.tight_layout()
+    plt.savefig(plot_path, dpi=300)
+    plt.close()
+    print(f"Persistent time plot saved at {plot_path}")
+
+
+#plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points, partner_time)
+
+#plot_neighbour_time(neighbour_dataframe, bonds_df, color_palette, save_dir)
+
+plot_persistent_times(bonds_df, neighbour_dataframe, color_palette, save_dir)
