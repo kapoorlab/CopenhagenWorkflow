@@ -17,7 +17,6 @@ from natsort import natsorted
 @hydra.main(version_base="1.3", config_path='conf', config_name='scenario_segment_star_cellpose')
 def main(config: VollCellSegPose):
     dual_channel_image_dir = config.experiment_data_paths.dual_channel_split_directory
-    save_dir = os.path.join(dual_channel_image_dir, 'VollCellPoseSeg')
     channel_membrane = config.parameters.channel_membrane
 
     den_model_dir = config.model_paths.den_model_dir
@@ -34,7 +33,7 @@ def main(config: VollCellSegPose):
     for fname in filesRaw:
         image = imread(fname)
         Name = os.path.basename(os.path.splitext(fname)[0])
-        edge_enhanced_folder_path = os.path.join(save_dir, 'Membrane_Enhanced')
+        edge_enhanced_folder_path = os.path.join(dual_channel_image_dir, 'Membrane_Enhanced')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
         image_membrane = image[ :, channel_membrane, :, :]
         denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
