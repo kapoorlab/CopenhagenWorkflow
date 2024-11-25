@@ -45,11 +45,13 @@ def main(config: VollCellSegPose):
                 
                 nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
                 denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
+                cellpose_labels = imread(os.path.join(cellpose_folder_path, Name + extension))
                 image[ :, channel_membrane, :, :] = denoised_image_membrane
                 
                 VollCellSeg(
                             image,
                             nuclei_seg_image = nuclei_seg_image,
+                            cellpose_labels = cellpose_labels,
                             channel_membrane = channel_membrane,
                             channel_nuclei = channel_nuclei,
                             gpu = gpu,
