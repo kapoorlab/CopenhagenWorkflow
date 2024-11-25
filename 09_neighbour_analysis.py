@@ -252,17 +252,16 @@ def plot_persistent_times_over_time(bonds_df, neighbour_dataframe, color_palette
         .nunique()
         .reset_index(name='Persistence')
     )
+    bonds_df = pd.merge(bonds_df, bond_persistence, on=['Track ID', 'Neighbor Track ID'], how='left')
 
-    # Filter for bonds persisting for at least `partner_time`
-    persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
 
-    # Merge persistence with cell type data
-    merged_df = persistent_bonds_df.merge(
-        neighbour_dataframe[['Track ID', 'Cell_Type', 't']],
-        how='left',
-        left_on='Track ID',
-        right_on='Track ID'
-    )
+
+    merged_df = bonds_df.merge(
+    neighbour_dataframe[['Track ID', 'Cell_Type', 't']],  
+    how='left',  
+    left_on=['Track ID', 'Time'],  
+    right_on=['Track ID', 't']  
+)
     
     print(merged_df)
     # Aggregate persistence data over time for each cell type
