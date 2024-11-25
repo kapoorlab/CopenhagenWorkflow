@@ -34,14 +34,14 @@ def main(config: VollCellSegPose):
     nuclei_data = merged_data[:, :, channel_nuclei, :, :]
     data_name =  os.path.splitext(os.path.basename(merged_path))[0]
     voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
-
-    imwrite(os.path.join(nuclei_image_dir, 'timelapse_sixth_dataset.tif'), nuclei_data, imagej=True,
+    timelapse_nuclei_to_track = config.experiment_data_paths.timelapse_nuclei_to_track
+    imwrite(os.path.join(nuclei_image_dir, f'{timelapse_nuclei_to_track}.tif'), nuclei_data, imagej=True,
             photometric='minisblack',
             resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
             metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
                         'axes': 'TZYX'})
     
-    imwrite(os.path.join(membrane_image_dir, 'timelapse_sixth_dataset.tif'), membrane_data, imagej=True,
+    imwrite(os.path.join(membrane_image_dir, f'{timelapse_nuclei_to_track}.tif'), membrane_data, imagej=True,
             photometric='minisblack',
             resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
             metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
