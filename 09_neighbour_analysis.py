@@ -126,11 +126,11 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
         .nunique()
         .reset_index(name='Persistence')
     )
-    bonds_df = pd.merge(bonds_df, bond_persistence, on=['Track ID', 'Neighbor Track ID'], how='left')
+    
 
+    persistent_bonds_df = bond_persistence[bond_persistence['Persistence'] >= partner_time]
 
-
-    max_persistence = bonds_df['Persistence'].max() if not bonds_df.empty else 1
+    max_persistence = persistent_bonds_df['Persistence'].max() if not persistent_bonds_df.empty else 1
 
     for t in tqdm(time_points, desc='Plotting Bonds Spatially'):
         fig, ax = plt.subplots(figsize=(18, 15))
@@ -146,9 +146,9 @@ def plot_bonds_spatially(df, bonds_df, color_palette, save_dir, time_points, par
             track_id = row['Track ID']
             neighbor_id = row['Neighbor Track ID']
 
-            bond_persist_row = bonds_df[
-                (bonds_df['Track ID'] == track_id) &
-                (bonds_df['Neighbor Track ID'] == neighbor_id)
+            bond_persist_row = persistent_bonds_df[
+                (persistent_bonds_df['Track ID'] == track_id) &
+                (persistent_bonds_df['Neighbor Track ID'] == neighbor_id)
             ]
 
             if bond_persist_row.empty:
