@@ -264,7 +264,6 @@ def plot_persistent_times_over_time(bonds_df, neighbour_dataframe, color_palette
     right_on=['Track ID', 't']  
 )
     
-    print(merged_df)
     # Aggregate persistence data over time for each cell type
     persistence_over_time = merged_df.groupby(['t', 'Cell_Type'])['Persistence'].mean().reset_index()
 
@@ -296,7 +295,6 @@ def plot_persistent_times_over_time(bonds_df, neighbour_dataframe, color_palette
     print(f"Persistent time over time plot saved at {plot_path}")
 
 plot_persistent_times_over_time(bonds_df, neighbour_dataframe, color_palette, save_dir)
-
 
 plot_bonds_spatially(neighbour_dataframe, bonds_df, color_palette, save_dir, time_points, partner_time)
 
