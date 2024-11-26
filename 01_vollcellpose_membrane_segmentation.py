@@ -41,27 +41,27 @@ def main(config: VollCellSegPose):
         edge_enhanced_folder_path = os.path.join(dual_channel_image_dir, 'Membrane_Enhanced')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
 
-        if not os.path.exists(os.path.join(cellpose_folder_path, Name + extension)):
+        #if not os.path.exists(os.path.join(cellpose_folder_path, Name + extension)):
                 
-                nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
-                denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
-                cellpose_labels = imread(os.path.join(cellpose_folder_path, Name + extension))
-                image[ :, channel_membrane, :, :] = denoised_image_membrane
-                
-                VollCellSeg(
-                            image,
-                            nuclei_seg_image = nuclei_seg_image,
-                            cellpose_labels = cellpose_labels,
-                            channel_membrane = channel_membrane,
-                            channel_nuclei = channel_nuclei,
-                            gpu = gpu,
-                            axes = axes,
-                            n_tiles = n_tiles,
-                            save_dir=save_dir,
-                            Name = Name,
-                            do_3D=do_3D,
-                            
-                        )
+        nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
+        denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
+        cellpose_labels = imread(os.path.join(cellpose_folder_path, Name + extension))
+        image[ :, channel_membrane, :, :] = denoised_image_membrane
+        
+        VollCellSeg(
+                    image,
+                    nuclei_seg_image = nuclei_seg_image,
+                    cellpose_labels = cellpose_labels,
+                    channel_membrane = channel_membrane,
+                    channel_nuclei = channel_nuclei,
+                    gpu = gpu,
+                    axes = axes,
+                    n_tiles = n_tiles,
+                    save_dir=save_dir,
+                    Name = Name,
+                    do_3D=do_3D,
+                    
+                )
 
 
 
