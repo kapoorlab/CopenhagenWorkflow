@@ -5,7 +5,7 @@ timelapse_nuclei_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_On
 timelapse_seg_nuclei_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/seg_nuclei_timelapses/'
 timelapse_seg_nuclei_vollseg_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/seg_nuclei_vollseg_timelapses/'
 timelapse_membrane_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/membrane_timelapses/'
-timelapse_seg_membrane_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/seg_membrane_timelapses/'
+timelapse_seg_membrane_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/seg_membrane_timelapses_fixed/'
 timelapse_oneat_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/oneat_detections/'
 timelapse_oneat_vollseg_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/oneat_vollseg_detections/'
 timelapse_region_of_interest_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Sixth_Dataset_Analysis/region_of_interest/'

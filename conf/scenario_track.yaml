@@ -1,6 +1,6 @@
 defaults:
     - _self_
-    - experiment_data_paths: seconddataset_jeanzay.yaml
+    - experiment_data_paths: sixthdataset_jeanzay.yaml
     - model_paths: jeanzay.yaml
     - parameters: tracking.yaml
 
