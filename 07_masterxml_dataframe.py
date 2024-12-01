@@ -35,10 +35,6 @@ save_file_normalized = os.path.join(data_frames_dir , f'results_dataframe_normal
 save_file_unnormalized = os.path.join(data_frames_dir , f'results_dataframe_{channel}.csv')  
 save_file = os.path.join(data_frames_dir , f'results_dataframe_{channel}.csv')   
 
-block_size = 100
-overlap = 50
-plot_at_mitosis_time_distribution = False
-verbose_generation_plots = False
 shape_cols = SHAPE_FEATURES
 dynamic_cols = DYNAMIC_FEATURES
 feature_cols = SHAPE_DYNAMIC_FEATURES
