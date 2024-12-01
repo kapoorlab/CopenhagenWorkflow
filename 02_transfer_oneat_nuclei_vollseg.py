@@ -19,11 +19,11 @@ def main( config : VollOneat):
     Path(timelapse_oneat_vollseg_directory).mkdir(exist_ok=True)
     vollsegsegimage = os.path.join(timelapse_seg_nuclei_vollseg_directory, timelapse_nuclei_to_track + '.tif')
     csv_files = [
-                    f"oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv"
+                    f"non_maximal_oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv"
                     for label in ["mitosis"]
                 ]
     save_files = [
-                    f"oneat_{label}_locations_nuclei_vollseg_{timelapse_nuclei_to_track}.csv"
+                    f"non_maximal_oneat_{label}_locations_nuclei_vollseg_{timelapse_nuclei_to_track}.csv"
                     for label in ["mitosis"]
                 ]
 

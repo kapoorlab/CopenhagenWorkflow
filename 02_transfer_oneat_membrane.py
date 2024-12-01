@@ -20,7 +20,6 @@ def main( config : VollOneat):
     file_name
     for label in ["mitosis"]
     for file_name in [
-        f"oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv",
         f"non_maximal_oneat_{label}_locations_nuclei_{timelapse_nuclei_to_track}.csv"
     ]
     ]
@@ -30,7 +29,6 @@ def main( config : VollOneat):
     file_name
     for label in ["mitosis"]
     for file_name in [
-        f"oneat_{label}_locations_membrane_{timelapse_nuclei_to_track}.csv",
         f"non_maximal_oneat_{label}_locations_membrane_{timelapse_nuclei_to_track}.csv"
     ]
     ]
