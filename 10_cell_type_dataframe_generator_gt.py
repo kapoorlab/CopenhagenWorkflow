@@ -4,12 +4,9 @@ from pathlib import Path
 import os
 import pandas as pd
 
-from napatrackmater.Trackvector import (TrackVector,
-                                        SHAPE_FEATURES, 
-                                        DYNAMIC_FEATURES, 
-                                        SHAPE_DYNAMIC_FEATURES,
+from napatrackmater.Trackvector import TrackVector
                                         
-                                        )
+                                        
 
 # %%
 dataset_name = 'Sixth'

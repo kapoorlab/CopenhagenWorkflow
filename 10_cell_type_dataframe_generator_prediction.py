@@ -2,12 +2,6 @@
 import os
 import pandas as pd
 
-from napatrackmater.Trackvector import (
-                                        SHAPE_FEATURES, 
-                                        DYNAMIC_FEATURES, 
-                                        SHAPE_DYNAMIC_FEATURES,
-                                        )
-
 dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
