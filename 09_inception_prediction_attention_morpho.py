@@ -40,6 +40,7 @@ def main(args):
         2: "Goblet"
     }
 
+
     loss_func =  CrossEntropyLoss()
 
     gbr_morpho_lightning_model, gbr_morpho_torch_model = LightningModel.extract_mitosis_model(
