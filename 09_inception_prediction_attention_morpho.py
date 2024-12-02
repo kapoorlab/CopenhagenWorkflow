@@ -56,7 +56,7 @@ def main(args):
     for index, t_initial in enumerate(t_initials):
         t_final = t_finals[index]
         tracks_dataframe_short = tracks_dataframe[(tracks_dataframe['t'] > t_initial) & (tracks_dataframe['t'] <= t_final)]
-        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}morpho_dynamic_augmented_2/'
+        annotations_prediction_dir = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted_attention_{model_name}_{channel}morpho_dynamic_balanced/'
         Path(annotations_prediction_dir).mkdir(exist_ok=True)
         tracks_dataframe_short = tracks_dataframe_short[tracks_dataframe_short['Track Duration'] >= tracklet_length]
         gbr_prediction = {}
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     parser.add_argument('--t_finals', type=int, nargs='+', default=[400], help='List of final timepoints')
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
-    parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest_nuclei_augmented', help='Model name including full path')
+    parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest_nuclei_balanced', help='Model name including full path')
 
     args = parser.parse_args()
     main(args)

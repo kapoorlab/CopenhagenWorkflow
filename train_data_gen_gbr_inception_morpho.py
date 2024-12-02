@@ -2,11 +2,7 @@ import os
 import numpy as np
 from napatrackmater import create_analysis_tracklets
 import pandas as pd
-from napatrackmater.Trackvector import (
-    SHAPE_FEATURES,
-    DYNAMIC_FEATURES,
-    SHAPE_DYNAMIC_FEATURES
-)
+
 from sklearn.model_selection import train_test_split
 import h5py
 
