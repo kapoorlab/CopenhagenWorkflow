@@ -30,6 +30,7 @@ morpho_gbr_h5_file= "morphodynamic_training_data_gbr_25_nuclei_.h5"
 os.makedirs(morpho_model_dir, exist_ok=True)
 block_config = (6)
 growth_rate = 4
+augment = False
 
 train_gbr_neural_net(
     save_path=morpho_model_dir,
@@ -43,5 +44,6 @@ train_gbr_neural_net(
     block_config=block_config,
     attention_dim=64,
     n_pos=(8,),
-    growth_rate=growth_rate
+    growth_rate=growth_rate,
+    augment = augment
 )
