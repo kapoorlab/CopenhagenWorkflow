@@ -9,8 +9,9 @@ from skimage.segmentation import find_boundaries
 from skimage.morphology import binary_opening, binary_closing, disk
 
 def main():
-  source_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg/CellPose/'
-  destination_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg/CellPoseEdges/'
+  source_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Fifth_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg/CellPose/'
+  destination_dir = '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Fifth_Dataset_Analysis/split_nuclei_membrane_raw/VollCellPoseSeg/CellPoseEdges/'
+  append_name = '_dec_fifth'
   Path(destination_dir).mkdir(exist_ok=True)
   acceptable_formats = [".tif"] 
   nthreads = os.cpu_count()
@@ -18,7 +19,7 @@ def main():
 
 
 
-  def denoisemaker(path, save_path, dtype, append_name = 'dec_second'):
+  def denoisemaker(path, save_path, dtype):
               
               files = os.listdir(path)
               for fname in tqdm(files):
