@@ -25,9 +25,7 @@ def main():
               for fname in tqdm(files):
                 if any(fname.endswith(f) for f in acceptable_formats):
                     image = imread(os.path.join(path,fname))
-                    
             
-                    # Apply simple_dist only to the filtered image
                     if np.max(image) > 0:
                             image = simple_dist(image.astype('uint16'))
                             imwrite(save_path + '/' + os.path.splitext(fname)[0] + append_name + '.tif' , image.astype(dtype))

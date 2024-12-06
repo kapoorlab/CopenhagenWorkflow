@@ -3,12 +3,11 @@ import glob
 from tifffile import imread
 from vollseg.utils import CellPoseSeg
 import hydra
-from vollseg import VollSeg3D, CARE
 from scenario_segment_star_cellpose import VollCellSegPose
 from hydra.core.config_store import ConfigStore
 from pathlib import Path 
 from natsort import natsorted
-from tifffile import imread, imwrite
+from tifffile import imread
 configstore = ConfigStore.instance()
 configstore.store(name='VollCellSegPose', node=VollCellSegPose)
 
