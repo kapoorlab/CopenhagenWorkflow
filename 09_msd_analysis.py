@@ -86,12 +86,16 @@ for cell_type in cell_types:
                     popt_msd, _ = curve_fit(power_law_msd, track_data['t_normalized'], fitted_msd_data, maxfev=5000)
                     D, alpha = popt_msd  
                     
-                    if alpha > 1.2:
+                    if alpha >= 1.5:
                         motion_type = "Directed"
-                    elif 0.8 <= alpha <= 1.2:
+                    elif  1.4 < alpha < 1.5:
+                        motion_type = "Fractional Brownian High"     
+                    elif 0.9 <= alpha <= 1.1:
                         motion_type = "Brownian"
-                    else:
-                        motion_type = "Random"
+                    elif  0.4 <= alpha <= 0.5:
+                        motion_type = "Fractional Brownian Low"   
+                    elif  alpha < 0.5:
+                        motion_type = "Confined"
                     
                     motion_stats[cell_type][motion_type] += 1
                     

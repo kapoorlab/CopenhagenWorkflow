@@ -30,7 +30,6 @@ def main(config: VollCellSegPose):
     membrane_data = imread(os.path.join(membrane_image_dir, f'{timelapse_nuclei_to_track}.tif'))
     nuclei_data = imread(os.path.join(nuclei_image_dir, f'{timelapse_nuclei_to_track}.tif'))
 
-    data_name =  os.path.splitext(os.path.basename(merged_path))[0]
     voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz
     
    
