@@ -1,17 +1,8 @@
 # %%
 from pathlib import Path 
 import os
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-from napatrackmater.Trackvector import (TrackVector,
-                                        SHAPE_FEATURES, 
-                                        DYNAMIC_FEATURES, 
-                                        SHAPE_DYNAMIC_FEATURES,
-                                        
-                                        )
+from napatrackmater.Trackvector import TrackVector
 
 
 dataset_name = 'Sixth'
