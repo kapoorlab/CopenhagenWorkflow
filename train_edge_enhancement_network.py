@@ -28,7 +28,7 @@ def main( config : TrainCellPose):
         #X, Y, XY_axes = create_patches (
         #    raw_data            = raw_data,
         #    patch_size          = tuple(config.parameters.patch_size),
-        #    n_patches_per_image = 20,
+        #    n_patches_per_image = 10,
         #    save_file           = npz_file,
         #)
 
