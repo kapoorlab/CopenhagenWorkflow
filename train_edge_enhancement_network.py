@@ -18,21 +18,21 @@ def main( config : TrainCellPose):
         low = config.train_data_paths.edge_enhancement_low_dir 
         GT = config.train_data_paths.edge_enhancement_gt_dir
 
-        #raw_data = RawData.from_folder (
-        #    basepath    = basepath,
-        #    source_dirs = [low],
-        #    target_dir  = GT,
-        #    axes        = 'ZYX',
-        #)
+        raw_data = RawData.from_folder (
+            basepath    = basepath,
+            source_dirs = [low],
+            target_dir  = GT,
+            axes        = 'ZYX',
+        )
 
-        #X, Y, XY_axes = create_patches (
-        #    raw_data            = raw_data,
-        #    patch_size          = tuple(config.parameters.patch_size),
-        #    n_patches_per_image = 10,
-        #    save_file           = npz_file,
-        #)
+        X, Y, XY_axes = create_patches (
+            raw_data            = raw_data,
+            patch_size          = tuple(config.parameters.patch_size),
+            n_patches_per_image = 10,
+            save_file           = npz_file,
+        )
 
-        (X,Y), (X_val,Y_val), axes = load_training_data(npz_file, validation_split=0.01, verbose=True)
+        (X,Y), (X_val,Y_val), axes = load_training_data(npz_file, validation_split=0.001, verbose=True)
 
 
 
