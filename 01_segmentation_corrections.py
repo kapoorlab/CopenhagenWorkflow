@@ -1,11 +1,8 @@
 import os
-import glob
-from tifffile import imread
 from vollseg.utils import SegCorrect
 import hydra
 from scenario_train_vollseg_cellpose_sam import TrainCellPose
 from hydra.core.config_store import ConfigStore
-from pathlib import Path 
 configstore = ConfigStore.instance()
 configstore.store(name='TrainCellPose', node=TrainCellPose)
 
