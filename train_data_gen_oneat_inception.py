@@ -1,54 +1,50 @@
+import hydra
+from scenario_train_oneat import TrainOneat
+from hydra.core.config_store import ConfigStore
+from kapoorlabs_lightning import save_json, VolumeLabelDataSet, OneatConfig
 import os
-from pathlib import Path
-from napatrackmater import create_h5, filter_and_get_tracklets, normalize_image_in_chunks
-import pandas as pd
-import numpy as np
-from tifffile import imwrite, imread
-def process_datasets(home_folder, dataset_names, image_dataset_names, image_folder_names,  channel, train_save_dir, tracking_directory_name='nuclei_membrane_tracking/', time_window = 10, crop_size = [256,256,8]):
- 
-    dtype=np.float32
-    for idx, dataset_name in enumerate(dataset_names):
-        image_dataset_name = image_dataset_names[idx]
-        image_folder_name = image_folder_names[idx]
-        tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}/{tracking_directory_name}'
-        raw_image = f'{home_folder}Mari_Data_Oneat/Mari_{image_folder_name}/{channel}timelapses/timelapse_{image_dataset_name.lower()}_dataset.tif'
-        segmentation_image = f'{home_folder}Mari_Data_Oneat/Mari_{image_folder_name}/seg_{channel}timelapses/timelapse_{image_dataset_name.lower()}_dataset.tif'
-        data_frames_dir = os.path.join(tracking_directory, 'dataframes/')
-        normalized_dataframe_file = os.path.join(data_frames_dir, f'goblet_basal_dataframe_normalized_{channel}.csv')
-        dataset_dataframe = pd.read_csv(normalized_dataframe_file)
-        if isinstance(raw_image, str):
-            raw_image = imread(raw_image)
-        if isinstance(segmentation_image, str):
-                segmentation_image = imread(segmentation_image)    
-                raw_image = normalize_image_in_chunks(raw_image.astype(dtype))
-        cell_type_dataframe = dataset_dataframe[~dataset_dataframe['Cell_Type'].isna()]
-        class_map_gbr = {
-            0: "Basal",
-            1: "Radial",
-            2: "Goblet"
-        }
+configstore = ConfigStore.instance()
+configstore.store(name = 'TrainCellShape', node = TrainOneat)
 
-        for train_label, cell_type in reversed(class_map_gbr.items()): 
+@hydra.main(version_base="1.3",config_path = 'conf', config_name = 'scenario_train_oneat')
+def main( config : TrainOneat):
 
-            filter_and_get_tracklets(cell_type_dataframe, cell_type, time_window, raw_image, crop_size, segmentation_image, dataset_name, train_save_dir, 
-                                train_label)
-       
-    create_h5(train_save_dir,train_size=0.95,save_name="cellfate_vision_training_data_gbr_large")
- 
+    base_dir = config.train_data_paths.base_nuclei_dir
+    image_dir = os.path.join(base_dir, config.train_data_paths.oneat_timelapse_nuclei_raw)
+    csv_dir = os.path.join(base_dir, config.train_data_paths.oneat_timelapse_nuclei_csv)
+    seg_dir = os.path.join(base_dir, config.train_data_paths.oneat_timelapse_nuclei_seg)
+    model_dir = config.model_paths.oneat_nuclei_model_dir
+    class_name = config.parameters.event_name
+    class_label = config.parameters.event_label
+    size_tminus = config.parameters.size_tminus
+    size_tplus = config.parameters.size_tplus
+    tshift = config.parameters.tshift
+    imagex  = config.parameters.imagex
+    imagey = config.parameters.imagey
+    imagez = config.parameters.imagez
+    normalizeimage = config.parameters.normalizeimage
+    oneat_h5_file = config.train_data_paths.oneat_h5_file
+    crop_size = [imagex,imagey,imagez, size_tminus,size_tplus]
+    event_position_name = config.parameters.event_position_name
+    event_position_label = config.parameters.event_position_label
+    dynamic_config = OneatConfig(class_name, class_label, event_position_name, event_position_label)
+
+    dynamic_json, dynamic_cord_json = dynamic_config.to_json()
+
+    save_json(dynamic_json, model_dir +config.parameters.categories_json)
+
+    save_json(dynamic_cord_json, model_dir + config.parameters.cord_json)
     
+    VolumeLabelDataSet(image_dir, 
+                                seg_dir, 
+                                csv_dir, 
+                                oneat_h5_file,
+                                class_name, 
+                                class_label, 
+                                crop_size,
+                                normalizeimage = normalizeimage,
+                                tshift = tshift, 
+                               )
 
-home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_name = [
-    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
-    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
-image_folder_name = [
-    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
-    'Fifth_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Third_Dataset_Analysis', 'Third_Dataset_Analysis']
-image_dataset_name = [
-    'Second', 'Fifth', 'Sixth', 
-    'Fifth', 'Fifth', 'Third', 'Third']
-time_window = 100
-crop_size = [256,256,8]
-train_save_dir = f'{home_folder}Mari_Data_Training/vision_track_training_data_large_window_100_crop256/'
-Path(train_save_dir).mkdir(exist_ok=True)
-process_datasets(home_folder, dataset_name, image_dataset_name, image_folder_name,  channel='nuclei_', train_save_dir=train_save_dir, time_window=time_window, crop_size = crop_size)
+if __name__=='__main__':
+    main()  

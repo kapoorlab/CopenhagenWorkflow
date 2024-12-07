@@ -28,9 +28,6 @@ class Params:
         normalizeimage: bool 
         event_name: list 
         event_label: list 
-        csv_name_diff: str 
-        npz_name: str 
-        npz_val_name: str 
         event_position_name : list 
         event_position_label : list 
         categories_json: str 
@@ -51,9 +48,7 @@ class Train_Data_Paths:
     oneat_timelapse_nuclei_raw : str
     oneat_timelapse_nuclei_csv : str
     oneat_timelapse_nuclei_seg : str
-    oneat_nuclei_patch_dir : str
-    oneat_npzfile: str
-    oneat_npzvalfile: str
+    oneat_h5_file: str
     identifier: str
      
 

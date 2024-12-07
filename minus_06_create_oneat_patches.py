@@ -1,9 +1,8 @@
 import hydra
 from scenario_train_oneat import TrainOneat
 from hydra.core.config_store import ConfigStore
-from oneat.NEATUtils.utils import save_json, load_json
+from oneat.NEATUtils.utils import save_json
 from oneat.NEATUtils import MovieCreator
-from oneat.NEATModels import NEATDenseVollNet
 from oneat.NEATModels.TrainConfig import TrainConfig
 import os
 configstore = ConfigStore.instance()
@@ -22,11 +21,8 @@ def main( config : TrainOneat):
     
     #Name of the  events
     event_type_name = config.parameters.event_name
-    #Label corresponding to event
     event_type_label = config.parameters.event_label
 
-    #The name appended before the CSV files
-    csv_name_diff = config.parameters.csv_name_diff
     size_tminus = config.parameters.size_tminus
     size_tplus = config.parameters.size_tplus
     tshift = config.parameters.tshift
@@ -34,8 +30,8 @@ def main( config : TrainOneat):
     imagey = config.parameters.imagey
     imagez = config.parameters.imagez
     normalizeimage = config.parameters.normalizeimage
-    npz_name = config.parameters.npz_name
-    npz_val_name = config.parameters.npz_val_name
+    npz_name = config.train_data_paths.oneat_h5_file + '.npz'
+    npz_val_name = config.train_data_paths.oneat_h5_file + '_val.npz'
     crop_size = [imagex,imagey,imagez, size_tminus,size_tplus]
     event_position_name = config.parameters.event_position_name
     event_position_label = config.parameters.event_position_label
@@ -47,17 +43,17 @@ def main( config : TrainOneat):
 
     save_json(dynamic_cord_json, model_dir + config.parameters.cord_json)
     
-    # MovieCreator.VolumeLabelDataSet(image_dir, 
-    #                            seg_dir, 
-    #                            csv_dir, 
-    #                            save_patch_dir, 
-    #                            event_type_name, 
-    #                            event_type_label, 
-    #                            csv_name_diff,
-    #                            crop_size,
-    #                            normalizeimage = normalizeimage,
-    #                            tshift = tshift, 
-    #                            )
+    MovieCreator.VolumeLabelDataSet(image_dir, 
+                                seg_dir, 
+                                csv_dir, 
+                                save_patch_dir, 
+                                event_type_name, 
+                                event_type_label, 
+                                '',
+                                crop_size,
+                                normalizeimage = normalizeimage,
+                                tshift = tshift, 
+                                )
     MovieCreator.createNPZ(save_patch_dir, axes = 'STZYXC', save_name = npz_name, save_name_val = npz_val_name)
 
 if __name__=='__main__':

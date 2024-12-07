@@ -23,9 +23,8 @@ nms_time: 2
 normalizeimage: True
 event_name: ['normal', 'mitosis']
 event_label: [0, 1]
-csv_name_diff: 'ONEAT'
-npz_name: 'oneat_xenopus_volumetric'
-npz_val_name: 'oneat_xenopus_volumetric_val'
+
+
 event_position_name : ["x", "y", "z", "t", "h", "w", "d", "c"]
 event_position_label : [0, 1, 2, 3, 4, 5, 6, 7]
 categories_json: 'catagories.json'
