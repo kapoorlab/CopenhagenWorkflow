@@ -93,4 +93,4 @@ def main( config : TrainCellPose, create_data = False):
         history = model.train(X,Y, validation_data=(X_val,Y_val))
 
 if __name__ == "__main__":
-    main(create_data= False) 
+    main() 
