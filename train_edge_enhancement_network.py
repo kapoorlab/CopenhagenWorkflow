@@ -46,7 +46,6 @@ def main( config : TrainCellPose, create_data = False):
         print(configtrain)
         vars(configtrain)
         den_membrane_model_name = config.model_paths.edge_enhancement_model_name
-        # the base directory in which our model will live
         den_model_dir = config.model_paths.den_model_dir
         model = CARE(configtrain, den_membrane_model_name, basedir=den_model_dir)
         if os.path.exists(
