@@ -12,25 +12,25 @@ configstore = ConfigStore.instance()
 configstore.store(name = 'TrainCellPose', node = TrainCellPose)
 
 @hydra.main(config_path = 'conf', config_name = 'scenario_train_vollseg_cellpose_sam')
-def main( config : TrainCellPose):
+def main( config : TrainCellPose, create_data = False):
         basepath = config.train_data_paths.base_membrane_dir
         npz_file = os.path.join(basepath, config.train_data_paths.membrane_enhancement_npzfile)
         low = config.train_data_paths.edge_enhancement_low_dir 
         GT = config.train_data_paths.edge_enhancement_gt_dir
+        if create_data: 
+                raw_data = RawData.from_folder (
+                    basepath    = basepath,
+                    source_dirs = [low],
+                    target_dir  = GT,
+                    axes        = 'ZYX',
+                )
 
-        raw_data = RawData.from_folder (
-            basepath    = basepath,
-            source_dirs = [low],
-            target_dir  = GT,
-            axes        = 'ZYX',
-        )
-
-        X, Y, XY_axes = create_patches (
-            raw_data            = raw_data,
-            patch_size          = tuple(config.parameters.patch_size),
-            n_patches_per_image = 10,
-            save_file           = npz_file,
-        )
+                X, Y, XY_axes = create_patches (
+                    raw_data            = raw_data,
+                    patch_size          = tuple(config.parameters.patch_size),
+                    n_patches_per_image = 10,
+                    save_file           = npz_file,
+                )
 
         (X,Y), (X_val,Y_val), axes = load_training_data(npz_file, validation_split=0.001, verbose=True)
 
@@ -93,4 +93,4 @@ def main( config : TrainCellPose):
         history = model.train(X,Y, validation_data=(X_val,Y_val))
 
 if __name__ == "__main__":
-    main() 
+    main(create_data= False) 
