@@ -40,7 +40,8 @@ def main( config : TrainCellPose):
                              unet_n_depth=config.parameters.depth, 
                              unet_kern_size=config.parameters.kern_size, 
                              unet_n_first=config.parameters.startfilter,  
-                             train_loss='mae', train_epochs=config.parameters.epochs
+                             train_loss='mae', train_epochs=config.parameters.epochs,
+                             train_learning_rate= 0.0002
                              )
         print(configtrain)
         vars(configtrain)
