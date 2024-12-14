@@ -1,7 +1,6 @@
 import os
 import glob
 from tifffile import imread
-from vollseg import StarDist3D, UNET, MASKUNET
 import hydra
 from vollseg import VollSeg3D, CARE
 from tifffile import imread, imwrite
@@ -34,11 +33,12 @@ def main(config: VollCellSegPose):
         image = imread(fname)
         Name = os.path.basename(os.path.splitext(fname)[0])
         edge_enhanced_folder_path = os.path.join(dual_channel_image_dir, 'Membrane_Enhanced')
+        Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
         result_file = os.path.join(edge_enhanced_folder_path, f'{Name}.tif')
         if os.path.exists(result_file):
             print(f"Skipping {fname} as {result_file} already exists.")
             continue 
-        Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
+        
         image_membrane = image[ :, channel_membrane, :, :]
         denoised_image_membrane = VollSeg3D(image_membrane,unet_model = None, star_model = None,  noise_model=edge_enhancement_model,n_tiles= n_tiles, dounet=False,  axes='ZYX')
         imwrite(edge_enhanced_folder_path + '/' + Name + '.tif', denoised_image_membrane)                                        
