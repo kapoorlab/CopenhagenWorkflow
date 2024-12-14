@@ -33,9 +33,12 @@ def main(config: VollCellSegPose):
         mask_folder = os.path.join(save_dir, 'BinaryMask')  
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'StarDist') 
         edge_enhanced_folder_path = os.path.join(dual_channel_image_dir, 'Membrane_Enhanced')
+        cellpose_folder_path =  os.path.join(dual_channel_image_dir, 'VollCellPose')
         Path(edge_enhanced_folder_path).mkdir(exist_ok=True)
-
-        #if not os.path.exists(os.path.join(cellpose_folder_path, Name + extension)):
+        result_file = os.path.join(cellpose_folder_path, f'{Name}.tif')
+        if os.path.exists(result_file):
+            print(f"Skipping {fname} as {result_file} already exists.")
+            continue
                 
         nuclei_seg_image = imread(os.path.join(nuclei_segmentation_folder, Name + extension))
         denoised_image_membrane = imread(os.path.join(edge_enhanced_folder_path, Name + extension))
