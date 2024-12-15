@@ -30,7 +30,7 @@ def main(config: VollCellSegPose):
         image = imread(fname)
         Name = os.path.basename(os.path.splitext(fname)[0])
         extension = os.path.splitext(fname)[1]
-        mask_folder = os.path.join(nuclei_save_dir, 'Roi')  
+        mask_folder = os.path.join(save_dir, 'CellPose')  
         nuclei_segmentation_folder = os.path.join(nuclei_save_dir, 'Markers') 
         edge_enhanced_folder_path = os.path.join(dual_channel_image_dir, 'Membrane_Enhanced')
         cellpose_folder_path =  os.path.join(save_dir, 'VollCellPose')
