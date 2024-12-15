@@ -27,7 +27,7 @@ def main(config: VollCellSegPose):
         #os.path.join(input_parent_folder, 'VollSeg/Roi'),
         #os.path.join(input_parent_folder, 'VollSeg/StarDist'),
         #os.path.join(input_parent_folder, 'VollSeg/VollSeg'),
-        os.path.join(input_parent_folder, 'VollCellPoseSeg/CellPose'),
+        os.path.join(input_parent_folder, 'VollCellPoseSeg/VollCellPose'),
         #os.path.join(input_parent_folder, 'VollCellPoseSeg/VollCellPose')
 
     ]

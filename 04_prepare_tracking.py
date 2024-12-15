@@ -14,50 +14,54 @@ configstore.store(name='VollOneat', node=NapaTrackMater)
 @hydra.main(version_base="1.3", config_path='conf', config_name='scenario_track')
 def main(config: NapaTrackMater):
     
+        do_vollseg = False
+        do_membrane = True
+        do_nuclei = False
+        
             
         timelapse_directory = config.experiment_data_paths.timelapse_nuclei_directory
         timelapse_seg_directory = config.experiment_data_paths.timelapse_seg_nuclei_directory
         timelapse_oneat_directory = config.experiment_data_paths.timelapse_oneat_directory
         tracking_directory = config.experiment_data_paths.tracking_directory
         Path(tracking_directory).mkdir(exist_ok=True)
-        do_vollseg = False
-        do_membrane = False
-        files = os.listdir(timelapse_directory)
-        for fname in files:
-                image = imread(os.path.join(timelapse_directory, fname), dtype=np.uint8)
-                print(f'Image shape: {image.shape}')
-                segimage = imread(os.path.join(timelapse_seg_directory, fname),dtype=np.uint16)
-                print(f'Segimage shape: {segimage.shape}')
-                name = fname.replace('.tif', '')
-                
-                
-                csv_files = [
-                    f"non_maximal_oneat_{label}_locations_nuclei_{name}.csv"
-                    for label in ["mitosis"]
-                ]
+        
+        if do_nuclei:
+                files = os.listdir(timelapse_directory)
+                for fname in files:
+                        image = imread(os.path.join(timelapse_directory, fname), dtype=np.uint8)
+                        print(f'Image shape: {image.shape}')
+                        segimage = imread(os.path.join(timelapse_seg_directory, fname),dtype=np.uint16)
+                        print(f'Segimage shape: {segimage.shape}')
+                        name = fname.replace('.tif', '')
+                        
+                        
+                        csv_files = [
+                            f"non_maximal_oneat_{label}_locations_nuclei_{name}.csv"
+                            for label in ["mitosis"]
+                        ]
 
-                for csv_file in csv_files:
-                    csv_path_src = os.path.join(timelapse_oneat_directory, csv_file)
-                    csv_path_dst = os.path.join(tracking_directory, csv_file)
-                    shutil.copy(csv_path_src, csv_path_dst)
+                        for csv_file in csv_files:
+                            csv_path_src = os.path.join(timelapse_oneat_directory, csv_file)
+                            csv_path_dst = os.path.join(tracking_directory, csv_file)
+                            shutil.copy(csv_path_src, csv_path_dst)
 
-                hyperstack = np.asarray([segimage, image], dtype=np.uint16)
-                del image 
-                del segimage
-                gc.collect()
-                
-                hyperstack = np.transpose(hyperstack, (1, 2, 0, 3, 4))
-                voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz  
-                
-                hyperstack_path = os.path.join(tracking_directory, f"nuclei_{name}.tif")
-                imwrite(hyperstack_path, hyperstack, imagej=True, bigtiff=True,
-                photometric='minisblack',
-                resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
-                metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
-                            'axes': 'TZCYX'})
-                 
-                del hyperstack
-                gc.collect() 
+                        hyperstack = np.asarray([segimage, image], dtype=np.uint16)
+                        del image 
+                        del segimage
+                        gc.collect()
+                        
+                        hyperstack = np.transpose(hyperstack, (1, 2, 0, 3, 4))
+                        voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz  
+                        
+                        hyperstack_path = os.path.join(tracking_directory, f"nuclei_{name}.tif")
+                        imwrite(hyperstack_path, hyperstack, imagej=True, bigtiff=True,
+                        photometric='minisblack',
+                        resolution=(1 / voxel_size_xyz[0], 1 / voxel_size_xyz[1]),
+                        metadata={'spacing': voxel_size_xyz[2], 'unit': 'um', 
+                                    'axes': 'TZCYX'})
+                        
+                        del hyperstack
+                        gc.collect() 
         if do_vollseg:
             timelapse_seg_directory = config.experiment_data_paths.timelapse_seg_nuclei_vollseg_directory
             timelapse_oneat_vollseg_directory = config.experiment_data_paths.timelapse_oneat_vollseg_directory
