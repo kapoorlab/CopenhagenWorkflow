@@ -2,7 +2,7 @@ import os
 import hydra
 from hydra.core.config_store import ConfigStore
 from napatrackmater.Trackmate import transfer_fate_location
-
+from pathlib import Path
 from scenario_track import NapaTrackMater
 configstore = ConfigStore.instance()
 configstore.store(name = 'NapaTrackMater' , node = NapaTrackMater )
@@ -24,6 +24,7 @@ def main(config:NapaTrackMater):
 
     for index, csv_file in enumerate(csv_files):
                     save_file = save_files[index]
+                    Path(save_file).mkdir(exist_ok=True)
                     print(membranesegimage,csv_file,save_file)
                     transfer_fate_location(membranesegimage, csv_file, save_file)
 
