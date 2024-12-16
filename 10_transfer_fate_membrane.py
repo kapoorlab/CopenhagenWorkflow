@@ -24,7 +24,7 @@ def main(config:NapaTrackMater):
 
     for index, csv_file in enumerate(csv_files):
                     save_file = save_files[index]
-                    Path(save_file).mkdir(exist_ok=True)
+                    Path(save_file).parent.mkdir(exist_ok=True)
                     print(membranesegimage,csv_file,save_file)
                     transfer_fate_location(membranesegimage, csv_file, save_file)
 
