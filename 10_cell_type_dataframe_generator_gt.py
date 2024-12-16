@@ -9,20 +9,20 @@ from napatrackmater.Trackvector import TrackVector
                                         
 
 # %%
-dataset_name = 'Sixth'
+dataset_name = 'Fifth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
-channel = 'nuclei_'
+channel = 'membrane_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 oneat_detections = f'/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/oneat_detections/non_maximal_oneat_mitosis_locations_{channel}timelapse_{dataset_name.lower()}_dataset.csv'
 
 
-goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic/goblet_cells_nuclei_annotations_inception.csv'
-basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic/basal_cells_nuclei_annotations_inception.csv'
-radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic/radially_intercalating_cells_nuclei_annotations_inception.csv'
+goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_corrected/goblet_cells_nuclei_annotations_inception.csv'
+basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_corrected/basal_cells_nuclei_annotations_inception.csv'
+radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_corrected/radially_intercalating_cells_nuclei_annotations_inception.csv'
 
 
 goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
@@ -30,7 +30,7 @@ basal_cells_dataframe = pd.read_csv(basal_cells_file)
 radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
 normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_dual_predicted_attention_morpho_nuclei_membrane_nuclei_morpho_dynamic.csv')
+goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_{channel}.csv')
 
 
 
