@@ -90,6 +90,10 @@ class Experiment_Data_Path:
         basal_cells_membrane_predicted: str
         radial_cells_membrane_predicted: str
 
+        goblet_cells_membrane_transferred: str
+        basal_cells_membrane_transferred: str
+        radial_cells_membrane_transferred: str
+
 
    
 

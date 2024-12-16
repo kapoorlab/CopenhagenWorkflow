@@ -18,8 +18,8 @@ def main(config:NapaTrackMater):
                     config.experiment_data_paths.goblet_cells_nuclei_predicted
                 ]
     save_files = [
-                   config.experiment_data_paths.basal_cells_membrane_predicted, config.experiment_data_paths.radial_cells_membrane_predicted,
-                    config.experiment_data_paths.goblet_cells_membrane_predicted
+                   config.experiment_data_paths.basal_cells_membrane_transferred, config.experiment_data_paths.radial_cells_membrane_transferred,
+                    config.experiment_data_paths.goblet_cells_membrane_transferred
                 ]
 
     for index, csv_file in enumerate(csv_files):
