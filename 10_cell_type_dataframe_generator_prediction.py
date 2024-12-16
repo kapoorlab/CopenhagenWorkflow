@@ -6,13 +6,13 @@ dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
-channel = 'membrane_'
+channel = 'nuclei_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 
-goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_transferred/goblet_cells_{channel}annotations_inception.csv'
-basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_transferred/basal_cells_{channel}annotations_inception.csv'
-radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_transferred/radially_intercalating_cells_{channel}annotations_inception.csv'
+goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/goblet_cells_{channel}annotations_inception.csv'
+basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/basal_cells_{channel}annotations_inception.csv'
+radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/radially_intercalating_cells_{channel}annotations_inception.csv'
 
 
 goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
@@ -20,7 +20,7 @@ basal_cells_dataframe = pd.read_csv(basal_cells_file)
 radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
 normalized_dataframe_file = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
-goblet_basal_radial_dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}transferred.csv')
+goblet_basal_radial_dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
 
 
 
