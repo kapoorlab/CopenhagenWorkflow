@@ -76,7 +76,7 @@ if __name__ == "__main__":
     parser.add_argument('--t_finals', type=int, nargs='+', default=[400], help='List of final timepoints')
     parser.add_argument('--tracklet_length', type=int, default=25, help='Tracklet length value')
     parser.add_argument('--model_dir', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/', help='Model directory path')
-    parser.add_argument('--model_name', type=str, default='morpho_feature_attention_shallowest_litest_membrane_balanced', help='Model name including full path')
+    parser.add_argument('--model_name', type=str, default='membrane_inception_cell_type', help='Model name including full path')
 
     args = parser.parse_args()
     main(args)
