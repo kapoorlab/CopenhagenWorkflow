@@ -76,7 +76,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
             hf.create_dataset(key, data=value)
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-dataset_name = ['Second_Dataset_Analysis', 'Sixth_Dataset_Analysis']
+dataset_name = ['Second_Dataset_Analysis', 'Sixth_Dataset_Analysis', 'Fifth_Dataset_Analysis','Fifth_Extra_Goblet', 'Fifth_Extra_Radial']
 #[
 #    'Second_Dataset_Analysis', 'Fifth_Dataset_Analysis', 'Sixth_Dataset_Analysis', 
 #    'Fifth_Extra_Goblet', 'Fifth_Extra_Radial', 'Third_Extra_Goblet', 'Third_Extra_Radial']
