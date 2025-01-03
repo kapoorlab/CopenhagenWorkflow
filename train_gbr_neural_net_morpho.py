@@ -21,13 +21,16 @@ from napatrackmater.Trackvector import train_gbr_neural_net
 #    block_config = (int(block_config_str),)
 # Static configurations
 
+
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 base_dir = f'{home_folder}Mari_Data_Training/track_training_data/'
-morpho_model_base = "morpho_feature_attention_shallowest_litest"
-channel = 'nuclei_'
-morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}_{channel}balanced/"
-morpho_gbr_h5_file= "morphodynamic_training_data_gbr_25_nuclei_.h5"
+morpho_model_base = "membrane_inception_cell_type"
+channel = 'membrane_'
+morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}/"
+morpho_gbr_h5_file= f"inception_cell_type_{channel}.h5"
+
 os.makedirs(morpho_model_dir, exist_ok=True)
+
 block_config = (6)
 growth_rate = 4
 augment = False

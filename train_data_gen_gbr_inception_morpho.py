@@ -71,7 +71,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_labels
     }
 
-    with h5py.File(os.path.join(train_save_dir, f'morphodynamic_training_data_gbr_{tracklet_length}_{channel}.h5'), 'w') as hf:
+    with h5py.File(os.path.join(train_save_dir, f'inception_cell_type_{channel}.h5'), 'w') as hf:
         for key, value in combined_h5_training_data.items():
             hf.create_dataset(key, data=value)
 
