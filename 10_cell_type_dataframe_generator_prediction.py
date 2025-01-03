@@ -6,10 +6,10 @@ dataset_name = 'Sixth'
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
 timelapse_to_track = f'timelapse_{dataset_name.lower()}_dataset'
 tracking_directory = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/nuclei_membrane_tracking/'
-channel = 'nuclei_'
+channel = 'membrane_'
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
-
+model_name = f'{channel}inception_cell_type'
 goblet_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/goblet_cells_{channel}annotations_inception.csv'
 basal_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/basal_cells_{channel}annotations_inception.csv'
 radial_cells_file = f'{home_folder}Mari_Data_Oneat/Mari_{dataset_name}_Dataset_Analysis/annotations_predicted/radially_intercalating_cells_{channel}annotations_inception.csv'
