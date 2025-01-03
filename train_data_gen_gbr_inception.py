@@ -97,7 +97,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_shape_labels
     }
 
-    with h5py.File(os.path.join(train_save_dir, f'shape_training_data_gbr_{tracklet_length}_{channel}.h5'), 'w') as hf:
+    with h5py.File(os.path.join(train_save_dir, f'shape_inception_cell_type_{channel}.h5'), 'w') as hf:
         for key, value in shape_h5_training_data.items():
             hf.create_dataset(key, data=value)
 
@@ -122,7 +122,7 @@ def process_datasets(home_folder, dataset_names, channel='nuclei_', tracking_dir
         'val_labels': val_dynamic_labels
     }
 
-    with h5py.File(os.path.join(train_save_dir, f'dynamic_training_data_gbr_{tracklet_length}_{channel}.h5'), 'w') as hf:
+    with h5py.File(os.path.join(train_save_dir, f'dynamic_inception_cell_type_{channel}.h5'), 'w') as hf:
         for key, value in dynamic_h5_training_data.items():
             hf.create_dataset(key, data=value)
 
