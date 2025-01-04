@@ -69,7 +69,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for morpho prediction script")
-    parser.add_argument('--dataset_name', type=str, default='Sixth', help='Name of the dataset')
+    parser.add_argument('--dataset_name', type=str, default='Second', help='Name of the dataset')
     parser.add_argument('--home_folder', type=str, default='/lustre/fsn1/projects/rech/jsy/uzj81mi/', help='Home folder path')
     parser.add_argument('--channel', type=str, default='membrane_', help='Channel name, e.g., nuclei_ or membrane_')
     parser.add_argument('--t_initials', type=int, nargs='+', default=[0], help='List of initial timepoints')
