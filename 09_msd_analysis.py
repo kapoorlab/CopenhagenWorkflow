@@ -19,12 +19,12 @@ channel = 'nuclei_'
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
 
-save_dir = os.path.join(tracking_directory, f'msd_plots_first_half_{channel}predicted_morpho_feature_attention_shallowest_litest/')
+save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}predicted')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
 Path(save_dir).mkdir(exist_ok=True, parents=True) 
 
-dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted_morpho_feature_attention_shallowest_litest.csv')
+dataframe_file = os.path.join(data_frames_dir , f'goblet_basal_dataframe_normalized_{channel}predicted.csv')
 
 def polynomial_msd(t, a, b, c, d):
     return a * t**3 + b * t**2 + c * t + d
