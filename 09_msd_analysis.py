@@ -41,7 +41,7 @@ cell_types = cell_type_dataframe['Cell_Type'].unique()
 cell_type_dataframe = cell_type_dataframe[cell_type_dataframe['t'] < max_timepoint //2]
 
 # Initialize dictionary to store motion type counts for each cell type
-motion_stats = {cell_type: {"Directed": 0, "Fractional Brownian High" : 0, "Brownian": 0, "Fractional Brownian Low": 0, "Confined" : 0 } for cell_type in cell_types}
+motion_stats = {cell_type: {"Directed": 0, "Fractional Brownian High" : 0, "Brownian": 0, "Fractional Brownian Low": 0, "Confined" : 0, "UnClassified": 0 } for cell_type in cell_types}
 
 # MSD Analysis and Plotting for Each Cell Type
 for cell_type in cell_types:
