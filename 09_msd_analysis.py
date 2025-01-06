@@ -85,9 +85,9 @@ for cell_type in cell_types:
                     popt_msd, _ = curve_fit(power_law_msd, track_data['t_normalized'], fitted_msd_data, maxfev=5000)
                     D, alpha = popt_msd  
 
-                    if alpha >= 2.0:
+                    if alpha > 2.1:
                         motion_type = "hyperbalistic"
-                    elif alpha > 1.9  and alpha<= 2.0:
+                    elif alpha > 1.9  and alpha<= 2.1:
                         motion_type = "ballistic"    
 
                     elif alpha > 1.1 and alpha<1.9:
