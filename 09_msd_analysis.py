@@ -18,7 +18,7 @@ channel = 'nuclei_'
 
 master_xml_name = 'master_' + 'marching_cubes_filled_' + channel + timelapse_to_track + ".xml"
 xml_path = Path(os.path.join(tracking_directory, master_xml_name))
-motion_type = 'UnClassified'
+
 save_dir = os.path.join(tracking_directory, f'msd_plots_{channel}predicted')
 data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 
@@ -41,7 +41,7 @@ cell_types = cell_type_dataframe['Cell_Type'].unique()
 cell_type_dataframe = cell_type_dataframe[cell_type_dataframe['t'] < max_timepoint //2]
 
 # Initialize dictionary to store motion type counts for each cell type
-motion_stats = {cell_type: {"Superdiffusive": 0, "Directed": 0, "Fractional Brownian High" : 0, "Brownian": 0, "Fractional Brownian Low": 0, "Confined" : 0, "UnClassified": 0 } for cell_type in cell_types}
+motion_stats = {cell_type: {"ballistic": 0, "Directed": 0, "Brownian": 0, "Confined" : 0, "hyperbalistic": 0 } for cell_type in cell_types}
 
 # MSD Analysis and Plotting for Each Cell Type
 for cell_type in cell_types:
@@ -86,16 +86,17 @@ for cell_type in cell_types:
                     D, alpha = popt_msd  
 
                     if alpha >= 2.0:
-                        motion_type = "Superdiffusive"
-                    elif alpha >= 1.5 and alpha<2.0:
+                        motion_type = "hyperbalistic"
+                    elif alpha == 2.0:
+                        motion_type = "ballistic"    
+
+                    elif alpha > 1.0 and alpha<2.0:
                         motion_type = "Directed"
-                    elif  1.4 < alpha < 1.5:
-                        motion_type = "Fractional Brownian High"     
-                    elif 0.9 <= alpha <= 1.1:
+                   
+                    elif 0.9 < alpha <= 1.0:
                         motion_type = "Brownian"
-                    elif  0.4 <= alpha <= 0.5:
-                        motion_type = "Fractional Brownian Low"   
-                    elif  alpha < 0.5:
+                    
+                    elif  alpha <= 0.9:
                         motion_type = "Confined"
                     
                     motion_stats[cell_type][motion_type] += 1
