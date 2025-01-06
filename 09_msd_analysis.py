@@ -87,13 +87,13 @@ for cell_type in cell_types:
 
                     if alpha >= 2.0:
                         motion_type = "hyperbalistic"
-                    elif alpha == 2.0:
+                    elif alpha > 1.9  and alpha<= 2.0:
                         motion_type = "ballistic"    
 
-                    elif alpha > 1.0 and alpha<2.0:
+                    elif alpha > 1.1 and alpha<1.9:
                         motion_type = "Directed"
                    
-                    elif 0.9 < alpha <= 1.0:
+                    elif 0.9 < alpha <= 1.1:
                         motion_type = "Brownian"
                     
                     elif  alpha <= 0.9:
