@@ -37,7 +37,6 @@ def linear_msd(t, m, c):
 track_vectors = TrackVector(master_xml_path=xml_path)
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-max_timepoint = cell_type_dataframe['t'].max()
 cell_types = cell_type_dataframe['Cell_Type'].unique()
 
 

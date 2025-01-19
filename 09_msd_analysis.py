@@ -36,9 +36,8 @@ def power_law_msd(t, D, alpha):
 track_vectors = TrackVector(master_xml_path=xml_path)
 tracks_goblet_basal_radial_dataframe = pd.read_csv(dataframe_file)
 cell_type_dataframe = tracks_goblet_basal_radial_dataframe[~tracks_goblet_basal_radial_dataframe['Cell_Type'].isna()]
-max_timepoint = cell_type_dataframe['t'].max()
 cell_types = cell_type_dataframe['Cell_Type'].unique()
-cell_type_dataframe = cell_type_dataframe[cell_type_dataframe['t'] < max_timepoint //2]
+
 
 # Initialize dictionary to store motion type counts for each cell type
 motion_stats = {cell_type: {"ballistic": 0, "Directed": 0, "Brownian": 0, "Confined" : 0, "hyperbalistic": 0 } for cell_type in cell_types}
