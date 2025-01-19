@@ -67,7 +67,8 @@ for cell_type in cell_types:
             late_indices = t > t_threshold
             t_early, msd_early = t[early_indices], msd[early_indices]
             t_late, msd_late = t[late_indices], msd[late_indices]
-            
+            if len(msd[early_indices]) < 5 and len(msd[late_indices]) < 5:
+                continue
             try:
                 popt_early, _ = curve_fit(quadratic_msd, t_early, msd_early, maxfev=10000)
                 popt_late, _ = curve_fit(linear_msd, t_late, msd_late, maxfev=10000)
