@@ -55,10 +55,11 @@ for cell_type in cell_types:
         
         for track_id in track_ids:
             track_data = trackmate_data[trackmate_data['Track ID'] == track_id].copy()
-            if len(track_data['t']) < 5 or len(track_data['MSD']) < 5:
+            track_data['t_normalized'] = track_data['t'] - track_data['t'].min()
+            if len(track_data['t_normalized']) < 5 or len(track_data['MSD']) < 5:
                 continue
             
-            t = track_data['t'].values
+            t = track_data['t_normalized'].values
             msd = track_data['MSD'].values
             
             t_threshold = t.max() / 4
