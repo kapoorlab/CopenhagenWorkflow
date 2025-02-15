@@ -23,21 +23,7 @@ You can install the packages required to run this workflow via pip:
       source $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
       
       
-# Verify install:
-python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"      
 
-# Then on HPC 
-
-A script that is loaded before starting the code to ensure GPU is used
-
-      module load anaconda-py3
-      conda activate capedenv
-      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
-      export XLA_FLAGS=--xla_gpu_cuda_data_dir=$CONDA_PREFIX
-      mkdir -p $CONDA_PREFIX/lib/nvvm/libdevice/
-      cp -p $CONDA_PREFIX/lib/libdevice.10.bc $CONDA_PREFIX/lib/nvvm/libdevice/
-      export XDG_CACHE_HOME='/lustre/fsn1/projects/rech/jsy/uzj81mi/napari/cache'
-      module load cuda/11.8.0
 
 
 # Workflow Steps
