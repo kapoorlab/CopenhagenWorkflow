@@ -19,6 +19,7 @@ real_mask_nuclei_patch_dir: 'cloud_mask_training/cloud_mask_nuclei/label_images/
 oneat_timelapse_nuclei_raw : 'oneat_timelapse_nuclei_raw/'
 oneat_timelapse_nuclei_csv : 'oneat_timelapse_nuclei_csv/'
 oneat_timelapse_nuclei_seg : 'oneat_timelapse_nuclei_seg/'
+oneat_nuclei_patch_dir: 'oneat_patches/'
 oneat_h5_file: 'oneat_xenopus'
 
 oneat_nuclei_train_data: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/Dual_Channel_CZYX/second_dataset_nuclei_raw.tif'

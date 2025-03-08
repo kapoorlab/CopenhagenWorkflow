@@ -6,21 +6,24 @@ Developed by Mari Tolonen &amp; Varun Kapoor for Dr. Jakub Sedzinski's Lab.
 
 ## Installation
 
-You can install the packages required to run this workflow via pip:
+
+You can follow a step by step installation guide for installing the codes required for 3D cell/2D laser-ablation tracking by following [these instrctions](INSTALL3D.md).
+
+
+For quick installation you can also copy pase the lines below in a Powershell/Linux terminal:
    
       
 
       conda create -n capedenv python=3.10
       conda activate capedenv
       conda install mamba -c conda-forge
-      pip install caped-ai
+      pip install caped-ai, ultralytics
       mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
       mamba install -c nvidia cuda-nvcc=11.3.58
-      python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow-gpu==2.10.*
-      mkdir -p $CONDA_PREFIX/etc/conda/activate.d
-      echo 'CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
-      echo 'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib/:$CUDNN_PATH/lib:$LD_LIBRARY_PATH' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
-      source $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+      python3 -m pip install tensorflow-gpu==2.10.*
+      pip uninstall numpy
+      pip install numpy==1.26.4
+     
       
       
 # Verify install:

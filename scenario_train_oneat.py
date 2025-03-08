@@ -48,6 +48,7 @@ class Train_Data_Paths:
     oneat_timelapse_nuclei_raw : str
     oneat_timelapse_nuclei_csv : str
     oneat_timelapse_nuclei_seg : str
+    oneat_nuclei_patch_dir: str
     oneat_h5_file: str
     identifier: str
      
