@@ -7,7 +7,7 @@ Developed by Mari Tolonen &amp; Varun Kapoor for Dr. Jakub Sedzinski's Lab.
 ## Installation
 
 
-You can follow a step by step installation guide for installing the codes required for 3D cell/2D laser-ablation tracking by following [these instrctions](INSTALL3D.md).
+You can follow a step by step installation guide for installing the codes required for 3D cell tracking by following [these instrctions](INSTALL3D.md).
 
 
 For quick installation you can also copy pase the lines below in a Powershell/Linux terminal:
