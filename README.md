@@ -17,7 +17,7 @@ For quick installation you can also copy pase the lines below in a Powershell/Li
       conda create -n capedenv python=3.10
       conda activate capedenv
       conda install mamba -c conda-forge
-      pip install caped-ai, ultralytics
+      pip install caped-ai ultralytics napari_fast4dreg
       mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
       mamba install -c nvidia cuda-nvcc=11.3.58
       python3 -m pip install tensorflow-gpu==2.10.*
