@@ -16,7 +16,8 @@ raw_timelapse_path = "/path/to/raw.tif"
 seg_timelapse_path = "/path/to/seg.tif"
 output_dir = "/path/to/drift_corrected"
 
-crop_output = True
+crop_output = False
+do_z_drift = False
 # Output structure
 output_seg_dir = os.path.join(output_dir, "StarDist")
 Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -32,11 +33,17 @@ seg_dask = da.from_array(seg_np[np.newaxis, ...], chunks=("auto", 1, "auto", "au
 
 # --- Drift correction: XY ---
 xy_drift = get_xy_drift(raw_dask, ref_channel=0)
-z_drift = get_z_drift(raw_dask, ref_channel=0)
+if do_z_drift:
+  z_drift = get_z_drift(raw_dask, ref_channel=0)
+
 raw_xy_corrected = apply_xy_drift(raw_dask, xy_drift)
 seg_xy_corrected = apply_xy_drift(seg_dask, xy_drift)
-raw_xyz_corrected = apply_z_drift(raw_xy_corrected, z_drift)
-seg_xyz_corrected = apply_z_drift(seg_xy_corrected, z_drift)
+if do_z_drift:
+    raw_xyz_corrected = apply_z_drift(raw_xy_corrected, z_drift)
+    seg_xyz_corrected = apply_z_drift(seg_xy_corrected, z_drift)
+else:
+         raw_xyz_corrected = raw_xy_corrected
+         seg_xyz_corrected = seg_xy_corrected
 
 # --- Crop edges to remove border artifacts ---
 if crop_output:
