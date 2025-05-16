@@ -4,7 +4,7 @@ from tifffile import imread, imwrite
 from vollseg import StarDist3D, MASKUNET
 from vollseg.utils import VollSeg
 import hydra
-import tqdm 
+from tqdm import tqdm 
 from scenario_segment_star_cellpose import VollCellSegPose
 from hydra.core.config_store import ConfigStore
 from pathlib import Path 
