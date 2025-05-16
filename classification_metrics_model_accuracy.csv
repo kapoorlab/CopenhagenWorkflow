@@ -1,2 +1,2 @@
 ,Model Name,True Positive,False Positive,False Negative,Total Predictions,GT predictions,Precision,Recall,F1
-0,prediction_mitosis,27,4,5,31,28,0.8709677419354839,0.84375,0.8571428571428571
+0,non_maximal_oneat_mitosis_locations_nuclei_Merged,310,1171,168,1481,429,0.20931802835921676,0.6485355648535565,0.3164880040837162

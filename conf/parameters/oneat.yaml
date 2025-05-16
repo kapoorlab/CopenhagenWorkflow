@@ -6,8 +6,8 @@ batch_size: 32
 epochs: 250
 show: False
 stage_number: 3
-size_tminus: 2
-size_tplus: 2
+size_tminus: 1
+size_tplus: 1
 tshift: 0
 imagex: 64
 imagey: 64
