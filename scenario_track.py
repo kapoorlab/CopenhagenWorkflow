@@ -93,6 +93,7 @@ class Experiment_Data_Path:
         goblet_cells_membrane_transferred: str
         basal_cells_membrane_transferred: str
         radial_cells_membrane_transferred: str
+        base_directory: str
 
 
    

@@ -75,6 +75,7 @@ class Experiment_Data_Path:
         oneat_nuclei_csv_file: str
         oneat_nuclei_vollseg_csv_file: str 
         oneat_membrane_csv_file: str
+        base_directory: str
    
 
 @dataclass

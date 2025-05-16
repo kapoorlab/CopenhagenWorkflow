@@ -16,9 +16,9 @@ configstore.store(name='VollCellSegPose', node=VollCellSegPose)
 def main(config: VollCellSegPose):
     
     base_directory = config.experiment_data_paths.base_directory
-    timelapse_nuclei_directory = os.path.join(base_directory, config.experiment_data_paths.timelapse_raw_directory)
-    timelapse_seg_directory = os.path.join(base_directory, config.experiment_data_paths.timelapse_seg_directory)
-    split_timelapse_nuclei_directory =  os.path.join(base_directory, config.experiment_data_paths.split_timelapse_raw_directory)
+    timelapse_nuclei_directory = os.path.join(base_directory, config.experiment_data_paths.timelapse_nuclei_directory)
+    timelapse_seg_directory = os.path.join(base_directory, config.experiment_data_paths.timelapse_seg_nuclei_directory)
+    split_timelapse_nuclei_directory =  os.path.join(base_directory, config.experiment_data_paths.dual_channel_split_directory)
     voxel_size_xyz = config.experiment_data_paths.voxel_size_xyz  
     Path(split_timelapse_nuclei_directory).mkdir(exist_ok=True)
     Path(timelapse_seg_directory).mkdir(exist_ok=True)

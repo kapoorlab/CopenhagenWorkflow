@@ -91,6 +91,7 @@ class Model_Paths:
     edge_enhancement_model_name: str
 
 
+
 @dataclass
 class Experiment_Data_Path:
         timelapse_nuclei_to_track: str
@@ -112,6 +113,7 @@ class Experiment_Data_Path:
         oneat_nuclei_csv_file: str
         oneat_nuclei_vollseg_csv_file: str 
         oneat_membrane_csv_file: str
+        base_directory: str
    
 
 @dataclass
