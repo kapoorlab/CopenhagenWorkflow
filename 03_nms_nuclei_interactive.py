@@ -13,8 +13,8 @@ configstore.store(name = 'VollOneat', node = VollOneat)
 
 @hydra.main(version_base="1.3",config_path = 'conf', config_name = 'scenario_predict_oneat')
 def main( config : VollOneat):
-        imagedir = config.experiment_data_paths.base_directory #timelapse_nuclei_directory
-        csvdir = config.experiment_data_paths.base_directory #timelapse_oneat_directory
+        imagedir = config.experiment_data_paths.timelapse_nuclei_directory
+        csvdir = config.experiment_data_paths.timelapse_oneat_directory
         print(csvdir)
         model_dir = config.model_paths.oneat_nuclei_model_dir
       
