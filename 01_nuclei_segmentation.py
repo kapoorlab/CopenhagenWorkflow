@@ -80,7 +80,7 @@ def main(config: VollCellSegPose):
                             slice_merge = slice_merge, 
                             UseProbability = UseProbability, 
                             save_dir = raw_save_dir, 
-                            Name = Name) 
+                            Name = f'{Name}_{time}') 
 
         seg_files = glob.glob(os.path.join(seg_save_dir, f"{Name}_*.tif"))
         seg_files = natsorted(seg_files)  
