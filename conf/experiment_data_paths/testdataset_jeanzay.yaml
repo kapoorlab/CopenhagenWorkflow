@@ -2,7 +2,7 @@ timelapse_nuclei_to_track: 'timelapse_test_dataset'
 timelapse_membrane_to_track: 'timelapse_test_dataset'
 base_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Division_Test_Dataset/'
 
-dual_channel_split_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Division_Test_Dataset/split_nuclei_membrane_raw/'
+dual_channel_split_directory: 'split_nuclei_membrane_raw/'
 timelapse_nuclei_directory: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Division_Test_Dataset/nuclei_timelapses/'
 timelapse_seg_nuclei_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Division_Test_Dataset/seg_nuclei_timelapses/'
 timelapse_seg_nuclei_vollseg_directory : '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Division_Test_Dataset/seg_nuclei_vollseg_timelapses/'
