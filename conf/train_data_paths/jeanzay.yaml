@@ -22,6 +22,7 @@ oneat_timelapse_nuclei_seg : 'oneat_timelapse_nuclei_seg/'
 oneat_nuclei_patch_dir: 'oneat_patches/'
 oneat_h5_file: 'oneat_xenopus'
 oneat_npzfile: 'oneat_xenopus.npz'
+oneat_npzvalfile: 'oneat_xenopus_val.npz'
 oneat_nuclei_train_data: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Oneat/Mari_Second_Dataset_Analysis/Dual_Channel_CZYX/second_dataset_nuclei_raw.tif'
 
 base_roi_dir: '/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Data_Training/'
