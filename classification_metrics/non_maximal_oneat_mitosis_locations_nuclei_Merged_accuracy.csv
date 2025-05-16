@@ -1,0 +1,2 @@
+Model,TP,FP,FN,Precision,Recall,F1
+non_maximal_oneat_mitosis_locations_nuclei_Merged,252,592,211,0.2985781990521327,0.5442764578833693,0.3856159143075746
