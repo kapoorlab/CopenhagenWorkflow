@@ -9,8 +9,8 @@ stage_number: 3
 size_tminus: 2
 size_tplus: 2
 tshift: 0
-imagex: 48
-imagey: 48
+imagex: 64
+imagey: 64
 imagez: 8
 depth: {'depth_0': 12, 'depth_1': 24, 'depth_2': 16}
 reduction: 0.5
