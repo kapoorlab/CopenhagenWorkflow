@@ -1,0 +1,2 @@
+Model,TP,FP,FN,Precision,Recall,F1
+oneat_mitosis_locations_nuclei_timelapse_test_dataset,160,157,275,0.5047318611987381,0.367816091954023,0.425531914893617
