@@ -1,2 +1,2 @@
 Model,TP,FP,FN,Precision,Recall,F1
-non_maximal_oneat_mitosis_locations_nuclei_timelapse_test_dataset,317,516,175,0.38055222088835533,0.6443089430894309,0.4784905660377358
+non_maximal_oneat_mitosis_locations_nuclei_timelapse_test_dataset,220,237,205,0.4814004376367615,0.5176470588235295,0.4988662131519275
