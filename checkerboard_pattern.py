@@ -23,7 +23,7 @@ print(f'Computing diagrams over time')
 diagrams = diagrams_over_time(tracks_dataframe, spatial_cols=('z','y','x'), max_dim=1)
 plot_persistence_time_series(
     diagrams_by_time=diagrams,
-    dim=1,
+   
     save_path=save_dir,
     title="Loops (H1): birth and death scales over time"
 )
