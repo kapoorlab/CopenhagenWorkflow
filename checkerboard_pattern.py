@@ -24,6 +24,6 @@ diagrams = diagrams_over_time(tracks_dataframe, spatial_cols=('z','y','x'), max_
 plot_persistence_time_series(
     diagrams_by_time=diagrams,
    
-    save_path=save_dir,
+    save_dir=save_dir,
     title="Loops (H1): birth and death scales over time"
 )
