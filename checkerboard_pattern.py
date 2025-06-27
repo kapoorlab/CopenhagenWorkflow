@@ -1,6 +1,8 @@
 from napatrackmater.homology import vr_entropy_all_frames, vr_entropy_generator, diagrams_over_time
 from pathlib import Path 
 import os
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -14,9 +16,11 @@ data_frames_dir = os.path.join(tracking_directory, f'dataframes/')
 save_dir = os.path.join(tracking_directory, f'{channel}checkerboard')
 Path(save_dir).mkdir(exist_ok=True)
 
+print('Reading dataframe')
 tracks_dataframe_path = os.path.join(data_frames_dir, f'results_dataframe_normalized_{channel}.csv')
 tracks_dataframe = pd.read_csv(tracks_dataframe_path)
 
+print(f'Computing diagrams over time')
 # --- diagrams over time + Betti-1 plot --------------------------------------
 all_diagrams = diagrams_over_time(tracks_dataframe, max_dim=1)
 
@@ -30,6 +34,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(save_dir, f"{channel}betti1_over_time.png"))
 plt.close()
 
+print(f'Computing entropy over all frames')
 # --- one-shot: PE vector per time point --------------------------------------
 t_sorted, diagrams, entropy = vr_entropy_all_frames(tracks_dataframe)
 
