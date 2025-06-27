@@ -25,5 +25,4 @@ plot_persistence_time_series(
     diagrams_by_time=diagrams,
    
     save_dir=save_dir,
-    title="Loops (H1): birth and death scales over time"
 )
