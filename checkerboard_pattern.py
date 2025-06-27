@@ -1,4 +1,4 @@
-from napatrackmater.homology import  plot_persistence_time_series, diagrams_over_time
+from napatrackmater.homology import  save_barcodes_and_stats, diagrams_over_time
 from pathlib import Path 
 import os
 import matplotlib
@@ -21,7 +21,7 @@ tracks_dataframe = pd.read_csv(tracks_dataframe_path)
 
 print(f'Computing diagrams over time')
 diagrams = diagrams_over_time(tracks_dataframe, spatial_cols=('z','y','x'), max_dim=1)
-plot_persistence_time_series(
+save_barcodes_and_stats(
     diagrams_by_time=diagrams,
    
     save_dir=save_dir,
