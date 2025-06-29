@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --nodes=1             # Number of nodes 
-#SBATCH -A jsy@v100
+#SBATCH -A jsy@a100
 #SBATCH --gres=gpu:1
-#SBATCH --partition=gpu_p2
-#SBATCH --job-name=augmented              # Jobname 
+#SBATCH --partition=gpu_p5
+#SBATCH --job-name=incetion              # Jobname 
 #SBATCH --cpus-per-task=40
 #SBATCH --output=cell.o%j            # Output file 
 #SBATCH --error=cell.o%j            # Error file 
