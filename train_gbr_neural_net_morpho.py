@@ -23,7 +23,7 @@ from napatrackmater.Trackvector import train_gbr_neural_net
 
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-base_dir = f'{home_folder}Mari_Data_Training/track_training_data/'
+base_dir = f'{home_folder}Inception/'
 morpho_model_base = "nuclei_inception_qkv_cell_type"
 channel = 'nuclei_'
 morpho_model_dir = f"/lustre/fsn1/projects/rech/jsy/uzj81mi/Mari_Models/TrackModels/{morpho_model_base}/"
