@@ -29,7 +29,7 @@ goblet_cells_dataframe = pd.read_csv(goblet_cells_file)
 basal_cells_dataframe = pd.read_csv(basal_cells_file)
 radial_cells_dataframe = pd.read_csv(radial_cells_file)
 
-normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normali Ozed_{channel}.csv')
+normalized_dataframe = os.path.join(data_frames_dir , f'results_dataframe_normalized_{channel}.csv')
 goblet_basal_radial_dataframe = os.path.join(data_frames_dir , f'goblet_basal_dataframe_{channel}.csv')
 
 
