@@ -8,7 +8,7 @@ from napatrackmater.Trackvector import (
 )
 
 home_folder = '/lustre/fsn1/projects/rech/jsy/uzj81mi/'
-base_dir =  f'{home_folder}Mari_Data_Training/track_training_data/'
+base_dir = f'{home_folder}Inception/'
 model_dir = f'{home_folder}Mari_Models/TrackModels/'
 
 dynamic_model_dir = os.path.join(model_dir, 'inception_qkv_motion_type_nuclei_')
