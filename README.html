@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Anaconda" href="INSTALL3D.html" />
+    <link rel="next" title="Creating a virtual environment" href="INSTALL3D.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -172,8 +172,7 @@
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="INSTALL3D.html">Anaconda</a></li>
-
+<li class="toctree-l1"><a class="reference internal" href="INSTALL3D.html">Creating a virtual environment</a></li>
 
 
 
@@ -374,17 +373,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Copenhagen Tracking Workflow</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-steps">Workflow Steps</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#file-structure">File Structure</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experimental-data">Experimental Data</a></li>
-</ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -395,7 +385,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/README.html</p>
+  <p>Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/</p>
 <section class="tex2jax_ignore mathjax_ignore" id="copenhagen-tracking-workflow">
 <h1>Copenhagen Tracking Workflow<a class="headerlink" href="#copenhagen-tracking-workflow" title="Link to this heading">#</a></h1>
 <p>Developed by Mari Tolonen &amp; Varun Kapoor for Dr. Jakub Sedzinski’s Lab.</p>
@@ -414,37 +404,6 @@ document.write(`
   pip install numpy==1.26.4
 </pre></div>
 </div>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="workflow-steps">
-<h1>Workflow Steps<a class="headerlink" href="#workflow-steps" title="Link to this heading">#</a></h1>
-<p>This workflow is for segmentation and tracking of Xenopus cells in 3D and contains the following steps in order:</p>
-<ol class="arabic simple">
-<li><p>Segmentation of nuclei and membrane channels, details in this <a class="reference internal" href="SEGMENTATION.html"><span class="std std-doc">section</span></a>.</p></li>
-<li><p>Converting the segmentation labels to point cloud representations for both the channels, details in this <a class="reference internal" href="#POINTCLOUDS.md"><span class="xref myst">section</span></a>.</p></li>
-<li><p>Tracking the nuclei channel and transfer the nuclei tracks to membrane channel, details in this <a class="reference internal" href="#TRACKING.md"><span class="xref myst">section</span></a>.</p></li>
-<li><p>Using cellshape autoencoder models/ marching cubes to compute additional shape and dynamic features, details in this <a class="reference internal" href="#TRACKING.md"><span class="xref myst">section</span></a>.</p></li>
-<li><p>Cell Fate computation using the computed shape and dynamic feature vectors, classification of trajectories into pre-defined cluster classes, obtaining the nearness score of cell tracks over time, obtaining statistics of mitotic trajectories in terms of the shape and dynamic feature vectors using this <a class="reference internal" href="#10_show_global_dynamic_dataframe.ipynb"><span class="xref myst">notebook</span></a></p></li>
-</ol>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="file-structure">
-<h1>File Structure<a class="headerlink" href="#file-structure" title="Link to this heading">#</a></h1>
-<p>We do everything with hydra config files. The config files are partitioned into several scenarios: segmentation scenario, oneat prediction scenario, tracking scenario, cellshape training/ training oneat/ training segmentation scenario. Each scenario has pre set links to yaml files that contain the required model paths, dataset paths, parameters. As an example see our <a class="reference internal" href="#conf/scenario_track.yaml"><span class="xref myst">scenario_track</span></a>, here the dataset to be tracked is chosen along with model paths and model parameters.</p>
-<p>You would have to modify the parent paths (mentioned in the scenario yaml files) according to your workstation/HPC paths &amp; then the workflow described here should work flawless, without bugs and as described here.</p>
-<section id="experimental-data">
-<h2>Experimental Data<a class="headerlink" href="#experimental-data" title="Link to this heading">#</a></h2>
-<p>Your experimental data folders have this structure:</p>
-<ul class="simple">
-<li><p>region_of_interest: contains 2D region of interest tha contains the sample</p></li>
-<li><p>membrane_timelapses: contains timelapse image for the membrane channel</p></li>
-<li><p>seg_membrane_timelapses: contains timelapse segmentation image for the membrane channel</p></li>
-<li><p>seg_nuclei_timelapses: contains timelapse segmenation image for the nuclei channel</p></li>
-<li><p>oneat_detections: csv file of oneat detected locations for mitosis</p></li>
-<li><p>split_nuclei_membrane_raw: dual channel images (CZYX) containing the nuclei and the membrane channel</p></li>
-<li><p>nuclei_timelapses: contains timelapse image for the nuclei channel</p></li>
-<li><p>nuclei_membrane_tracking: directory containing hyperstack of both the nuclei and the membrane channel, csv file of mistosis locations, xml and csv files for both the channels coming from TrackMate and the master xml file created by NapaTrackMater.</p></li>
-</ul>
-<p>Any new dataset that we get from you will be organized in the same structure as pointed above.</p>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -485,7 +444,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Anaconda</p>
+        <p class="prev-next-title">Creating a virtual environment</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -505,17 +464,8 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Copenhagen Tracking Workflow</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-steps">Workflow Steps</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#file-structure">File Structure</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experimental-data">Experimental Data</a></li>
-</ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>
