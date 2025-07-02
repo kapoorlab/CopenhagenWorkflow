@@ -468,7 +468,7 @@ Patches of size <code class="docutils literal notranslate"><span class="pre">(Z,
 <li><p><strong>Optionally apply MARI</strong> to enforce perpendicular daughter positioning, reducing false positives</p></li>
 </ol>
 <p><strong>Performance:</strong><br />
-Integrating Oneat boosts the precision from 0.1 to 0.86 (with MARI) vs. native TrackMate, with a false discovery rate of 0.14 compared to 0.9 of native TrackMate.</p>
+Integrating Oneat boosts the precision from 0.1 to 0.86 (with MARI) vs. native TrackMate, with a false discovery rate of 0.14 compared to 0.9 of native TrackMate. TrackMate-Oneat extension uses the same track linking algorithm as TrackMate but with a biologically prior information of the locations of mitotic mother cells and it is only desinged to boost the track linking/Branch Correctness index, the mother cells for which both the daughter cells can not be linked are corrected at a later stage to be classified as a mitotic trajectory.</p>
 <p><img alt="TrackMate-Oneat Accuracy" src="_images/FigS1.png" /></p>
 </section>
 </section>
