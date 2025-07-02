@@ -6,3 +6,4 @@ root: README
 chapters:
 - file: INSTALL3D.md
 - file: SEGMENTATION.md
+- file: ONEAT.md
