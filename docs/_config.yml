@@ -1,0 +1,28 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.
+author: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski
+logo: 
+
+
+
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/kapoorlab/CopenhagenWorkflow/  # Online location of your book
+  path_to_book: docs  # Optional path to your book, relative to the repository root
+  branch: main 
+
+html:
+  use_issues_button: true
+  use_repository_button: true
+
+  
+execute:
+  execute_notebooks: "off"
+
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - dollarmath
