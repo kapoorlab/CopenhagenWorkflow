@@ -1,111 +1,113 @@
-## Creating a virtual environment
+"""## 🐍 Creating a Virtual Environment
 
-Download Anaconda package for your OS, the instructions below are tailored ofr Windows OS users but can be also used if you have Mac or Linux. Once you have installed the conda environment, you can open an Anconda prompt or a Windows powershell promt. If your conda instalaation was done systemwide on your computer you should see your prompt in the terminal having (base) before the command line. 
+Download the Anaconda package for your OS. The instructions below are tailored for Windows users but can also be applied on Mac or Linux. Once Anaconda is installed, open an Anaconda Prompt or a Windows PowerShell. If the installation was system-wide, you should see `(base)` before your command prompt.
 
+To create a new conda environment (skip this step if you already have one for this project):
 
-
-For this project you need to create a conda environment that will contain all the neccesary packages in your environment. in your terminal type the following to create a new environment (if you already have a virtualenv that you will be using for this porject you can skip this step)
-
-As shown in the terminal windown below type the following command 
-```sh
+```bash
 conda create -n analysisenv python=3.10
 ```
 
+![Step 1: Create conda environment](demoimages/1_conda_install.png)
 
-![Step 1](demoimages/1_conda_install.png)
+After pressing Enter, you should see output similar to:
 
-After pressing enter you should see an output as seen below
+![Step 2: Environment creation output](demoimages/2_conda_install.png)
 
-![Step 2](demoimages/2_conda_install.png)
+Activate your new environment:
 
-After this the basic packages start downloading and you can activate your environment by typing 
-
-```sh
+```bash
 conda activate analysisenv
 ```
 
-![Step 3](demoimages/3_conda_install.png)
+![Step 3: Activate environment](demoimages/3_conda_install.png)
 
+---
 
-## Installing Mamba
+## 🛠️ Installing Mamba
 
-Mamba is a more advanced package manager and it is a good idea to have it installed in your environment as well to aid in managing package dependencies.
+Mamba is a fast package manager that helps resolve dependencies efficiently. Install it into your environment:
 
-```sh
+```bash
 conda install mamba -c conda-forge
 ```
 
+![Step 4: Install mamba](demoimages/4_conda_install.png)
 
-![Step 4](demoimages/4_conda_install.png)
+---
 
+## 📦 Installing Main Packages
 
-## Main packages 
+Install the core packages required for analysis:
 
-Once you have reached this step you are now ready to install the main packages that would be required to run your analysis pythin scripts and notebooks provided by us, to get them type the following
-
-```sh
-pip install caped-ai, ultralytics
+```bash
+pip install caped-ai ultralytics
 ```
 
-![Step 5](demoimages/5_conda_install.png)
+![Step 5: Install core packages](demoimages/5_conda_install.png)
 
-This will install many packages in your environment and your screen should look as below
+Wait for the installation to complete:
 
-![Step 6](demoimages/6_conda_install.png)
+![Step 6: Packages downloading](demoimages/6_conda_install.png)
+![Step 7: Packages installed](demoimages/7_conda_install.png)
 
-![Step 7](demoimages/7_conda_install.png)
+---
 
+## 🚀 Installing CUDA Toolkit
 
-## Installing Cudatoolkit
+Even if your HPC has system-wide CUDA, it's recommended to include it in your environment:
 
-Even though your HPC may have system level cuda toolkits that can be activated we can at the same time have those libraries in the environment itself
-
-```sh
+```bash
 mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 ```
 
-![Step 8](demoimages/8_conda_install.png)
+![Step 8: CUDA toolkit install](demoimages/8_conda_install.png)
 
+Then install the NVIDIA compiler:
 
-After this run 
-
-```sh
+```bash
 mamba install -c nvidia cuda-nvcc=11.3.58
 ```
 
-![Step 9](demoimages/9_conda_install.png)
+![Step 9: NVIDIA nvcc install](demoimages/9_conda_install.png)
 
+---
 
-Now we come to a very important step, to cap the version of tensorflow we will be dealing with, since our models have been trained in Tensorflow 2.0 we have to cap the versions of Tensorflow and Keras, if by mistake you download a package that ups the version of these libraries, no worries, just run the command below in your environment and get the correct versions of these libraries
+## 🔒 Locking TensorFlow & NumPy Versions
 
-```sh
+To ensure compatibility with our models (trained on TensorFlow 2.x):
+
+```bash
 python3 -m pip install tensorflow-gpu==2.10.*
 pip uninstall numpy
 pip install numpy==1.26.4
 ```
 
-We have additionally caped the version of numpy to be less than 2.0 to avoid breaking changes in our environment.
+---
 
-## Sucessful installtion
+## ✅ Successful Installation
 
-If you have followed all these steps, and if they worked or if you were prompted to update your pip and you did and then these steps worked give it a quick check by typing the following in your terminal
+Verify everything by entering a Python REPL:
 
-```sh
+```bash
 python
 ```
-After this line you will be dropped from your terminal into a python shell, now in a single line type in
 
-```sh
+Then run:
+
+```python
 import vollseg, oneat, csbdeep, numpy, tensorflow, torch, lightning, ultralytics
 ```
 
-The output of your screen should look as below
+You should see no errors, similar to:
 
-![Step 10](demoimages/10_conda_install.png)
+![Step 10: Verification output](demoimages/10_conda_install.png)
 
-If you see the output as seen here, Congratulations you are now enabled to run all our codes, scripts, notebooks, Napari plugins on your computer/HPC. To exit the python shell type 
+Exit the shell:
 
-```sh
+```bash
 quit()
 ```
 
+Congratulations! Your environment is now ready to run all our scripts, notebooks, and Napari plugins.
+"""

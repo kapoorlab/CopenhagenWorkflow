@@ -1,14 +1,16 @@
-# 📘 CopenhagenWorkflow
+"""# 📘 CopenhagenWorkflow
 
 > A reproducible, modular, and Hydra-powered bioimage analysis pipeline for single-cell morphodynamics in **Xenopus** embryos.
 
 ![Hydra](https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3.10+-brightgreen?logo=python)
 [![License](https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square)](https://github.com/kapoorlab/CopenhagenWorkflow/blob/main/LICENCE)
+
 ---
 
 ## 🌐 Website
-Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski
+
+**Authors:** Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski  
 📖 [**Explore the Documentation**](https://kapoorlab.github.io/CopenhagenWorkflow/)  
 📁 [**GitHub Repository**](https://github.com/kapoorlab/CopenhagenWorkflow)
 
@@ -29,7 +31,7 @@ pip uninstall numpy && pip install numpy==1.26.4
 
 This workflow uses Hydra to manage parameters, paths, and models in a clean, modular fashion.
 
-📁 Configuration Structure
+📁 **Configuration Structure**
 
 ```bash
 conf/
@@ -41,45 +43,50 @@ conf/
     └── <stage_config>.yaml
 ```
 
-🔬 Pipeline Overview
+🔬 **Pipeline Overview**
 
 Each step of the pipeline is a standalone script with its own configuration:
-	•	00_create_nuclei_membrane_splits.py – generate Merged.tif and split channels
-	•	01_nuclei_segmentation.py – StarDist 3D nuclear segmentation
-	•	01_enhance_membrane.py – CARE denoising for membrane channel
-	•	01_vollcellpose_membrane_segmentation.py – Cellpose 2D membrane segmentation and 3D reconstruction
-	•	02_oneat_nuclei.py – mitosis classification using Oneat
-	•	03_nms_nuclei_automated.py – non-max suppression (automated)
-	•	03_nms_nuclei_interactive.py – non-max suppression (interactive via Napari)
+- `00_create_nuclei_membrane_splits.py` – generate `Merged.tif` and split channels  
+- `01_nuclei_segmentation.py` – StarDist 3D nuclear segmentation  
+- `01_enhance_membrane.py` – CARE denoising for membrane channel  
+- `01_vollcellpose_membrane_segmentation.py` – Cellpose 2D membrane segmentation and 3D reconstruction  
+- `02_oneat_nuclei.py` – mitosis classification using Oneat  
+- `03_nms_nuclei_automated.py` – non-max suppression (automated)  
+- `03_nms_nuclei_interactive.py` – non-max suppression (interactive via Napari)  
 
-All parameters are controlled via YAML files in the conf/ directory.    
+All parameters are controlled via YAML files in the `conf/` directory.
 
+---
 
-🧩 Features
-	•	📊 Tracking with TrackMate 7 + Oneat integration
-	•	🧠 DenseNet mitosis classification
-	•	🧬 Full 3D segmentation and lineage reconstruction
-	•	🪄 Napari plugins for manual inspection and correction
-	•	🧰 Evaluation via Jaccard, F1, and Cell Tracking Challenge metrics
+## 🧩 Features
 
+- 📊 Tracking with TrackMate 7 + Oneat integration  
+- 🧠 DenseNet mitosis classification  
+- 🧬 Full 3D segmentation and lineage reconstruction  
+- 🪄 Napari plugins for manual inspection and correction  
+- 🧰 Evaluation via Jaccard, F1, and Cell Tracking Challenge metrics  
 
-🙌 Acknowledgments
+---
 
-This project builds on the work of many excellent tools including:
-	•	StarDist
-	•	CARE (CSBDeep)
-	•	Cellpose
-	•	TrackMate
-	•	Hydra
-	•	Napari
+## 🙌 Acknowledgments
 
-🤝 Contributing
+This project builds on the work of many excellent tools, including:
+- StarDist  
+- CARE (CSBDeep)  
+- Cellpose  
+- TrackMate  
+- Hydra  
+- Napari  
 
-We welcome issues, pull requests, and external extensions.
-Please feel free to fork and open a PR with improvements or new modules.
+---
 
+## 🤝 Contributing
 
-🔗 License
+We welcome issues, pull requests, and external extensions.  
+Feel free to fork and open a PR with improvements or new modules.
+
+---
+
+## 🔗 License
 
 MIT License
-

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Creating a virtual environment &#8212; Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.</title>
+    <title>🛠️ Installing Mamba &#8212; Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.</title>
   
   
   
@@ -60,8 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'INSTALL3D';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Segmentation and Tracking Pipeline" href="SEGMENTATION.html" />
-    <link rel="prev" title="The CopenhagenWorkflow" href="README.html" />
+    <link rel="next" title="🗂️ Segmentation and Tracking Pipeline" href="SEGMENTATION.html" />
+    <link rel="prev" title="🌐 Website" href="README.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -166,17 +166,17 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="README.html">
-                    The CopenhagenWorkflow
+                    🌐 Website
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Creating a virtual environment</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">🛠️ Installing Mamba</a></li>
 
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="SEGMENTATION.html">Segmentation and Tracking Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SEGMENTATION.html">🗂️ Segmentation and Tracking Pipeline</a></li>
 </ul>
 
     </div>
@@ -362,7 +362,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Creating a virtual environment</h1>
+    <h1>🛠️ Installing Mamba</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -372,11 +372,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Creating a virtual environment</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-mamba">Installing Mamba</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#main-packages">Main packages</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-cudatoolkit">Installing Cudatoolkit</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sucessful-installtion">Sucessful installtion</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">🛠️ Installing Mamba</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-main-packages">📦 Installing Main Packages</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-cuda-toolkit">🚀 Installing CUDA Toolkit</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#locking-tensorflow-numpy-versions">🔒 Locking TensorFlow &amp; NumPy Versions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#successful-installation">✅ Successful Installation</a></li>
 </ul>
 
             </nav>
@@ -389,78 +389,84 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="creating-a-virtual-environment">
-<h1>Creating a virtual environment<a class="headerlink" href="#creating-a-virtual-environment" title="Link to this heading">#</a></h1>
-<p>Download Anaconda package for your OS, the instructions below are tailored ofr Windows OS users but can be also used if you have Mac or Linux. Once you have installed the conda environment, you can open an Anconda prompt or a Windows powershell promt. If your conda instalaation was done systemwide on your computer you should see your prompt in the terminal having (base) before the command line.</p>
-<p>For this project you need to create a conda environment that will contain all the neccesary packages in your environment. in your terminal type the following to create a new environment (if you already have a virtualenv that you will be using for this porject you can skip this step)</p>
-<p>As shown in the terminal windown below type the following command</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>analysisenv<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
+  <p>“””## 🐍 Creating a Virtual Environment</p>
+<p>Download the Anaconda package for your OS. The instructions below are tailored for Windows users but can also be applied on Mac or Linux. Once Anaconda is installed, open an Anaconda Prompt or a Windows PowerShell. If the installation was system-wide, you should see <code class="docutils literal notranslate"><span class="pre">(base)</span></code> before your command prompt.</p>
+<p>To create a new conda environment (skip this step if you already have one for this project):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>analysisenv<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
 </pre></div>
 </div>
-<p><img alt="Step 1" src="_images/1_conda_install.png" /></p>
-<p>After pressing enter you should see an output as seen below</p>
-<p><img alt="Step 2" src="_images/2_conda_install.png" /></p>
-<p>After this the basic packages start downloading and you can activate your environment by typing</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>analysisenv
+<p><img alt="Step 1: Create conda environment" src="_images/1_conda_install.png" /></p>
+<p>After pressing Enter, you should see output similar to:</p>
+<p><img alt="Step 2: Environment creation output" src="_images/2_conda_install.png" /></p>
+<p>Activate your new environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>analysisenv
 </pre></div>
 </div>
-<p><img alt="Step 3" src="_images/3_conda_install.png" /></p>
-</section>
+<p><img alt="Step 3: Activate environment" src="_images/3_conda_install.png" /></p>
+<hr class="docutils" />
 <section id="installing-mamba">
-<h1>Installing Mamba<a class="headerlink" href="#installing-mamba" title="Link to this heading">#</a></h1>
-<p>Mamba is a more advanced package manager and it is a good idea to have it installed in your environment as well to aid in managing package dependencies.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>mamba<span class="w"> </span>-c<span class="w"> </span>conda-forge
+<h1>🛠️ Installing Mamba<a class="headerlink" href="#installing-mamba" title="Link to this heading">#</a></h1>
+<p>Mamba is a fast package manager that helps resolve dependencies efficiently. Install it into your environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>mamba<span class="w"> </span>-c<span class="w"> </span>conda-forge
 </pre></div>
 </div>
-<p><img alt="Step 4" src="_images/4_conda_install.png" /></p>
+<p><img alt="Step 4: Install mamba" src="_images/4_conda_install.png" /></p>
+<hr class="docutils" />
 </section>
-<section id="main-packages">
-<h1>Main packages<a class="headerlink" href="#main-packages" title="Link to this heading">#</a></h1>
-<p>Once you have reached this step you are now ready to install the main packages that would be required to run your analysis pythin scripts and notebooks provided by us, to get them type the following</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>caped-ai,<span class="w"> </span>ultralytics
+<section id="installing-main-packages">
+<h1>📦 Installing Main Packages<a class="headerlink" href="#installing-main-packages" title="Link to this heading">#</a></h1>
+<p>Install the core packages required for analysis:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>caped-ai<span class="w"> </span>ultralytics
 </pre></div>
 </div>
-<p><img alt="Step 5" src="_images/5_conda_install.png" /></p>
-<p>This will install many packages in your environment and your screen should look as below</p>
-<p><img alt="Step 6" src="_images/6_conda_install.png" /></p>
-<p><img alt="Step 7" src="_images/7_conda_install.png" /></p>
+<p><img alt="Step 5: Install core packages" src="_images/5_conda_install.png" /></p>
+<p>Wait for the installation to complete:</p>
+<p><img alt="Step 6: Packages downloading" src="_images/6_conda_install.png" />
+<img alt="Step 7: Packages installed" src="_images/7_conda_install.png" /></p>
+<hr class="docutils" />
 </section>
-<section id="installing-cudatoolkit">
-<h1>Installing Cudatoolkit<a class="headerlink" href="#installing-cudatoolkit" title="Link to this heading">#</a></h1>
-<p>Even though your HPC may have system level cuda toolkits that can be activated we can at the same time have those libraries in the environment itself</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.2<span class="w"> </span><span class="nv">cudnn</span><span class="o">=</span><span class="m">8</span>.1.0
+<section id="installing-cuda-toolkit">
+<h1>🚀 Installing CUDA Toolkit<a class="headerlink" href="#installing-cuda-toolkit" title="Link to this heading">#</a></h1>
+<p>Even if your HPC has system-wide CUDA, it’s recommended to include it in your environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.2<span class="w"> </span><span class="nv">cudnn</span><span class="o">=</span><span class="m">8</span>.1.0
 </pre></div>
 </div>
-<p><img alt="Step 8" src="_images/8_conda_install.png" /></p>
-<p>After this run</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="o">=</span><span class="m">11</span>.3.58
+<p><img alt="Step 8: CUDA toolkit install" src="_images/8_conda_install.png" /></p>
+<p>Then install the NVIDIA compiler:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="o">=</span><span class="m">11</span>.3.58
 </pre></div>
 </div>
-<p><img alt="Step 9" src="_images/9_conda_install.png" /></p>
-<p>Now we come to a very important step, to cap the version of tensorflow we will be dealing with, since our models have been trained in Tensorflow 2.0 we have to cap the versions of Tensorflow and Keras, if by mistake you download a package that ups the version of these libraries, no worries, just run the command below in your environment and get the correct versions of these libraries</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>tensorflow-gpu<span class="o">==</span><span class="m">2</span>.10.*
+<p><img alt="Step 9: NVIDIA nvcc install" src="_images/9_conda_install.png" /></p>
+<hr class="docutils" />
+</section>
+<section id="locking-tensorflow-numpy-versions">
+<h1>🔒 Locking TensorFlow &amp; NumPy Versions<a class="headerlink" href="#locking-tensorflow-numpy-versions" title="Link to this heading">#</a></h1>
+<p>To ensure compatibility with our models (trained on TensorFlow 2.x):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>tensorflow-gpu<span class="o">==</span><span class="m">2</span>.10.*
 pip<span class="w"> </span>uninstall<span class="w"> </span>numpy
 pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy</span><span class="o">==</span><span class="m">1</span>.26.4
 </pre></div>
 </div>
-<p>We have additionally caped the version of numpy to be less than 2.0 to avoid breaking changes in our environment.</p>
+<hr class="docutils" />
 </section>
-<section id="sucessful-installtion">
-<h1>Sucessful installtion<a class="headerlink" href="#sucessful-installtion" title="Link to this heading">#</a></h1>
-<p>If you have followed all these steps, and if they worked or if you were prompted to update your pip and you did and then these steps worked give it a quick check by typing the following in your terminal</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python
+<section id="successful-installation">
+<h1>✅ Successful Installation<a class="headerlink" href="#successful-installation" title="Link to this heading">#</a></h1>
+<p>Verify everything by entering a Python REPL:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python
 </pre></div>
 </div>
-<p>After this line you will be dropped from your terminal into a python shell, now in a single line type in</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>import<span class="w"> </span>vollseg,<span class="w"> </span>oneat,<span class="w"> </span>csbdeep,<span class="w"> </span>numpy,<span class="w"> </span>tensorflow,<span class="w"> </span>torch,<span class="w"> </span>lightning,<span class="w"> </span>ultralytics
+<p>Then run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vollseg</span><span class="o">,</span><span class="w"> </span><span class="nn">oneat</span><span class="o">,</span><span class="w"> </span><span class="nn">csbdeep</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="o">,</span><span class="w"> </span><span class="nn">tensorflow</span><span class="o">,</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">lightning</span><span class="o">,</span><span class="w"> </span><span class="nn">ultralytics</span>
 </pre></div>
 </div>
-<p>The output of your screen should look as below</p>
-<p><img alt="Step 10" src="_images/10_conda_install.png" /></p>
-<p>If you see the output as seen here, Congratulations you are now enabled to run all our codes, scripts, notebooks, Napari plugins on your computer/HPC. To exit the python shell type</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>quit<span class="o">()</span>
+<p>You should see no errors, similar to:</p>
+<p><img alt="Step 10: Verification output" src="_images/10_conda_install.png" /></p>
+<p>Exit the shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>quit<span class="o">()</span>
 </pre></div>
 </div>
+<p>Congratulations! Your environment is now ready to run all our scripts, notebooks, and Napari plugins.
+“””</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -499,7 +505,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">The CopenhagenWorkflow</p>
+        <p class="prev-next-title">🌐 Website</p>
       </div>
     </a>
     <a class="right-next"
@@ -507,7 +513,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Segmentation and Tracking Pipeline</p>
+        <p class="prev-next-title">🗂️ Segmentation and Tracking Pipeline</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -527,11 +533,11 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Creating a virtual environment</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-mamba">Installing Mamba</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#main-packages">Main packages</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-cudatoolkit">Installing Cudatoolkit</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sucessful-installtion">Sucessful installtion</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">🛠️ Installing Mamba</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-main-packages">📦 Installing Main Packages</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-cuda-toolkit">🚀 Installing CUDA Toolkit</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#locking-tensorflow-numpy-versions">🔒 Locking TensorFlow &amp; NumPy Versions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#successful-installation">✅ Successful Installation</a></li>
 </ul>
 
   </nav></div>
