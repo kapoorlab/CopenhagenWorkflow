@@ -1,4 +1,4 @@
-Workflow Website: https://kapoorlab.github.io/MTVKW/README.html
+Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/README.html
 
 # Copenhagen Tracking Workflow
 
@@ -27,10 +27,7 @@ For quick installation you can also copy pase the lines below in a Powershell/Li
       
       
 
-For obtaining the checkerboard patter with Vietoris-Rips algorithm additonally install 
 
-pip install ripser persim
-pip install giotto-tda
 
 # Workflow Steps
 
