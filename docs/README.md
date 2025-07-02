@@ -1,4 +1,4 @@
-Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/README.html
+Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/
 
 # Copenhagen Tracking Workflow
 
