@@ -373,6 +373,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authors-mari-tolonen-ziwei-xu-ozgur-beker-varun-kapoor-bianca-dumitrascu-jakub-sedzinski">
+
+
+Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website">🌐 Website</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-quickstart">🚀 Installation (Quickstart)</a></li>
 </ul>
@@ -391,10 +395,12 @@ document.write(`
 <blockquote>
 <div><p>A reproducible, modular, and Hydra-powered bioimage analysis pipeline for single-cell morphodynamics in <strong>Xenopus</strong> embryos.</p>
 </div></blockquote>
-<p><img alt="Hydra" src="https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&amp;logoColor=white" />
+<section id="authors-mari-tolonen-ziwei-xu-ozgur-beker-varun-kapoor-bianca-dumitrascu-jakub-sedzinski">
+<h2><img alt="Hydra" src="https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&amp;logoColor=white" />
 <img alt="Python" src="https://img.shields.io/badge/python-3.10+-brightgreen?logo=python" />
-<img alt="License" src="https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square" /></p>
-<hr class="docutils" />
+<img alt="License" src="https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square" />
+Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski<a class="headerlink" href="#authors-mari-tolonen-ziwei-xu-ozgur-beker-varun-kapoor-bianca-dumitrascu-jakub-sedzinski" title="Link to this heading">#</a></h2>
+</section>
 <section id="website">
 <h2>🌐 Website<a class="headerlink" href="#website" title="Link to this heading">#</a></h2>
 <p>📖 <a class="reference external" href="https://kapoorlab.github.io/CopenhagenWorkflow/"><strong>Explore the Documentation</strong></a><br />
@@ -411,63 +417,46 @@ mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="o">=</span><span class="m">11</span>.3.58
 pip<span class="w"> </span>install<span class="w"> </span>tensorflow-gpu<span class="o">==</span><span class="m">2</span>.10.*
 pip<span class="w"> </span>uninstall<span class="w"> </span>numpy<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy</span><span class="o">==</span><span class="m">1</span>.26.4
-
-
-This<span class="w"> </span>workflow<span class="w"> </span>uses<span class="w"> </span>Hydra<span class="w"> </span>to<span class="w"> </span>manage<span class="w"> </span>parameters,<span class="w"> </span>paths,<span class="w"> </span>and<span class="w"> </span>models<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>clean,<span class="w"> </span>modular<span class="w"> </span>fashion.
-
-📁<span class="w"> </span>Configuration<span class="w"> </span>Structure
-
-conf/
-├──<span class="w"> </span>experiment_data_paths/
-│<span class="w">   </span>└──<span class="w"> </span>&lt;dataset&gt;.yaml
-├──<span class="w"> </span>model_paths/
-│<span class="w">   </span>└──<span class="w"> </span>&lt;model_config&gt;.yaml
-└──<span class="w"> </span>parameters/
-<span class="w">    </span>└──<span class="w"> </span>&lt;stage_config&gt;.yaml
-
-🔬<span class="w"> </span>Pipeline<span class="w"> </span>Overview
-
-Each<span class="w"> </span>step<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>pipeline<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>standalone<span class="w"> </span>script<span class="w"> </span>with<span class="w"> </span>its<span class="w"> </span>own<span class="w"> </span>configuration:
-<span class="w">	</span>•<span class="w">	</span>00_create_nuclei_membrane_splits.py<span class="w"> </span>–<span class="w"> </span>generate<span class="w"> </span>Merged.tif<span class="w"> </span>and<span class="w"> </span>split<span class="w"> </span>channels
-<span class="w">	</span>•<span class="w">	</span>01_nuclei_segmentation.py<span class="w"> </span>–<span class="w"> </span>StarDist<span class="w"> </span>3D<span class="w"> </span>nuclear<span class="w"> </span>segmentation
-<span class="w">	</span>•<span class="w">	</span>01_enhance_membrane.py<span class="w"> </span>–<span class="w"> </span>CARE<span class="w"> </span>denoising<span class="w"> </span><span class="k">for</span><span class="w"> </span>membrane<span class="w"> </span>channel
-<span class="w">	</span>•<span class="w">	</span>01_vollcellpose_membrane_segmentation.py<span class="w"> </span>–<span class="w"> </span>Cellpose<span class="w"> </span>2D<span class="w"> </span>membrane<span class="w"> </span>segmentation<span class="w"> </span>and<span class="w"> </span>3D<span class="w"> </span>reconstruction
-<span class="w">	</span>•<span class="w">	</span>02_oneat_nuclei.py<span class="w"> </span>–<span class="w"> </span>mitosis<span class="w"> </span>classification<span class="w"> </span>using<span class="w"> </span>Oneat
-<span class="w">	</span>•<span class="w">	</span>03_nms_nuclei_automated.py<span class="w"> </span>–<span class="w"> </span>non-max<span class="w"> </span>suppression<span class="w"> </span><span class="o">(</span>automated<span class="o">)</span>
-<span class="w">	</span>•<span class="w">	</span>03_nms_nuclei_interactive.py<span class="w"> </span>–<span class="w"> </span>non-max<span class="w"> </span>suppression<span class="w"> </span><span class="o">(</span>interactive<span class="w"> </span>via<span class="w"> </span>Napari<span class="o">)</span>
-
-All<span class="w"> </span>parameters<span class="w"> </span>are<span class="w"> </span>controlled<span class="w"> </span>via<span class="w"> </span>YAML<span class="w"> </span>files<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>conf/<span class="w"> </span>directory.<span class="w">    </span>
-
-
-🧩<span class="w"> </span>Features
-<span class="w">	</span>•<span class="w">	</span>📊<span class="w"> </span>Tracking<span class="w"> </span>with<span class="w"> </span>TrackMate<span class="w"> </span><span class="m">7</span><span class="w"> </span>+<span class="w"> </span>Oneat<span class="w"> </span>integration
-<span class="w">	</span>•<span class="w">	</span>🧠<span class="w"> </span>DenseNet<span class="w"> </span>mitosis<span class="w"> </span>classification
-<span class="w">	</span>•<span class="w">	</span>🧬<span class="w"> </span>Full<span class="w"> </span>3D<span class="w"> </span>segmentation<span class="w"> </span>and<span class="w"> </span>lineage<span class="w"> </span>reconstruction
-<span class="w">	</span>•<span class="w">	</span>🪄<span class="w"> </span>Napari<span class="w"> </span>plugins<span class="w"> </span><span class="k">for</span><span class="w"> </span>manual<span class="w"> </span>inspection<span class="w"> </span>and<span class="w"> </span>correction
-<span class="w">	</span>•<span class="w">	</span>🧰<span class="w"> </span>Evaluation<span class="w"> </span>via<span class="w"> </span>Jaccard,<span class="w"> </span>F1,<span class="w"> </span>and<span class="w"> </span>Cell<span class="w"> </span>Tracking<span class="w"> </span>Challenge<span class="w"> </span>metrics
-
-
-🙌<span class="w"> </span>Acknowledgments
-
-This<span class="w"> </span>project<span class="w"> </span>builds<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>work<span class="w"> </span>of<span class="w"> </span>many<span class="w"> </span>excellent<span class="w"> </span>tools<span class="w"> </span>including:
-<span class="w">	</span>•<span class="w">	</span>StarDist
-<span class="w">	</span>•<span class="w">	</span>CARE<span class="w"> </span><span class="o">(</span>CSBDeep<span class="o">)</span>
-<span class="w">	</span>•<span class="w">	</span>Cellpose
-<span class="w">	</span>•<span class="w">	</span>TrackMate
-<span class="w">	</span>•<span class="w">	</span>Hydra
-<span class="w">	</span>•<span class="w">	</span>Napari
-
-🤝<span class="w"> </span>Contributing
-
-We<span class="w"> </span>welcome<span class="w"> </span>issues,<span class="w"> </span>pull<span class="w"> </span>requests,<span class="w"> </span>and<span class="w"> </span>external<span class="w"> </span>extensions.
-Please<span class="w"> </span>feel<span class="w"> </span>free<span class="w"> </span>to<span class="w"> </span>fork<span class="w"> </span>and<span class="w"> </span>open<span class="w"> </span>a<span class="w"> </span>PR<span class="w"> </span>with<span class="w"> </span>improvements<span class="w"> </span>or<span class="w"> </span>new<span class="w"> </span>modules.
-
-
-🔗<span class="w"> </span>License
-
-MIT<span class="w"> </span>License
 </pre></div>
 </div>
+<p>This workflow uses Hydra to manage parameters, paths, and models in a clean, modular fashion.</p>
+<p>📁 Configuration Structure</p>
+<p>conf/
+├── experiment_data_paths/
+│   └── <dataset>.yaml
+├── model_paths/
+│   └── &lt;model_config&gt;.yaml
+└── parameters/
+└── &lt;stage_config&gt;.yaml</p>
+<p>🔬 Pipeline Overview</p>
+<p>Each step of the pipeline is a standalone script with its own configuration:
+•	00_create_nuclei_membrane_splits.py – generate Merged.tif and split channels
+•	01_nuclei_segmentation.py – StarDist 3D nuclear segmentation
+•	01_enhance_membrane.py – CARE denoising for membrane channel
+•	01_vollcellpose_membrane_segmentation.py – Cellpose 2D membrane segmentation and 3D reconstruction
+•	02_oneat_nuclei.py – mitosis classification using Oneat
+•	03_nms_nuclei_automated.py – non-max suppression (automated)
+•	03_nms_nuclei_interactive.py – non-max suppression (interactive via Napari)</p>
+<p>All parameters are controlled via YAML files in the conf/ directory.</p>
+<p>🧩 Features
+•	📊 Tracking with TrackMate 7 + Oneat integration
+•	🧠 DenseNet mitosis classification
+•	🧬 Full 3D segmentation and lineage reconstruction
+•	🪄 Napari plugins for manual inspection and correction
+•	🧰 Evaluation via Jaccard, F1, and Cell Tracking Challenge metrics</p>
+<p>🙌 Acknowledgments</p>
+<p>This project builds on the work of many excellent tools including:
+•	StarDist
+•	CARE (CSBDeep)
+•	Cellpose
+•	TrackMate
+•	Hydra
+•	Napari</p>
+<p>🤝 Contributing</p>
+<p>We welcome issues, pull requests, and external extensions.
+Please feel free to fork and open a PR with improvements or new modules.</p>
+<p>🔗 License</p>
+<p>MIT License</p>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -528,6 +517,10 @@ MIT<span class="w"> </span>License
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authors-mari-tolonen-ziwei-xu-ozgur-beker-varun-kapoor-bianca-dumitrascu-jakub-sedzinski">
+
+
+Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website">🌐 Website</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-quickstart">🚀 Installation (Quickstart)</a></li>
 </ul>

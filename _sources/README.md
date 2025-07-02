@@ -5,7 +5,7 @@
 ![Hydra](https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3.10+-brightgreen?logo=python)
 ![License](https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square)
-
+Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski
 ---
 
 ## 🌐 Website
@@ -26,7 +26,7 @@ mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 mamba install -c nvidia cuda-nvcc=11.3.58
 pip install tensorflow-gpu==2.10.*
 pip uninstall numpy && pip install numpy==1.26.4
-
+```
 
 This workflow uses Hydra to manage parameters, paths, and models in a clean, modular fashion.
 
