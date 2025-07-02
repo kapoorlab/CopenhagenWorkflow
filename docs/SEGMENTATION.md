@@ -13,4 +13,6 @@ Membrane and nuclear objects were linked by nearest-neighbour matching of centro
 
 ### 📊 Performance assessment  
 Segmentation accuracy was quantified with the standard, sparse, and centroid-anchored Jaccard indices, while tracking was benchmarked with the Cell Tracking Challenge metrics (DET, TRA, LNK) using manually annotated “silver-truth” subsets.  Integrating Oneat predictions reduced false branch assignments by > 60 % without compromising detection recall, and overall tracking accuracy (TRA) exceeded 0.85 across full embryos, providing lineage trees suitable for downstream morphodynamic analysis.
-"""
+
+
+![Figure 2: Segmentation Pipeline Overview](demoimages/Fig2.png)
