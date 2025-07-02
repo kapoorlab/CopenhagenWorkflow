@@ -4,12 +4,11 @@
 
 ![Hydra](https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3.10+-brightgreen?logo=python)
-![License](https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square)
-Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski
+[![License](https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square)](https://github.com/kapoorlab/CopenhagenWorkflow/blob/main/LICENCE)
 ---
 
 ## 🌐 Website
-
+Authors: Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski
 📖 [**Explore the Documentation**](https://kapoorlab.github.io/CopenhagenWorkflow/)  
 📁 [**GitHub Repository**](https://github.com/kapoorlab/CopenhagenWorkflow)
 
@@ -32,6 +31,7 @@ This workflow uses Hydra to manage parameters, paths, and models in a clean, mod
 
 📁 Configuration Structure
 
+```bash
 conf/
 ├── experiment_data_paths/
 │   └── <dataset>.yaml
@@ -39,6 +39,7 @@ conf/
 │   └── <model_config>.yaml
 └── parameters/
     └── <stage_config>.yaml
+```
 
 🔬 Pipeline Overview
 
