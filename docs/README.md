@@ -16,6 +16,8 @@
 
 ---
 
+![WorkFlow](demoimages/FigS1.png)
+
 ## 🚀 Installation (Quickstart)
 
 ```bash
