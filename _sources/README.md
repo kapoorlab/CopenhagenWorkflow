@@ -16,7 +16,7 @@
 
 ---
 
-![WorkFlow](demoimages/FigS1.png)
+![WorkFlow](demoimages/Fig1.png)
 
 ## 🚀 Installation (Quickstart)
 
