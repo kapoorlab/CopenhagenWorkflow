@@ -12,11 +12,11 @@ conda create -n analysisenv python=3.10
 ```
 
 
-![Step 1](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/1_conda_install.png)
+![Step 1](demoimages/1_conda_install.png)
 
 After pressing enter you should see an output as seen below
 
-![Step 2](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/2_conda_install.png)
+![Step 2](demoimages/2_conda_install.png)
 
 After this the basic packages start downloading and you can activate your environment by typing 
 
@@ -24,7 +24,7 @@ After this the basic packages start downloading and you can activate your enviro
 conda activate analysisenv
 ```
 
-![Step 3](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/3_conda_install.png)
+![Step 3](demoimages/3_conda_install.png)
 
 
 ## Installing Mamba
@@ -36,7 +36,7 @@ conda install mamba -c conda-forge
 ```
 
 
-![Step 4](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/4_conda_install.png)
+![Step 4](demoimages/4_conda_install.png)
 
 
 ## Main packages 
@@ -47,13 +47,13 @@ Once you have reached this step you are now ready to install the main packages t
 pip install caped-ai, ultralytics
 ```
 
-![Step 5](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/5_conda_install.png)
+![Step 5](demoimages/5_conda_install.png)
 
 This will install many packages in your environment and your screen should look as below
 
-![Step 6](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/6_conda_install.png)
+![Step 6](demoimages/6_conda_install.png)
 
-![Step 7](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/7_conda_install.png)
+![Step 7](demoimages/7_conda_install.png)
 
 
 ## Installing Cudatoolkit
@@ -64,7 +64,7 @@ Even though your HPC may have system level cuda toolkits that can be activated w
 mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 ```
 
-![Step 8](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/8_conda_install.png)
+![Step 8](demoimages/8_conda_install.png)
 
 
 After this run 
@@ -73,7 +73,7 @@ After this run
 mamba install -c nvidia cuda-nvcc=11.3.58
 ```
 
-![Step 9](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/9_conda_install.png)
+![Step 9](demoimages/9_conda_install.png)
 
 
 Now we come to a very important step, to cap the version of tensorflow we will be dealing with, since our models have been trained in Tensorflow 2.0 we have to cap the versions of Tensorflow and Keras, if by mistake you download a package that ups the version of these libraries, no worries, just run the command below in your environment and get the correct versions of these libraries
@@ -101,7 +101,7 @@ import vollseg, oneat, csbdeep, numpy, tensorflow, torch, lightning, ultralytics
 
 The output of your screen should look as below
 
-![Step 10](https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/demoimages/10_conda_install.png)
+![Step 10](demoimages/10_conda_install.png)
 
 If you see the output as seen here, Congratulations you are now enabled to run all our codes, scripts, notebooks, Napari plugins on your computer/HPC. To exit the python shell type 
 

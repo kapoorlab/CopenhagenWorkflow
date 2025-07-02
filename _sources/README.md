@@ -1,6 +1,6 @@
 Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/
 
-# Copenhagen Tracking Workflow
+# The CopenhagenWorkflow
 
 Developed by Mari Tolonen &amp; Varun Kapoor for Dr. Jakub Sedzinski's Lab.
 
