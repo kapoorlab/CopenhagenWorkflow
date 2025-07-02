@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'SEGMENTATION';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Creating a virtual environment" href="INSTALL3D.html" />
+    <link rel="prev" title="🛠️ Installing Mamba" href="INSTALL3D.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -165,12 +165,12 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="README.html">
-                    📘 CopenhagenWorkflow
+                    🌐 Website
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="INSTALL3D.html">Creating a virtual environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="INSTALL3D.html">🛠️ Installing Mamba</a></li>
 
 
 
@@ -388,6 +388,7 @@ document.write(`
                   
   <section id="segmentation-and-tracking-pipeline">
 <h1>🗂️ Segmentation and Tracking Pipeline<a class="headerlink" href="#segmentation-and-tracking-pipeline" title="Link to this heading">#</a></h1>
+<p><img alt="Figure 2: Segmentation Pipeline Overview" src="_images/Fig2.png" /></p>
 <p>Confocal time-lapse stacks were first deskewed and stabilised: tiled volumes were stitched in ImageJ, then tilt artefacts were removed with a custom macro and residual sample drift was corrected frame-by-frame with <strong>Fast4DReg</strong>.  For the membrane channel, photon-shot noise was reduced in three dimensions by a content-aware restoration network (<strong>CARE</strong>, CSBDeep), ensuring uniform signal-to-noise across developmental stages. To start the pipeline merge the nuclei and membrane channel and call it Merged.tif that you can put in a folder such as Mari_Second_Dataset_Analysis. Then update the config files with your <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/conf/experiment_data_paths/seconddataset_jeanzay.yaml">data paths</a>, <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/conf/model_paths/jeanzay.yaml">model paths</a>, the  <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/conf/parameters/cellpose.yaml">parameters</a> specified here can be modifed but are set to the ones used for our analysis. Then you can run the zeroth step of the workflow that <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/00_create_nuclei_membrane_splits.py">creates nuclei and memrane channel tif files</a>.</p>
 <section id="nuclear-masks">
 <h2>⚛️ Nuclear masks<a class="headerlink" href="#nuclear-masks" title="Link to this heading">#</a></h2>
@@ -399,12 +400,11 @@ document.write(`
 </section>
 <section id="integration-and-lineage-reconstruction">
 <h2>🔗 Integration and lineage reconstruction<a class="headerlink" href="#integration-and-lineage-reconstruction" title="Link to this heading">#</a></h2>
-<p>Membrane and nuclear objects were linked by nearest-neighbour matching of centroids in 3-D space, ensuring every cell acquired both a shape envelope and a nuclear anchor.  Nuclear centroids then served as the basis for tracking in <strong>TrackMate 7</strong>: integer-label images were imported with the Label Image Detector, and trajectories were assembled using the Linear Assignment Problem linker (maximum distance = 16 µm, gap-closing ≤ 3 frames).  Division events, often missed by classical linkers, were imposed post-hoc with a custom <strong>TrackMate-Oneat</strong> plug-in.  Here, a DenseNet-based “Oneat” classifier identified mitotic nuclei in cropped 3-D time windows; the plug-in inserted branching points at predicted mitoses and associated daughter tracks within a 16.5 µm search radius, optionally constrained by the MARI (Mitosis Angular Region of Interest) rule to eliminate implausible angular configurations. To use <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/02_oneat_nuclei.py">Oneat mitosis detector</a>, aftedr this step we need to perform non-maximal supression to avoid detecting the same event in succeding time frames, you can either do it via <a class="reference internal" href="#03_nms_nuclei_automated.py"><span class="xref myst">non-maximal supression auto script</span></a> or you can launch our <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/03_nms_nuclei_interactive.py">non-maximal supression Napari plugin</a> and also see the mitosis counts prior to and after doing the non-maximal supression.</p>
+<p>Membrane and nuclear objects were linked by nearest-neighbour matching of centroids in 3-D space, ensuring every cell acquired both a shape envelope and a nuclear anchor.  Nuclear centroids then served as the basis for tracking in <strong>TrackMate 7</strong>: integer-label images were imported with the Label Image Detector, and trajectories were assembled using the Linear Assignment Problem linker (maximum distance = 16 µm, gap-closing ≤ 3 frames).  Division events, often missed by classical linkers, were imposed post-hoc with a custom <strong>TrackMate-Oneat</strong> plug-in.  Here, a DenseNet-based “Oneat” classifier identified mitotic nuclei in cropped 3-D time windows; the plug-in inserted branching points at predicted mitoses and associated daughter tracks within a 16.5 µm search radius, optionally constrained by the MARI (Mitosis Angular Region of Interest) rule to eliminate implausible angular configurations. To use <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/02_oneat_nuclei.py">Oneat mitosis detector</a>, aftedr this step we need to perform non-maximal supression to avoid detecting the same event in succeding time frames, you can either do it via <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/03_nms_nuclei_automated.py">non-maximal supression auto script</a> or you can launch our <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/03_nms_nuclei_interactive.py">non-maximal supression Napari plugin</a> and also see the mitosis counts prior to and after doing the non-maximal supression.</p>
 </section>
 <section id="performance-assessment">
 <h2>📊 Performance assessment<a class="headerlink" href="#performance-assessment" title="Link to this heading">#</a></h2>
 <p>Segmentation accuracy was quantified with the standard, sparse, and centroid-anchored Jaccard indices, while tracking was benchmarked with the Cell Tracking Challenge metrics (DET, TRA, LNK) using manually annotated “silver-truth” subsets.  Integrating Oneat predictions reduced false branch assignments by &gt; 60 % without compromising detection recall, and overall tracking accuracy (TRA) exceeded 0.85 across full embryos, providing lineage trees suitable for downstream morphodynamic analysis.</p>
-<p><img alt="Figure 2: Segmentation Pipeline Overview" src="_images/Fig2.png" /></p>
 </section>
 </section>
 
@@ -444,7 +444,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Creating a virtual environment</p>
+        <p class="prev-next-title">🛠️ Installing Mamba</p>
       </div>
     </a>
 </div>
