@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>The CopenhagenWorkflow &#8212; Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.</title>
+    <title>📘 CopenhagenWorkflow &#8212; Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.</title>
   
   
   
@@ -167,7 +167,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    The CopenhagenWorkflow
+                    📘 CopenhagenWorkflow
                 </a>
             </li>
         </ul>
@@ -177,7 +177,7 @@
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="SEGMENTATION.html">Segmentation and Tracking Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SEGMENTATION.html">🗂️ Segmentation and Tracking Pipeline</a></li>
 </ul>
 
     </div>
@@ -363,7 +363,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>The CopenhagenWorkflow</h1>
+    <h1>📘 CopenhagenWorkflow</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -373,7 +373,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website">🌐 Website</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-quickstart">🚀 Installation (Quickstart)</a></li>
 </ul>
             </nav>
         </div>
@@ -385,23 +386,86 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>Workflow Website: https://kapoorlab.github.io/CopenhagenWorkflow/</p>
-<section class="tex2jax_ignore mathjax_ignore" id="the-copenhagenworkflow">
-<h1>The CopenhagenWorkflow<a class="headerlink" href="#the-copenhagenworkflow" title="Link to this heading">#</a></h1>
-<p>Developed by Mari Tolonen &amp; Varun Kapoor for Dr. Jakub Sedzinski’s Lab.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p>You can follow a step by step installation guide for installing the codes required for 3D cell tracking by following <a class="reference internal" href="INSTALL3D.html"><span class="std std-doc">these instrctions</span></a>.</p>
-<p>For quick installation you can also copy pase the lines below in a Powershell/Linux terminal:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  conda create -n capedenv python=3.10
-  conda activate capedenv
-  conda install mamba -c conda-forge
-  pip install caped-ai ultralytics napari_fast4dreg
-  mamba install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
-  mamba install -c nvidia cuda-nvcc=11.3.58
-  python3 -m pip install tensorflow-gpu==2.10.*
-  pip uninstall numpy
-  pip install numpy==1.26.4
+  <section class="tex2jax_ignore mathjax_ignore" id="copenhagenworkflow">
+<h1>📘 CopenhagenWorkflow<a class="headerlink" href="#copenhagenworkflow" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>A reproducible, modular, and Hydra-powered bioimage analysis pipeline for single-cell morphodynamics in <strong>Xenopus</strong> embryos.</p>
+</div></blockquote>
+<p><img alt="Hydra" src="https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&amp;logoColor=white" />
+<img alt="Python" src="https://img.shields.io/badge/python-3.10+-brightgreen?logo=python" />
+<img alt="License" src="https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square" /></p>
+<hr class="docutils" />
+<section id="website">
+<h2>🌐 Website<a class="headerlink" href="#website" title="Link to this heading">#</a></h2>
+<p>📖 <a class="reference external" href="https://kapoorlab.github.io/CopenhagenWorkflow/"><strong>Explore the Documentation</strong></a><br />
+📁 <a class="reference external" href="https://github.com/kapoorlab/CopenhagenWorkflow"><strong>GitHub Repository</strong></a></p>
+</section>
+<hr class="docutils" />
+<section id="installation-quickstart">
+<h2>🚀 Installation (Quickstart)<a class="headerlink" href="#installation-quickstart" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>capedenv<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
+conda<span class="w"> </span>activate<span class="w"> </span>capedenv
+conda<span class="w"> </span>install<span class="w"> </span>mamba<span class="w"> </span>-c<span class="w"> </span>conda-forge
+pip<span class="w"> </span>install<span class="w"> </span>caped-ai<span class="w"> </span>ultralytics<span class="w"> </span>napari_fast4dreg
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.2<span class="w"> </span><span class="nv">cudnn</span><span class="o">=</span><span class="m">8</span>.1.0
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="o">=</span><span class="m">11</span>.3.58
+pip<span class="w"> </span>install<span class="w"> </span>tensorflow-gpu<span class="o">==</span><span class="m">2</span>.10.*
+pip<span class="w"> </span>uninstall<span class="w"> </span>numpy<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy</span><span class="o">==</span><span class="m">1</span>.26.4
+
+
+This<span class="w"> </span>workflow<span class="w"> </span>uses<span class="w"> </span>Hydra<span class="w"> </span>to<span class="w"> </span>manage<span class="w"> </span>parameters,<span class="w"> </span>paths,<span class="w"> </span>and<span class="w"> </span>models<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>clean,<span class="w"> </span>modular<span class="w"> </span>fashion.
+
+📁<span class="w"> </span>Configuration<span class="w"> </span>Structure
+
+conf/
+├──<span class="w"> </span>experiment_data_paths/
+│<span class="w">   </span>└──<span class="w"> </span>&lt;dataset&gt;.yaml
+├──<span class="w"> </span>model_paths/
+│<span class="w">   </span>└──<span class="w"> </span>&lt;model_config&gt;.yaml
+└──<span class="w"> </span>parameters/
+<span class="w">    </span>└──<span class="w"> </span>&lt;stage_config&gt;.yaml
+
+🔬<span class="w"> </span>Pipeline<span class="w"> </span>Overview
+
+Each<span class="w"> </span>step<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>pipeline<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>standalone<span class="w"> </span>script<span class="w"> </span>with<span class="w"> </span>its<span class="w"> </span>own<span class="w"> </span>configuration:
+<span class="w">	</span>•<span class="w">	</span>00_create_nuclei_membrane_splits.py<span class="w"> </span>–<span class="w"> </span>generate<span class="w"> </span>Merged.tif<span class="w"> </span>and<span class="w"> </span>split<span class="w"> </span>channels
+<span class="w">	</span>•<span class="w">	</span>01_nuclei_segmentation.py<span class="w"> </span>–<span class="w"> </span>StarDist<span class="w"> </span>3D<span class="w"> </span>nuclear<span class="w"> </span>segmentation
+<span class="w">	</span>•<span class="w">	</span>01_enhance_membrane.py<span class="w"> </span>–<span class="w"> </span>CARE<span class="w"> </span>denoising<span class="w"> </span><span class="k">for</span><span class="w"> </span>membrane<span class="w"> </span>channel
+<span class="w">	</span>•<span class="w">	</span>01_vollcellpose_membrane_segmentation.py<span class="w"> </span>–<span class="w"> </span>Cellpose<span class="w"> </span>2D<span class="w"> </span>membrane<span class="w"> </span>segmentation<span class="w"> </span>and<span class="w"> </span>3D<span class="w"> </span>reconstruction
+<span class="w">	</span>•<span class="w">	</span>02_oneat_nuclei.py<span class="w"> </span>–<span class="w"> </span>mitosis<span class="w"> </span>classification<span class="w"> </span>using<span class="w"> </span>Oneat
+<span class="w">	</span>•<span class="w">	</span>03_nms_nuclei_automated.py<span class="w"> </span>–<span class="w"> </span>non-max<span class="w"> </span>suppression<span class="w"> </span><span class="o">(</span>automated<span class="o">)</span>
+<span class="w">	</span>•<span class="w">	</span>03_nms_nuclei_interactive.py<span class="w"> </span>–<span class="w"> </span>non-max<span class="w"> </span>suppression<span class="w"> </span><span class="o">(</span>interactive<span class="w"> </span>via<span class="w"> </span>Napari<span class="o">)</span>
+
+All<span class="w"> </span>parameters<span class="w"> </span>are<span class="w"> </span>controlled<span class="w"> </span>via<span class="w"> </span>YAML<span class="w"> </span>files<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>conf/<span class="w"> </span>directory.<span class="w">    </span>
+
+
+🧩<span class="w"> </span>Features
+<span class="w">	</span>•<span class="w">	</span>📊<span class="w"> </span>Tracking<span class="w"> </span>with<span class="w"> </span>TrackMate<span class="w"> </span><span class="m">7</span><span class="w"> </span>+<span class="w"> </span>Oneat<span class="w"> </span>integration
+<span class="w">	</span>•<span class="w">	</span>🧠<span class="w"> </span>DenseNet<span class="w"> </span>mitosis<span class="w"> </span>classification
+<span class="w">	</span>•<span class="w">	</span>🧬<span class="w"> </span>Full<span class="w"> </span>3D<span class="w"> </span>segmentation<span class="w"> </span>and<span class="w"> </span>lineage<span class="w"> </span>reconstruction
+<span class="w">	</span>•<span class="w">	</span>🪄<span class="w"> </span>Napari<span class="w"> </span>plugins<span class="w"> </span><span class="k">for</span><span class="w"> </span>manual<span class="w"> </span>inspection<span class="w"> </span>and<span class="w"> </span>correction
+<span class="w">	</span>•<span class="w">	</span>🧰<span class="w"> </span>Evaluation<span class="w"> </span>via<span class="w"> </span>Jaccard,<span class="w"> </span>F1,<span class="w"> </span>and<span class="w"> </span>Cell<span class="w"> </span>Tracking<span class="w"> </span>Challenge<span class="w"> </span>metrics
+
+
+🙌<span class="w"> </span>Acknowledgments
+
+This<span class="w"> </span>project<span class="w"> </span>builds<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>work<span class="w"> </span>of<span class="w"> </span>many<span class="w"> </span>excellent<span class="w"> </span>tools<span class="w"> </span>including:
+<span class="w">	</span>•<span class="w">	</span>StarDist
+<span class="w">	</span>•<span class="w">	</span>CARE<span class="w"> </span><span class="o">(</span>CSBDeep<span class="o">)</span>
+<span class="w">	</span>•<span class="w">	</span>Cellpose
+<span class="w">	</span>•<span class="w">	</span>TrackMate
+<span class="w">	</span>•<span class="w">	</span>Hydra
+<span class="w">	</span>•<span class="w">	</span>Napari
+
+🤝<span class="w"> </span>Contributing
+
+We<span class="w"> </span>welcome<span class="w"> </span>issues,<span class="w"> </span>pull<span class="w"> </span>requests,<span class="w"> </span>and<span class="w"> </span>external<span class="w"> </span>extensions.
+Please<span class="w"> </span>feel<span class="w"> </span>free<span class="w"> </span>to<span class="w"> </span>fork<span class="w"> </span>and<span class="w"> </span>open<span class="w"> </span>a<span class="w"> </span>PR<span class="w"> </span>with<span class="w"> </span>improvements<span class="w"> </span>or<span class="w"> </span>new<span class="w"> </span>modules.
+
+
+🔗<span class="w"> </span>License
+
+MIT<span class="w"> </span>License
 </pre></div>
 </div>
 </section>
@@ -464,7 +528,8 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#website">🌐 Website</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-quickstart">🚀 Installation (Quickstart)</a></li>
 </ul>
   </nav></div>
 
