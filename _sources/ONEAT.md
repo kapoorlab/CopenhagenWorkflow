@@ -53,7 +53,7 @@ After training, Oneat predicts mitosis coordinates `(t, z, y, x)` in whole 4D st
 3. **Optionally apply MARI** to enforce perpendicular daughter positioning, reducing false positives
 
 **Performance:**  
-Integrating Oneat cuts false branching by > 60 % (with MARI) vs. native TrackMate, while keeping high recall for biologically faithful lineage trees.
+Integrating Oneat boosts the precision from 0.1 to 0.86 (with MARI) vs. native TrackMate, with a false discovery rate of 0.14 compared to 0.9 of native TrackMate.
 
 
 ![TrackMate-Oneat Accuracy](demoimages/FigS1.png)
