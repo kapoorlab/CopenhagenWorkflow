@@ -391,51 +391,84 @@ document.write(`
 <p><img alt="Oneat Architecture" src="_images/FigS7.png" /></p>
 <section id="architecture-overview">
 <h2>🚀 Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading">#</a></h2>
+<p>Oneat’s core network, <strong>DenseVollNet</strong>, processes short 4D image crops by treating <strong>time frames as input channels</strong> and applying <strong>only spatial convolutions (Z, Y, X)</strong>:</p>
 <ul class="simple">
-<li><p><strong>Modified DenseNet Backbone</strong><br />
-Oneat extends a 3-stage DenseNet-style feature extractor. Each stage comprises dense blocks (BN → ReLU → Conv3D, repeated twice; growth rate = 8) and transition layers (1×1×1 conv + 2×2×2 avg-pool).<br />
-Instead of fully-connected layers, Oneat uses a <strong>large 3D convolution</strong> (encompassing multiple time and spatial voxels), making it a <strong>fully convolutional network</strong> that accepts inputs of arbitrary size.</p></li>
-<li><p><strong>🎯 Dual Detection Head</strong></p>
+<li><p><strong>Input:</strong><br />
+Patches of size <code class="docutils literal notranslate"><span class="pre">(Z,</span> <span class="pre">Y,</span> <span class="pre">X)</span></code> with <strong>T timepoints folded as C = T channels</strong> (shape <code class="docutils literal notranslate"><span class="pre">(Z,</span> <span class="pre">Y,</span> <span class="pre">X,</span> <span class="pre">T)</span></code>).</p></li>
+<li><p><strong>DenseVollNet Backbone:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Initial 3D Conv</strong></p>
 <ul>
-<li><p><strong>Action Classification</strong></p>
-<ul>
-<li><p>Conv3D(1×1×3) → BatchNorm → ReLU → Conv3D(1×1×1) + Softmax (mitosis vs. non-mitosis)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Conv3D</span></code> with <code class="docutils literal notranslate"><span class="pre">startfilter</span></code> filters, kernel <code class="docutils literal notranslate"><span class="pre">(k_z,</span> <span class="pre">k_y,</span> <span class="pre">k_x)</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">7×7×7</span></code>), <code class="docutils literal notranslate"><span class="pre">padding='same'</span></code></p></li>
+<li><p><strong>BatchNorm → ReLU</strong></p></li>
 </ul>
 </li>
-<li><p><strong>Regression Output</strong></p>
+<li><p><strong>Three Dense Block Stages</strong></p>
 <ul>
-<li><p>Conv3D(1×1×3) → BatchNorm → ReLU → Conv3D(1×1×1) (event confidence / spatio-temporal co-ordinates)</p></li>
+<li><p>Each stage <em>i</em> has <code class="docutils literal notranslate"><span class="pre">depth_i</span></code> layers:</p>
+<ul>
+<li><p><strong>Bottleneck</strong>: <code class="docutils literal notranslate"><span class="pre">Conv3D(1×1×1)</span></code>, reducing channels (<code class="docutils literal notranslate"><span class="pre">4·F</span></code>)</p></li>
+<li><p><strong>Feature</strong>:    <code class="docutils literal notranslate"><span class="pre">Conv3D(mid_kernel,</span> <span class="pre">mid_kernel,</span> <span class="pre">mid_kernel)</span></code>, growth rate <code class="docutils literal notranslate"><span class="pre">F</span></code></p></li>
+<li><p><strong>Concat</strong> the new features with previous tensor</p></li>
+</ul>
+</li>
+<li><p><strong>Transition layers</strong> between stages (except after the last):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Conv3D(1×1×1)</span></code> to compress channels (<code class="docutils literal notranslate"><span class="pre">reduction</span></code> factor)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MaxPool3D(2×2×2)</span></code> to downsample spatial dims</p>
+<ul>
+<li><p><strong>Downsampling factor per pool:</strong> 2</p></li>
+<li><p><strong>Total downsampling factor:</strong> 4 (after two pools), e.g. <code class="docutils literal notranslate"><span class="pre">(8,64,64)</span> <span class="pre">→</span> <span class="pre">(2,16,16)</span></code></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><strong>🛠️ Post-processing</strong><br />
-Voxel-wise predictions are refined via non-maximal suppression and optional <strong>MARI (Mitosis Angular Region of Interest)</strong> filtering to yield final mitotic event coordinates.</p></li>
 </ul>
+</li>
+<li><p><strong>BN → ReLU</strong> after final dense block</p></li>
+</ol>
+</li>
+<li><p><strong>Fully-Convolutional Head:</strong></p>
+<ul>
+<li><p>A <strong>single large <code class="docutils literal notranslate"><span class="pre">Conv3D</span></code></strong> (kernel <code class="docutils literal notranslate"><span class="pre">mid_kernel³</span></code>, padding=’valid’) replaces FC layers, outputting <code class="docutils literal notranslate"><span class="pre">categories</span> <span class="pre">+</span> <span class="pre">nboxes·box_vector</span></code> channels.</p>
+<ul>
+<li><p>Kernel size = <code class="docutils literal notranslate"><span class="pre">(Z/4,</span> <span class="pre">Y/4,</span> <span class="pre">X/4)</span></code> = <code class="docutils literal notranslate"><span class="pre">(2,16,16)</span></code> for input <code class="docutils literal notranslate"><span class="pre">(8,64,64)</span></code> and <code class="docutils literal notranslate"><span class="pre">last_conv_factor=4</span></code>.</p></li>
+<li><p>This <strong>collapses</strong> the spatial map to <code class="docutils literal notranslate"><span class="pre">1×1×1</span></code> per channel.</p></li>
+</ul>
+</li>
+<li><p><strong>Split</strong> these channels into:</p>
+<ul>
+<li><p><strong>Classification map</strong> (<code class="docutils literal notranslate"><span class="pre">categories</span></code> channels) → Softmax</p></li>
+<li><p><strong>Regression map</strong> (<code class="docutils literal notranslate"><span class="pre">nboxes·box_vector</span></code> channels) → Sigmoid</p></li>
+</ul>
+</li>
+<li><p><strong>Concat</strong> classification &amp; regression outputs.</p></li>
+</ul>
+</li>
+</ul>
+<p>This design lets Oneat scan any <code class="docutils literal notranslate"><span class="pre">(Z,</span> <span class="pre">Y,</span> <span class="pre">X)</span></code> volume with <strong>T</strong> frames in one pass, yielding per-voxel mitosis predictions.</p>
 </section>
 <hr class="docutils" />
 <section id="oneat-mitosis-detector">
 <h2>⚙️ Oneat Mitosis Detector<a class="headerlink" href="#oneat-mitosis-detector" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Input:</strong> 64×64×8 voxel crops over 3 time points, centered on each nucleus centroid.</p></li>
-<li><p><strong>Training Samples:</strong></p>
+<li><p><strong>Input crops:</strong> <code class="docutils literal notranslate"><span class="pre">64×64×8</span></code> voxels over <code class="docutils literal notranslate"><span class="pre">T</span></code> timepoints (folded into channels).</p></li>
+<li><p><strong>Training samples:</strong></p>
 <ul>
-<li><p><strong>Positive:</strong> Manual Napari clicks on mitotic nuclei</p></li>
-<li><p><strong>Negative:</strong> Random crops from non-dividing nuclei</p></li>
+<li><p><strong>Positive:</strong> Napari-clicked mitotic events</p></li>
+<li><p><strong>Negative:</strong> Random non-dividing crops</p></li>
 </ul>
 </li>
-<li><p><strong>Loss:</strong> Binary cross-entropy for mitosis vs. non-mitosis classification.</p></li>
+<li><p><strong>Loss:</strong> Binary cross-entropy</p></li>
 </ul>
-<p>Once trained, Oneat processes entire 4D stacks (T, Z, Y, X), outputting predicted mitosis coordinates (TZYX).</p>
-<p>These coordinates feed into the <strong>TrackMate-Oneat</strong> plugin:</p>
+<p>After training, Oneat predicts mitosis coordinates <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">z,</span> <span class="pre">y,</span> <span class="pre">x)</span></code> in whole 4D stacks, which the <strong>TrackMate-Oneat</strong> plugin uses to:</p>
 <ol class="arabic simple">
-<li><p><strong>Branch insertion:</strong> Insert trajectory splits at predicted mitosis points.</p></li>
-<li><p><strong>Daughter linking:</strong> Associate daughter cells within a 16.5 µm radius using a Jaqaman linker.</p></li>
-<li><p><strong>MARI filtering:</strong> Optionally constrain daughter assignments to be perpendicular to the mother’s major axis, minimizing false positives.</p></li>
+<li><p><strong>Insert trajectory branches</strong> at predicted mitoses</p></li>
+<li><p><strong>Link daughter cells</strong> within a 16.5 µm radius (Jaqaman linker)</p></li>
+<li><p><strong>Optionally apply MARI</strong> to enforce perpendicular daughter positioning, reducing false positives</p></li>
 </ol>
 <p><strong>Performance:</strong><br />
-Integrating Oneat reduces false branching by &gt; 60 % compared to TrackMate’s native splitter (with MARI) while preserving high detection recall, yielding more biologically realistic lineage reconstructions.
-“””</p>
+Integrating Oneat cuts false branching by &gt; 60 % (with MARI) vs. native TrackMate, while keeping high recall for biologically faithful lineage trees.</p>
 </section>
 </section>
 
