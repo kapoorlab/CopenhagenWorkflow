@@ -377,7 +377,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nuclear-masks">⚛️ Nuclear masks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membrane-masks">🧬 Membrane masks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-and-lineage-reconstruction">🔗 Integration and lineage reconstruction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-assessment">📊 Performance assessment</a></li>
 </ul>
             </nav>
         </div>
@@ -404,10 +403,6 @@ document.write(`
 <section id="integration-and-lineage-reconstruction">
 <h2>🔗 Integration and lineage reconstruction<a class="headerlink" href="#integration-and-lineage-reconstruction" title="Link to this heading">#</a></h2>
 <p>Membrane and nuclear objects were linked by nearest-neighbour matching of centroids in 3-D space, ensuring every cell acquired both a shape envelope and a nuclear anchor.  Nuclear centroids then served as the basis for tracking in <strong>TrackMate 7</strong>: integer-label images were imported with the Label Image Detector, and trajectories were assembled using the Linear Assignment Problem linker (maximum distance = 16 µm, gap-closing ≤ 3 frames).  Division events, often missed by classical linkers, were imposed post-hoc with a custom <strong>TrackMate-Oneat</strong> plug-in.  Here, a DenseNet-based “Oneat” (more details in Oneat section) classifier identified mitotic nuclei in cropped 3-D time windows; the plug-in inserted branching points at predicted mitoses and associated daughter tracks within a 16.5 µm search radius, optionally constrained by the MARI (Mitosis Angular Region of Interest) rule to eliminate implausible angular configurations. To use <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/02_oneat_nuclei.py">Oneat mitosis detector</a>, aftedr this step we need to perform non-maximal supression to avoid detecting the same event in succeding time frames, you can either do it via <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/03_nms_nuclei_automated.py">non-maximal supression auto script</a> or you can launch our <a class="reference external" href="https://raw.githubusercontent.com/kapoorlab/CopenhagenWorkflow/main/03_nms_nuclei_interactive.py">non-maximal supression Napari plugin</a> and also see the mitosis counts prior to and after doing the non-maximal supression.</p>
-</section>
-<section id="performance-assessment">
-<h2>📊 Performance assessment<a class="headerlink" href="#performance-assessment" title="Link to this heading">#</a></h2>
-<p>Segmentation accuracy was quantified with the standard, sparse, and centroid-anchored Jaccard indices, while tracking was benchmarked with the Cell Tracking Challenge metrics (DET, TRA, LNK) using manually annotated “silver-truth” subsets.  Integrating Oneat predictions reduced false branch assignments by &gt; 60 % without compromising detection recall, and overall tracking accuracy (TRA) exceeded 0.85 across full embryos, providing lineage trees suitable for downstream morphodynamic analysis.</p>
 </section>
 </section>
 
@@ -478,7 +473,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nuclear-masks">⚛️ Nuclear masks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membrane-masks">🧬 Membrane masks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-and-lineage-reconstruction">🔗 Integration and lineage reconstruction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-assessment">📊 Performance assessment</a></li>
 </ul>
   </nav></div>
 
