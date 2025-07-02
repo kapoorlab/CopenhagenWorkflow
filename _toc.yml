@@ -2,12 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: README
-
+root: Single-cell morphodynamics predicts cell fate decisions
 chapters:
-    - file: SEGMENTATION
-    - file: ONEAT
-    - file: POINTCLOUDS
-    - file: TRACKING
-    - file: TRACKCLUSTERING
-    - file: TRAINING
+- file: README.md
+- file: INSTALL3D.md
+- file: SEGMENTATION.md
