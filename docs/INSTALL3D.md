@@ -1,4 +1,4 @@
-"""## 🐍 Creating a Virtual Environment
+## 🐍 Creating a Virtual Environment
 
 Download the Anaconda package for your OS. The instructions below are tailored for Windows users but can also be applied on Mac or Linux. Once Anaconda is installed, open an Anaconda Prompt or a Windows PowerShell. If the installation was system-wide, you should see `(base)` before your command prompt.
 

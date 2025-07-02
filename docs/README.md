@@ -1,4 +1,4 @@
-"""# 📘 CopenhagenWorkflow
+📘 CopenhagenWorkflow
 
 > A reproducible, modular, and Hydra-powered bioimage analysis pipeline for single-cell morphodynamics in **Xenopus** embryos.
 
