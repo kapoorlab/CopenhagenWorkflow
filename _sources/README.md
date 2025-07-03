@@ -1,6 +1,6 @@
 📘 CopenhagenWorkflow
 
-> A reproducible, modular, and Hydra-powered bioimage analysis pipeline for single-cell morphodynamics in **Xenopus** embryos.
+> Single-cell morphodynamics predicts cell fate decisions during Xenopus mucociliary differentiation.
 
 ![Hydra](https://img.shields.io/badge/config-managed%20by%20Hydra-89b8e4?logo=python&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3.10+-brightgreen?logo=python)
@@ -8,10 +8,10 @@
 
 ---
 
-## 🌐 Website
+## 🌐 Code
 
 **Authors:** Mari Tolonen, Ziwei Xu, Ozgur Beker, Varun Kapoor, Bianca Dumitrascu, Jakub Sedzinski  
-📖 [**Explore the Documentation**](https://kapoorlab.github.io/CopenhagenWorkflow/)  
+ 
 📁 [**GitHub Repository**](https://github.com/kapoorlab/CopenhagenWorkflow)
 
 ---
