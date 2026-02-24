@@ -6,6 +6,7 @@
 ![Python](https://img.shields.io/badge/python-3.10+-brightgreen?logo=python)
 [![License](https://img.shields.io/github/license/kapoorlab/CopenhagenWorkflow?style=flat-square)](https://github.com/kapoorlab/CopenhagenWorkflow/blob/main/LICENCE)
 
+[Website](https://kapoorlab.github.io/CopenhagenWorkflow/README.html)
 ---
 
 ## 🌐 Code
